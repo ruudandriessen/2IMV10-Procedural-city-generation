@@ -3,19 +3,30 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mycompany</groupId>
     <artifactId>ProceduralCityGeneration</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <lwjgl.version>2.9.3</lwjgl.version>
     </properties>
+    
     <repositories>
         <repository>
             <id>de.topobyte</id>
             <url>http://mvn.topobyte.de</url>
         </repository> 
-   </repositories>
+        <repository>
+            <id>mavenNatives</id>
+            <name>Maven Natives Repository</name>
+            <url>http://mavennatives.googlecode.com/svn/repo</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+ 
     <dependencies>
         <dependency>
             <groupId>de.topobyte</groupId>
@@ -50,13 +61,26 @@
         <dependency>
             <groupId>org.lwjgl.lwjgl</groupId>
             <artifactId>lwjgl</artifactId>
-            <version>2.9.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.lwjgl.lwjgl</groupId>
-            <artifactId>lwjgl-platform</artifactId>
-            <version>2.9.3</version>
-            <classifier>natives-osx</classifier>
+            <version>${lwjgl.version}</version>
         </dependency>
     </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.googlecode.mavennatives</groupId>
+                <artifactId>maven-nativedependencies-plugin</artifactId>
+                <version>0.0.6</version>
+                <executions>
+                        <execution>
+                                <id>unpacknatives</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                        <goal>copy</goal>
+                                </goals>
+                        </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
