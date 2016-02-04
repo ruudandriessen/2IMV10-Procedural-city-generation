@@ -122,6 +122,7 @@ public class DataLoader {
             }
         } catch (EntityNotFoundException e) {
             // ignore
+            System.out.println("help");
         }
         return results;
     }
@@ -147,7 +148,7 @@ public class DataLoader {
     private void outputResults() {
         System.out.println("Buildings loaded: " + buildings.size());
         System.out.println("Streets loaded: " + streets.size());
-        System.out.println("Names loaded" + names.size());
+        System.out.println("Names loaded: " + names.size());
     }
 
     private void getBuildings(Map<Long, OsmRelation> relations, Map<Long, OsmWay> ways) {
@@ -166,7 +167,7 @@ public class DataLoader {
                 }
             }
         }
-        
+
         for (Long key : ways.keySet()) {
             OsmWay way = ways.get(key);
             Map<String, String> tags = OsmModelUtil.getTagsAsMap(way);
@@ -178,14 +179,17 @@ public class DataLoader {
             }
         }
     }
-    
+
     private void getStreets(Map<Long, OsmWay> ways) {
-        for (Long key: ways.keySet()) {
+        for (Long key : ways.keySet()) {
             OsmWay way = ways.get(key);
             Map<String, String> tags = OsmModelUtil.getTagsAsMap(way);
             String highway = tags.get("highway");
             if (!(highway == null)) {
-                Collection<LineString> paths = getLine(way);
+                Collection<LineString> paths;
+
+                paths = getLine(way);
+
                 if (!(!validHighways.contains(highway))) {
                     // Okay, this is a valid street
                     paths.stream().forEach((path) -> {
@@ -198,9 +202,10 @@ public class DataLoader {
                         });
                     }
                 }
+
             }
         }
-        
+
     }
 
 }

@@ -32,16 +32,25 @@ public class EntityResolver implements OsmEntityProvider {
 
     @Override
     public OsmNode getNode(long l) throws EntityNotFoundException {
+        if(!nodes.containsKey(l)) {
+            throw new EntityNotFoundException("Node not found: " + l);
+        }
         return nodes.get(l);
     }
 
     @Override
     public OsmWay getWay(long l) throws EntityNotFoundException {
+        if(!ways.containsKey(l)) {
+            throw new EntityNotFoundException("Way not found: " + l);
+        }
         return ways.get(l);
     }
 
     @Override
     public OsmRelation getRelation(long l) throws EntityNotFoundException {
+        if(!relations.containsKey(l)) {
+            throw new EntityNotFoundException("Relation not found: " + l);
+        }
         return relations.get(l);
     }
 
