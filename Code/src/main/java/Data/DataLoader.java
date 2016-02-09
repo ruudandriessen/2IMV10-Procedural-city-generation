@@ -10,14 +10,9 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.core.access.OsmIterator;
-import de.topobyte.osm4j.core.access.OsmReader;
-import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
-import de.topobyte.osm4j.core.dataset.MapDataSetLoader;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
-import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
-import de.topobyte.osm4j.core.model.iface.OsmTag;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.model.util.OsmModelUtil;
 import de.topobyte.osm4j.core.resolve.EntityFinder;
@@ -29,13 +24,10 @@ import de.topobyte.osm4j.geometry.RegionBuilderResult;
 import de.topobyte.osm4j.geometry.WayBuilder;
 import de.topobyte.osm4j.geometry.WayBuilderResult;
 import de.topobyte.osm4j.pbf.seq.PbfIterator;
-import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
-import de.topobyte.osm4j.xml.dynsax.OsmXmlReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -44,7 +36,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
 
 /**
  *
@@ -85,7 +76,7 @@ public class DataLoader {
         //        + "13.465661,52.504055,13.469817,52.506204";
 
         //Open a stream
-        InputStream input = new FileInputStream("./resources/amsterdam.osh.pbf");
+        InputStream input = DataLoader.class.getClassLoader().getResourceAsStream("maps/amsterdam.osh.pbf");
         OsmIterator iterator = new PbfIterator(input, true);
         Map<Long, OsmNode> nodes = new HashMap<>();
         Map<Long, OsmWay> ways = new HashMap<>();
