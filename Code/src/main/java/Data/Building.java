@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 ruudandriessen.
+ * Copyright 2016 rikschreurs.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,36 +15,36 @@
  */
 package Data;
 
-import java.util.ArrayList;
+import com.vividsolutions.jts.geom.Geometry;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 
 /**
  *
- * @author ruudandriessen
+ * @author rikschreurs
  */
-public class EntityManager {
-    private ArrayList<Entity> entities;
+public class Building extends Entity {
+    private Geometry geometry;
     
-    public EntityManager() {
-        entities = new ArrayList<>();
+    public Building(Geometry geometry) {
+        this.geometry = geometry;
+        setup();
     }
     
-    public void addEntity(Entity e) {
-        entities.add(e);
-    }
     
-    public void removeEntity(Entity e) {
-        entities.remove(e);
+    @Override
+    public void setup() {
+        
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
+    @Override
     public void render() {
-        entities.stream().forEach((e) -> {
-            e.render();
-        });
+
+    }
+
+    @Override
+    public void destroy() {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    public void destroy() {
-        entities.stream().forEach((e) -> {
-            e.destroy();
-        });
-    }
 }

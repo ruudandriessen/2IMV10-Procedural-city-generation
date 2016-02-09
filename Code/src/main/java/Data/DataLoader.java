@@ -24,7 +24,6 @@ import de.topobyte.osm4j.geometry.RegionBuilderResult;
 import de.topobyte.osm4j.geometry.WayBuilder;
 import de.topobyte.osm4j.geometry.WayBuilderResult;
 import de.topobyte.osm4j.pbf.seq.PbfIterator;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -43,7 +42,6 @@ import java.util.Set;
  */
 public class DataLoader {
 
-    //private InMemoryMapDataSet data;
     private WayBuilder wayBuilder = new WayBuilder();
     private RegionBuilder regionBuilder = new RegionBuilder();
 
@@ -59,23 +57,7 @@ public class DataLoader {
             Arrays.asList(new String[]{"primary", "secondary", "tertiary",
         "residential", "living_street"}));
 
-    private DataLoader(Map nodes, Map ways, Map relations) {
-        System.out.println("Nodes: " + nodes.size());
-        System.out.println("Ways: " + ways.size());
-        System.out.println("Relations: " + relations.size());
-        resolver = new EntityResolver(nodes, ways, relations);
-        wayFinder = EntityFinders.create(resolver, EntityNotFoundStrategy.IGNORE);
-        getBuildings(relations, ways);
-        getStreets(ways);
-        outputResults();
-    }
-
-    public static void main(String args[]) throws MalformedURLException, IOException, OsmInputException {
-        // Define a query to retrieve some data
-        //String query = "http://www.overpass-api.de/api/xapi?map?bbox="
-        //        + "13.465661,52.504055,13.469817,52.506204";
-
-        //Open a stream
+    public DataLoader() {
         InputStream input = DataLoader.class.getClassLoader().getResourceAsStream("maps/amsterdam.osh.pbf");
         OsmIterator iterator = new PbfIterator(input, true);
         Map<Long, OsmNode> nodes = new HashMap<>();
@@ -95,12 +77,23 @@ public class DataLoader {
                     break;
             }
         }
-
-        //InputStream input = new URL(query).openStream();
-        //OsmReader reader = new OsmXmlReader(input, false);
-        //InMemoryMapDataSet data = MapDataSetLoader.read(reader, true, true, true);
-        DataLoader dataLoader = new DataLoader(nodes, ways, relations);
-        //dataLoader.outputResults();
+        loadData(nodes, ways, relations);
+    }
+    
+    public List<Geometry> getGeometries() {
+        return this.buildings;
+    }
+    
+    public List<LineString> getRoads() {
+        return this.streets;
+    }
+    
+    private void loadData(Map nodes, Map ways, Map relations) {
+        resolver = new EntityResolver(nodes, ways, relations);
+        wayFinder = EntityFinders.create(resolver, EntityNotFoundStrategy.IGNORE);
+        getBuildings(relations, ways);
+        getStreets(ways);
+        outputResults();
     }
 
     private Collection<LineString> getLine(OsmWay way) {
@@ -113,7 +106,6 @@ public class DataLoader {
             }
         } catch (EntityNotFoundException e) {
             // ignore
-            System.out.println("help");
         }
         return results;
     }

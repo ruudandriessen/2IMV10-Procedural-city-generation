@@ -15,6 +15,8 @@
  */
 package ProceduralCityGeneration;
 
+import Data.Building;
+import Data.DataLoader;
 import Data.EntityManager;
 import Util.Util;
 import org.lwjgl.LWJGLException;
@@ -40,7 +42,13 @@ public class ProceduralCityGeneration {
     public void initialize() {
         setupGL();
         entityManager = new EntityManager();
-        // Load data
+        DataLoader dataLoader = new DataLoader();
+        dataLoader.getGeometries().stream().forEach((g) -> {
+            entityManager.addEntity(new Building(g));
+        });
+//        dataLoader.getGeometries().stream().forEach((g) -> {
+//            entityManager.addEntity(new S(g));
+//        });
         // Load textures
         // Load whatever
         // Done
