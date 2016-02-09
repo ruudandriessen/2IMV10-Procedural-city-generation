@@ -22,9 +22,7 @@ package Data;
  */
 public abstract class Entity { 
     
-    public Entity() {
-        setup();
-    }
+    public Entity(){ }
     
     public abstract void setup();
         // Setup vertices
