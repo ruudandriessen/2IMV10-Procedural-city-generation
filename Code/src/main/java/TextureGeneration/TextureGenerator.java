@@ -27,9 +27,7 @@ import org.lwjgl.util.glu.GLU;
  * @author ruudandriessen
  */
 public class TextureGenerator {
-    public static int getTexture(int tWidth, int tHeight, int textureUnit) {
-        ByteBuffer buf = createTexture(tWidth, tHeight);
-        
+    public static int getTexture(int tWidth, int tHeight, int textureUnit, ByteBuffer data) {        
         // Create a new texture object in memory and bind it
         int texId = glGenTextures();
         glActiveTexture(textureUnit);
@@ -37,7 +35,7 @@ public class TextureGenerator {
          
         // Upload the texture data and generate mip maps (for scaling)
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tWidth, tHeight, 0, 
-                GL_RGBA, GL_UNSIGNED_BYTE, buf);
+                GL_RGBA, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
          
         // Setup the ST coordinate system
@@ -53,22 +51,6 @@ public class TextureGenerator {
         exitOnGLError("loadtexture");
         
         return texId;
-    }
-    
-    private static ByteBuffer createTexture(int tWidth, int tHeight) {
-        byte[] texture = new byte[tWidth * tHeight * 4];
-        float[] noise = NoiseGenerator.getRandomNoise(tWidth, tWidth);
-        for (int i = 0; i < tHeight * tWidth * 4; i += 4) {
-            texture[i + 0] = (byte) (noise[i / 4] * 255);
-            texture[i + 1] = (byte) (noise[i / 4] * 255);
-            texture[i + 2] = (byte) (noise[i / 4] * 255);
-            texture[i + 3] = (byte) 255;
-        }
-        
-        ByteBuffer buf = ByteBuffer.allocateDirect(tWidth * tHeight * 4);
-        buf.put(texture);
-        buf.flip();
-        return buf;
     }
     
     public static void exitOnGLError(String errorMessage) {

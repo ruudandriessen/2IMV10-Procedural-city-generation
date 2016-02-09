@@ -1,5 +1,6 @@
 package TextureGeneration;
 
+import Textures.AsphaltTexture;
 import Util.ShaderLoader;
 import Util.TexturedVertex;
 import java.nio.ByteBuffer;
@@ -150,7 +151,7 @@ public class TextureGeneration {
         }
     }
     private void setupTextures() {
-        texId = TextureGenerator.getTexture(16, 16, GL_TEXTURE0);
+        texId = AsphaltTexture.generate(128, 128);
          
         exitOnGLError("setupTexture");
     }
