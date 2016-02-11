@@ -1,6 +1,5 @@
 package TextureGeneration;
 
-import Textures.AsphaltTexture;
 import Util.ShaderLoader;
 import Util.TexturedVertex;
 import java.nio.ByteBuffer;
@@ -22,7 +21,6 @@ import static org.lwjgl.opengl.GL11.glDeleteTextures;
 import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL11.glGetError;
 import static org.lwjgl.opengl.GL11.glViewport;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
@@ -30,7 +28,8 @@ import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL15.glBufferData;
 import static org.lwjgl.opengl.GL15.glDeleteBuffers;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
-import org.lwjgl.opengl.GL20;
+import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
+import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 import static org.lwjgl.opengl.GL20.glAttachShader;
 import static org.lwjgl.opengl.GL20.glBindAttribLocation;
 import static org.lwjgl.opengl.GL20.glCreateProgram;
@@ -119,15 +118,22 @@ public class TextureGeneration {
         this.exitOnGLError("Error in setupOpenGL");
     }
     
-    private void setupShaders() {        
-         // Load our vertex shader
-        vsId = ShaderLoader.load("vertexShader.glsl", GL20.GL_VERTEX_SHADER);
-
-        // Load our fragment shader
-        fsId = ShaderLoader.load("fragmentShader.glsl", GL20.GL_FRAGMENT_SHADER);
-
+    private void setupShaders() {  
          // We'll need a program to render anything with OpenGL 3.2(+)
         pId = glCreateProgram();
+        glLinkProgram(pId);
+        glValidateProgram(pId);
+        
+        try {
+        // Load our vertex shader
+            vsId = ShaderLoader.load("shader.vert", GL_VERTEX_SHADER);
+
+            // Load our fragment shader
+            fsId = ShaderLoader.load("shader.frag", GL_FRAGMENT_SHADER);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
         
         // attach to program
         glAttachShader(pId, vsId);
@@ -141,8 +147,6 @@ public class TextureGeneration {
         // Texture information will be attribute 2
         glBindAttribLocation(pId, 2, "in_TextureCoord");
 
-        glLinkProgram(pId);
-        glValidateProgram(pId);
          
         int errorCheckValue = GL11.glGetError();
         if (errorCheckValue != GL11.GL_NO_ERROR) {
@@ -151,7 +155,7 @@ public class TextureGeneration {
         }
     }
     private void setupTextures() {
-        texId = AsphaltTexture.generate(128, 128);
+//        texId = AsphaltTexture.generate(128, 128);
          
         exitOnGLError("setupTexture");
     }
