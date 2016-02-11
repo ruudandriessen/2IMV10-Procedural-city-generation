@@ -50,7 +50,7 @@ public class DataLoader {
     // We use this to find all way members of relations.
     EntityFinder wayFinder;
 
-    private List<Geometry> buildings = new ArrayList<>();
+    private List<MultiPolygon> buildings = new ArrayList<>();
     private List<LineString> streets = new ArrayList<>();
     private Map<LineString, String> names = new HashMap<>();
     private Set<String> validHighways = new HashSet<>(
@@ -58,7 +58,7 @@ public class DataLoader {
         "residential", "living_street"}));
 
     public DataLoader() {
-        InputStream input = DataLoader.class.getClassLoader().getResourceAsStream("maps/amsterdam.osh.pbf");
+        InputStream input = DataLoader.class.getClassLoader().getResourceAsStream("maps/andorra.osm.pbf");
         OsmIterator iterator = new PbfIterator(input, true);
         Map<Long, OsmNode> nodes = new HashMap<>();
         Map<Long, OsmWay> ways = new HashMap<>();
@@ -80,7 +80,7 @@ public class DataLoader {
         loadData(nodes, ways, relations);
     }
     
-    public List<Geometry> getGeometries() {
+    public List<MultiPolygon> getMultiPolygons() {
         return this.buildings;
     }
     
