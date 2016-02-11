@@ -15,35 +15,44 @@
  */
 package Data;
 
+import Util.VBO;
 
 /**
  *
  * @author ruudandriessen
  */
-public abstract class Entity { 
-    
-    public Entity(){ }
-    
+public abstract class Entity {
+
+    protected VBO verticesVBO,
+            indicesVBO;
+
+    public Entity() {
+        this.verticesVBO = new VBO();
+        this.indicesVBO = new VBO();
+    }
+
     public abstract void setup();
-        // Setup vertices
-        // Insert vertices in FloatBuffer
-        // Insert indices in bytebuffers
-        // Create VAO and select
-        // Create VBO for vertices and select
-        // Bind vertices buffer
-        // Create vertex att pointers
-        // Deselect VAO
-        // create VBO for indices and select
-        // Bind incides buffer
-        // Deselect VBO
+    // Setup vertices
+    // Insert vertices in FloatBuffer
+    // Insert indices in bytebuffers
+    // Create VAO and select
+    // Create VBO for vertices and select
+    // Bind vertices buffer
+    // Create vertex att pointers
+    // Deselect VAO
+    // create VBO for indices and select
+    // Bind incides buffer
+    // Deselect VBO
+
     public abstract void render();
-        // Select program?
-        // Bind VAO
-        // Select VBO vertex att array
-        // Bind VBO with indices information
-        // Draw vertices
-        // Deselect vbo
-        // Deselect vertex attrib array, vertex array
-        // Deselect program (shaders, etc)?
+    // Select program?
+    // Bind VAO
+    // Select VBO vertex att array
+    // Bind VBO with indices information
+    // Draw vertices
+    // Deselect vbo
+    // Deselect vertex attrib array, vertex array
+    // Deselect program (shaders, etc)?
+
     public abstract void destroy();
 }
