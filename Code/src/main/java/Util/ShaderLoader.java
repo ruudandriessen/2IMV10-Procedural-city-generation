@@ -18,7 +18,12 @@ package Util;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import org.lwjgl.opengl.GL20;
+import static org.lwjgl.opengl.GL20.GL_COMPILE_STATUS;
+import static org.lwjgl.opengl.GL20.glCompileShader;
+import static org.lwjgl.opengl.GL20.glCreateShader;
+import static org.lwjgl.opengl.GL20.glGetShaderInfoLog;
+import static org.lwjgl.opengl.GL20.glGetShaderi;
+import static org.lwjgl.opengl.GL20.glShaderSource;
 
 /**
  *
@@ -48,9 +53,15 @@ public class ShaderLoader {
             System.exit(-1);
         }
 
-        shaderID = GL20.glCreateShader(type);
-        GL20.glShaderSource(shaderID, shaderSource);
-        GL20.glCompileShader(shaderID);
+        shaderID = glCreateShader(type);
+        glShaderSource(shaderID, shaderSource);
+        glCompileShader(shaderID);
+        
+        if(glGetShaderi(shaderID, GL_COMPILE_STATUS) == 0){
+            System.err.println("Shader compilation failed");
+            System.err.println(glGetShaderInfoLog(shaderID, 1024));
+            System.exit(1);
+        }
 
         return shaderID;
     }

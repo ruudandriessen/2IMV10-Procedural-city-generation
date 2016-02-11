@@ -15,28 +15,48 @@
  */
 package Data;
 
+import Util.TexturedVertex;
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.LineString;
+import java.nio.FloatBuffer;
+import org.lwjgl.BufferUtils;
 
 /**
  *
  * @author ruudandriessen
  */
 public class Road extends Entity {
+
     LineString geometry;
-    
+
     public Road(LineString geometry) {
-        System.out.println("----- New Road -----");      
+        super();
+        System.out.println("----- New Road -----");
         System.out.println(geometry);
         this.geometry = geometry;
         setup();
     }
+
     @Override
     public void setup() {
-//        CoordinateSequence cs = geometry.getCoordinateSequence();
-//        for (int i = 0; i < cs.getDimension(); i++) {
-//            System.out.println(cs.getCoordinate(i));
-//        }
+        CoordinateSequence cs = geometry.getCoordinateSequence();
+
+        // Setup vertices using coordinate sequence 
+        FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(cs.getDimension()
+                * TexturedVertex.elementCount);
+        for (int i = 0; i < cs.getDimension(); i++) {
+            TexturedVertex v1 = new TexturedVertex();
+            Coordinate c = cs.getCoordinate(i);
+
+            v1.setXYZ((float) c.x, (float) c.y, (float) c.z);
+//            v.setRGB(0, 1, 0);
+           
+            verticesBuffer.put(v1.getElements());
+        }
+        verticesBuffer.flip();
+        
+                
     }
 
     @Override
@@ -48,5 +68,5 @@ public class Road extends Entity {
     public void destroy() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

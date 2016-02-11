@@ -1,16 +1,17 @@
 package TextureGeneration;
 
 import Textures.AsphaltTexture;
+import Util.Camera;
 import Util.ShaderLoader;
 import Util.TexturedVertex;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.ContextAttribs;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.GL11;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
@@ -22,7 +23,6 @@ import static org.lwjgl.opengl.GL11.glDeleteTextures;
 import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL11.glGetError;
 import static org.lwjgl.opengl.GL11.glViewport;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
@@ -39,6 +39,7 @@ import static org.lwjgl.opengl.GL20.glDeleteShader;
 import static org.lwjgl.opengl.GL20.glDetachShader;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glLinkProgram;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 import static org.lwjgl.opengl.GL20.glValidateProgram;
@@ -54,8 +55,13 @@ import org.lwjgl.util.glu.GLU;
 public class TextureGeneration { 
     // Screen variables
     private final String WINDOW_TITLE = "Procedural texture generation";
-    private final int WIDTH = 320;
-    private final int HEIGHT = 240;
+    private final int WIDTH = 640;
+    private final int HEIGHT = 380;
+    
+    private Camera camera;
+    private int projectionMatrixLocation;
+    private int viewMatrixLocation;
+    private int modelMatrixLocation;
     
     // Identifiers
     private int pId = 0;        // Program ID
@@ -65,7 +71,7 @@ public class TextureGeneration {
     private int vbocId = 0;     // VBO color id
     private int texId = 0;      // Texture id
     private int vsId = 0;       // Vertex shader id
-    private int fsId = 0;       // Fragment shader id
+    private int fsId = 0;       // Fragment shader id    
     
     // Vertex and indices count
     private int vertexCount = 0, indicesCount = 0;
@@ -112,19 +118,22 @@ public class TextureGeneration {
          
         // Setup an XNA like background color
         glClearColor(0.4f, 0.6f, 0.9f, 0f);
-         
+                 
         // Map the internal OpenGL coordinate system to the entire screen
         glViewport(0, 0, WIDTH, HEIGHT);
+        
+        camera = new Camera();
+        camera.create();
          
         this.exitOnGLError("Error in setupOpenGL");
     }
     
     private void setupShaders() {        
          // Load our vertex shader
-        vsId = ShaderLoader.load("vertexShader.glsl", GL20.GL_VERTEX_SHADER);
+        vsId = ShaderLoader.load("shader.vert", GL20.GL_VERTEX_SHADER);
 
         // Load our fragment shader
-        fsId = ShaderLoader.load("fragmentShader.glsl", GL20.GL_FRAGMENT_SHADER);
+        fsId = ShaderLoader.load("shader.frag", GL20.GL_FRAGMENT_SHADER);
 
          // We'll need a program to render anything with OpenGL 3.2(+)
         pId = glCreateProgram();
@@ -142,13 +151,16 @@ public class TextureGeneration {
         glBindAttribLocation(pId, 2, "in_TextureCoord");
 
         glLinkProgram(pId);
-        glValidateProgram(pId);
-         
-        int errorCheckValue = GL11.glGetError();
-        if (errorCheckValue != GL11.GL_NO_ERROR) {
-            System.out.println("ERROR - Could not create the shaders:" + GLU.gluErrorString(errorCheckValue));
-            System.exit(-1);
-        }
+        glValidateProgram(pId);        
+       
+        // Get matrices uniform locations
+        projectionMatrixLocation = glGetUniformLocation(pId,"projectionMatrix");
+        viewMatrixLocation = glGetUniformLocation(pId, "viewMatrix");
+        modelMatrixLocation = glGetUniformLocation(pId, "modelMatrix");
+        
+        camera.setUniformLocations(pId, projectionMatrixLocation, viewMatrixLocation, modelMatrixLocation);
+        
+        this.exitOnGLError("shaders");
     }
     private void setupTextures() {
         texId = AsphaltTexture.generate(128, 128);
@@ -222,6 +234,27 @@ public class TextureGeneration {
     }
      
     public void loopCycle() {
+        this.update();
+        
+        this.render();
+         
+        this.exitOnGLError("loopCycle");
+    }
+    
+    private void update() {
+         while(Keyboard.next()) {            
+            // Only listen to events where the key was pressed (down event)
+            if (!Keyboard.getEventKeyState()) continue;
+            
+            camera.processInput(1.0f);
+        }
+        
+        camera.apply();
+        
+        this.exitOnGLError("update");
+    }
+    
+    private void render() {
         glClear(GL_COLOR_BUFFER_BIT);
         
         glUseProgram(pId);
@@ -246,10 +279,10 @@ public class TextureGeneration {
         glBindVertexArray(0);
         
         glUseProgram(0);
-         
-        this.exitOnGLError("Error in loopCycle");
+        
+        this.exitOnGLError("render");
     }
-     
+    
     private void destroyOpenGL() {    
         // Delete the texture
         glDeleteTextures(texId);
@@ -288,7 +321,7 @@ public class TextureGeneration {
          
         Display.destroy();
     }
-     
+    
     public void exitOnGLError(String errorMessage) {
         int errorValue = glGetError();
          
