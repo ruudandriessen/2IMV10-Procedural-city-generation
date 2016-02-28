@@ -69,6 +69,25 @@ public class LoadData : MonoBehaviour {
 						Data.Instance.ways.Add(wayId, way);
 						break;
 					case "relation": 
+						long relationId = long.Parse (reader ["id"]);
+						List<OsmRelationMember> members = new List<OsmRelationMember> ();
+						if (reader.ReadToDescendant ("member")) {
+							EntityType type = EntityTypeMethods.fromString (reader ["type"]);
+							members.Add (new OsmRelationMember (long.Parse (reader ["ref"]), type, reader ["role"]));
+							while (reader.ReadToNextSibling ("member")) {
+								type = EntityTypeMethods.fromString (reader ["type"]);
+								members.Add (new OsmRelationMember (long.Parse (reader ["ref"]), type, reader ["role"]));
+							}
+						}
+						List<OsmTag> relationTags = new List<OsmTag> ();
+						if (reader.ReadToDescendant ("tag")) {
+							relationTags.Add (new OsmTag (reader ["k"], reader ["v"]));
+							while (reader.ReadToNextSibling ("tag")) {
+								relationTags.Add (new OsmTag (reader ["k"], reader ["v"]));
+							}
+						}
+						OsmRelation relation = new OsmRelation (relationId, relationTags, members);
+						Data.Instance.relations.Add(relationId, relation);
 						break;
 					default:
 						Debug.Log (reader.Name);
@@ -91,6 +110,7 @@ public class LoadData : MonoBehaviour {
 		}
 		Debug.Log ("Nodes: " + Data.Instance.nodes.Count);
 		Debug.Log ("Ways: " + Data.Instance.ways.Count);
+		Debug.Log ("Relations: " + Data.Instance.relations.Count);
 		Debug.Log ("Done");
 		Data.Instance.dataLoaded = true;
 	}

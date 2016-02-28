@@ -11,8 +11,9 @@ namespace AssemblyCSharp
 		{
 		}
 
-		public IDictionary nodes = new Dictionary<long, OsmNode>();
-		public IDictionary ways = new Dictionary<long, OsmWay>();
+		public Dictionary<long, OsmNode> nodes = new Dictionary<long, OsmNode>();
+		public Dictionary<long, OsmWay> ways = new Dictionary<long, OsmWay>();
+		public Dictionary<long, OsmRelation> relations = new Dictionary<long, OsmRelation> ();
 		public bool dataLoaded = false;
 	}
 }
