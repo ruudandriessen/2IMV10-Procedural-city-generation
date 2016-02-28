@@ -20,7 +20,6 @@ public class Road : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
 	}
 
 	void PositionSize(Vector3 start, Vector3 end, GameObject g) {
