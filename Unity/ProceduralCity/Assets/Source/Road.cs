@@ -8,12 +8,12 @@ public class Road : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		for (int i = 0; i < points.Count - 1; i++) {
+		for (int i = 0; i < this.points.Count - 1; i++) {
 			GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
-			GameObject c1 = GameObject.CreatePrimitive(PrimitiveType.Cube);
-			GameObject c2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
-			c1.transform.position = points [i];
-			c2.transform.position = points [i+1];
+//			GameObject c1 = GameObject.CreatePrimitive(PrimitiveType.Cube);
+//			GameObject c2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
+//			c1.transform.position = points [i];
+//			c2.transform.position = points [i+1];
 			PositionSize(points [i], points[i+1], plane);
 		}
 	}
