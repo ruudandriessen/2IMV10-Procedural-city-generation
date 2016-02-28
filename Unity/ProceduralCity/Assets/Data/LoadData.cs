@@ -34,12 +34,8 @@ public class LoadData : MonoBehaviour {
 						double lon = double.Parse (reader ["lon"]);
 
 						List<OsmTag> nodeTags = new List<OsmTag> ();
-						if (reader.ReadToDescendant ("tag")) {
-							nodeTags.Add (new OsmTag (reader ["k"], reader ["v"]));
-							while (reader.ReadToNextSibling ("tag")) {
-								nodeTags.Add (new OsmTag (reader ["k"], reader ["v"]));
-							}
-						}
+						XmlReader nodeSubtree = reader.ReadSubtree ();
+						readNodeSubtree (nodeSubtree, nodeTags);
 						OsmNode node = new OsmNode (nodeId, nodeTags, lon, lat);
 						Data.Instance.nodes.Add (nodeId, node);
 						break;
@@ -51,41 +47,30 @@ public class LoadData : MonoBehaviour {
 						break;
 					case "way":
 						long wayId = long.Parse (reader ["id"]);
-						List<OsmNodeReference> wayNodes = new List<OsmNodeReference> ();
-						if (reader.ReadToDescendant ("nd")) {
-							wayNodes.Add (new OsmNodeReference(long.Parse (reader ["ref"])));
-							while (reader.ReadToNextSibling ("nd")) {
-								wayNodes.Add (new OsmNodeReference(long.Parse (reader ["ref"])));
-							}
-						}
 						List<OsmTag> wayTags = new List<OsmTag> ();
-						if (reader.ReadToDescendant ("tag")) {
-							wayTags.Add (new OsmTag (reader ["k"], reader ["v"]));
-							while (reader.ReadToNextSibling ("tag")) {
-								wayTags.Add (new OsmTag (reader ["k"], reader ["v"]));
+						List<OsmNodeReference> wayNodes = new List<OsmNodeReference> ();
+						XmlReader waySubtree = reader.ReadSubtree ();
+						readWaySubtree (waySubtree, wayNodes, wayTags);
+						OsmWay way = new OsmWay (wayId, wayTags, wayNodes);
+						foreach (OsmTag tag in wayTags) {
+							if (tag.getKey () == "building") {
+								Debug.Log ("Building Found");
+								Data.Instance.buildings.Add (wayId, new OsmBuilding (wayId, wayTags, wayNodes));
+							}
+							if (tag.getKey () == "highway") {
+								Debug.Log ("Street found");
+								Data.Instance.streets.Add (wayId, new OsmStreet (wayId, wayTags, wayNodes));
 							}
 						}
-						OsmWay way = new OsmWay (wayId, wayTags, wayNodes);
+
 						Data.Instance.ways.Add(wayId, way);
 						break;
 					case "relation": 
 						long relationId = long.Parse (reader ["id"]);
 						List<OsmRelationMember> members = new List<OsmRelationMember> ();
-						if (reader.ReadToDescendant ("member")) {
-							EntityType type = EntityTypeMethods.fromString (reader ["type"]);
-							members.Add (new OsmRelationMember (long.Parse (reader ["ref"]), type, reader ["role"]));
-							while (reader.ReadToNextSibling ("member")) {
-								type = EntityTypeMethods.fromString (reader ["type"]);
-								members.Add (new OsmRelationMember (long.Parse (reader ["ref"]), type, reader ["role"]));
-							}
-						}
 						List<OsmTag> relationTags = new List<OsmTag> ();
-						if (reader.ReadToDescendant ("tag")) {
-							relationTags.Add (new OsmTag (reader ["k"], reader ["v"]));
-							while (reader.ReadToNextSibling ("tag")) {
-								relationTags.Add (new OsmTag (reader ["k"], reader ["v"]));
-							}
-						}
+						XmlReader relationSubtree = reader.ReadSubtree ();
+						readRelationSubtree (relationSubtree, members, relationTags);
 						OsmRelation relation = new OsmRelation (relationId, relationTags, members);
 						Data.Instance.relations.Add(relationId, relation);
 						break;
@@ -111,6 +96,9 @@ public class LoadData : MonoBehaviour {
 		Debug.Log ("Nodes: " + Data.Instance.nodes.Count);
 		Debug.Log ("Ways: " + Data.Instance.ways.Count);
 		Debug.Log ("Relations: " + Data.Instance.relations.Count);
+		Debug.Log("Buildings: " + Data.Instance.buildings.Count);
+		Debug.Log("Streets: " + Data.Instance.streets.Count);
+			
 		Debug.Log ("Done");
 		Data.Instance.dataLoaded = true;
 	}
@@ -118,5 +106,41 @@ public class LoadData : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
+	}
+
+	private void readWaySubtree(XmlReader subtree, List<OsmNodeReference> references, List<OsmTag> tags) {
+		while (subtree.Read ()) {
+			switch (subtree.Name) {
+			case "tag":
+				tags.Add (new OsmTag (subtree ["k"], subtree ["v"]));
+				break;
+			case "nd":
+				references.Add (new OsmNodeReference (long.Parse (subtree ["ref"])));
+				break;
+			}
+		}
+	}
+
+	private void readRelationSubtree(XmlReader subtree, List<OsmRelationMember> members, List<OsmTag> tags) {
+		while (subtree.Read ()) {
+			switch (subtree.Name) {
+			case "member":
+				EntityType type = EntityTypeMethods.fromString (subtree ["type"]);
+				members.Add (new OsmRelationMember (long.Parse (subtree ["ref"]), type, subtree ["role"]));
+				break;
+			case "tag":
+				tags.Add (new OsmTag (subtree ["k"], subtree ["v"]));
+				break;
+			}
+		}
+	}
+	private void readNodeSubtree(XmlReader subtree, List<OsmTag> tags) {
+		while (subtree.Read ()) {
+			switch (subtree.Name) {
+			case "tag":
+				tags.Add (new OsmTag (subtree ["k"], subtree ["v"]));
+				break;
+			}
+		}
 	}
 }
