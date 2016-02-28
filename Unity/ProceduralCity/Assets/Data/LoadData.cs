@@ -12,7 +12,7 @@ public class LoadData : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		//XmlTextReader reader = new XmlTextReader("Assets/andorra");
-		using (XmlReader reader = XmlReader.Create("Assets/map"))
+		using (XmlReader reader = XmlReader.Create("Assets/Maps/map"))
 		{
 			while (reader.Read())
 			{
