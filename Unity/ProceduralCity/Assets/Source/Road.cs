@@ -10,11 +10,13 @@ public class Road : MonoBehaviour {
 	void Start () {
 		for (int i = 0; i < this.points.Count - 1; i++) {
 			GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+
 //			GameObject c1 = GameObject.CreatePrimitive(PrimitiveType.Cube);
 //			GameObject c2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
 //			c1.transform.position = points [i];
 //			c2.transform.position = points [i+1];
 			PositionSize(points [i], points[i+1], plane);
+			plane.transform.parent = this.transform.parent;
 		}
 	}
 	
@@ -28,6 +30,6 @@ public class Road : MonoBehaviour {
 
 		Vector3 v3 = end-start;    // Rotation
 		g.transform.rotation = Quaternion.FromToRotation(Vector3.right, v3);
-		g.transform.localScale = new Vector3(v3.magnitude/10.0f, 0.1f, 0.1f);  // Scale 
+		g.transform.localScale = new Vector3(v3.magnitude/10.0f, 0.01f, 0.01f);  // Scale 
 	}
 }
