@@ -54,11 +54,9 @@ public class LoadData : MonoBehaviour {
 						OsmWay way = new OsmWay (wayId, wayTags, wayNodes);
 						foreach (OsmTag tag in wayTags) {
 							if (tag.getKey () == "building") {
-								Debug.Log ("Building Found");
 								Data.Instance.buildings.Add (wayId, new OsmBuilding (wayId, wayTags, wayNodes));
 							}
 							if (tag.getKey () == "highway") {
-								Debug.Log ("Street found");
 								Data.Instance.streets.Add (wayId, new OsmStreet (wayId, wayTags, wayNodes));
 							}
 						}
@@ -101,6 +99,9 @@ public class LoadData : MonoBehaviour {
 			
 		Debug.Log ("Done");
 		Data.Instance.dataLoaded = true;
+
+		//BuildingGenerator bg = new BuildingGenerator ();
+		this.generateBuildings ();
 	}
 	
 	// Update is called once per frame
@@ -141,6 +142,16 @@ public class LoadData : MonoBehaviour {
 				tags.Add (new OsmTag (subtree ["k"], subtree ["v"]));
 				break;
 			}
+		}
+	}
+
+	private void generateBuildings() {
+		Debug.Log ("Starting to do stuff");
+		// Get roads
+		foreach (long key in Data.Instance.buildings.Keys) {
+			GameObject obj = new GameObject("Building");
+			Building script = obj.AddComponent<Building> ();
+			script.buildingId = key;
 		}
 	}
 }
