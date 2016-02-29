@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AssemblyCSharp
+namespace ProceduralCity
 {
 	public class OsmBuilding : OsmWay
 	{

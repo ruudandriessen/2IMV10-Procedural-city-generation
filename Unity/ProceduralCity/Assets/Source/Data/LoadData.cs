@@ -99,9 +99,6 @@ public class LoadData {
 			
 		Debug.Log ("Done");
 		Data.Instance.dataLoaded = true;
-
-		//BuildingGenerator bg = new BuildingGenerator ();
-		this.generateBuildings ();
 	}
 
 	private static void readWaySubtree(XmlReader subtree, List<OsmNodeReference> references, List<OsmTag> tags) {
@@ -137,16 +134,6 @@ public class LoadData {
 				tags.Add (new OsmTag (subtree ["k"], subtree ["v"]));
 				break;
 			}
-		}
-	}
-
-	private void generateBuildings() {
-		Debug.Log ("Starting to do stuff");
-		// Get roads
-		foreach (long key in Data.Instance.buildings.Keys) {
-			GameObject obj = new GameObject("Building");
-			Building script = obj.AddComponent<Building> ();
-			script.buildingId = key;
 		}
 	}
 }

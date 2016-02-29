@@ -24,12 +24,12 @@ public class Road : MonoBehaviour {
 	void Update () {
 	}
 
-	void PositionSize(Vector3 start, Vector3 end, GameObject g) {
-		Vector3 pos = (end - start) / 2.0f + start;  // Position
+	void PositionSize(Vector3 start, Vector3 end, GameObject g, float width = 1.0f) {
+		Vector3 pos = (end - start) / 2.0f + start;
 		g.transform.position = pos;
 
-		Vector3 v3 = end-start;    // Rotation
+		Vector3 v3 = end-start;
 		g.transform.rotation = Quaternion.FromToRotation(Vector3.right, v3);
-		g.transform.localScale = new Vector3(v3.magnitude/10.0f, 0.01f, 0.01f);  // Scale 
+		g.transform.localScale = new Vector3(v3.magnitude/10.0f, 0.1f, width); 
 	}
 }
