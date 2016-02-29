@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using LibTessDotNet;
 
-namespace AssemblyCSharp
+namespace ProceduralCity
 {
 	public class BuildingGenerator
 	{

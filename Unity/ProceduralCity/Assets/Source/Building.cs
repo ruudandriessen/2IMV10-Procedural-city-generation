@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using AssemblyCSharp;
+using ProceduralCity;
 
 public class Building : MonoBehaviour
 {
@@ -8,11 +8,7 @@ public class Building : MonoBehaviour
 	void Start() {
 		OsmBuilding building = Data.Instance.buildings [buildingId];
 		//float[] points = building.getPolygon ();
-		Vector2[] points = building.getPolygonAsVector2 ();
-		Vector3[] vectors = new Vector3[points.Length];
-		for (int i = 0; i < points.Length; i++) {
-			vectors [i] = new Vector3 (points [i].x, 1, points[i].y);
-		}
+		Vector3[] points = building.getPolygonAsVector3 ();
 		var tess = new LibTessDotNet.Tess();
 
 
@@ -20,11 +16,11 @@ public class Building : MonoBehaviour
 		for (int i = 0; i < points.Length; i++)
 		{
 			// NOTE : Z is here for convenience if you want to keep a 3D vertex position throughout the tessellation process but only X and Y are important.
-			contour[i].Position = new LibTessDotNet.Vec3 { X = points[i].x, Y = 0.0f, Z = points[i].y };
+			contour[i].Position = new LibTessDotNet.Vec3 { X = points[i].x, Y = points[i].y, Z = points[i].z };
 			// Data can contain any per-vertex data, here a constant color.
 			contour[i].Data = Color.cyan;
 		}
-		tess.AddContour(contour, LibTessDotNet.ContourOrientation.Original);
+		tess.AddContour(contour, LibTessDotNet.ContourOrientation.Clockwise);
 		tess.Tessellate(LibTessDotNet.WindingRule.EvenOdd, LibTessDotNet.ElementType.Polygons, 3, VertexCombine);
 
 		//gameObject.AddComponent<MeshFilter>();
@@ -32,14 +28,14 @@ public class Building : MonoBehaviour
 		Mesh mesh = new Mesh ();
 		mesh.Clear();
 		mesh.name = "Building";
-		mesh.vertices = vectors;
+		mesh.vertices = points;
 		mesh.RecalculateNormals();
 		mesh.RecalculateBounds();
 
-		Vector2[] uvs = new Vector2[vectors.Length];
+		Vector2[] uvs = new Vector2[points.Length];
 		Bounds bounds = mesh.bounds;
-		for(int i = 0; i < vectors.Length; i++) {
-			uvs[i] = new Vector2(vectors[i].x / bounds.size.x, vectors[i].z / bounds.size.x);
+		for(int i = 0; i < points.Length; i++) {
+			uvs[i] = new Vector2(points[i].x / bounds.size.x, points[i].z / bounds.size.x);
 		}
 		mesh.uv = uvs;
 		mesh.triangles = tess.Elements;
@@ -47,7 +43,7 @@ public class Building : MonoBehaviour
 		GameObject meshObject = new GameObject ();
 		meshObject.AddComponent<MeshFilter> ().mesh = mesh;
 		meshObject.AddComponent<MeshRenderer> ();
-		meshObject.transform.position = new Vector3(-mesh.bounds.center.x, -mesh.bounds.center.y, -mesh.bounds.center.z);
+		//meshObject.transform.position = new Vector3(-mesh.bounds.center.x, -mesh.bounds.center.y, -mesh.bounds.center.z);
 
 		//gameObject.transform.position = new Vector3(-mesh.bounds.center.x, -mesh.bounds.center.y, -mesh.bounds.center.z);
 		//GetComponent<MeshRenderer> ().material = Resources.Load<Material> ("Source/Red");
