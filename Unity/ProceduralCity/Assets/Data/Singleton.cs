@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace AssemblyCSharp
+namespace ProceduralCity
 {
 	public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 	{

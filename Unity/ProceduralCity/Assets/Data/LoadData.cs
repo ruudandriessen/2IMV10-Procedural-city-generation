@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
 using System;
-using AssemblyCSharp;
+using ProceduralCity;
 
-public class LoadData : MonoBehaviour {
+public class LoadData {
 
 
 	// Use this for initialization
-	void Start () {
-		//XmlTextReader reader = new XmlTextReader("Assets/andorra");
+	public static void Load () {
+//		XmlTextReader reader = new XmlTextReader("Assets/Maps/andorra");
 		using (XmlReader reader = XmlReader.Create("Assets/Maps/map"))
 		{
 			while (reader.Read())
@@ -54,11 +54,9 @@ public class LoadData : MonoBehaviour {
 						OsmWay way = new OsmWay (wayId, wayTags, wayNodes);
 						foreach (OsmTag tag in wayTags) {
 							if (tag.getKey () == "building") {
-								Debug.Log ("Building Found");
 								Data.Instance.buildings.Add (wayId, new OsmBuilding (wayId, wayTags, wayNodes));
 							}
 							if (tag.getKey () == "highway") {
-								Debug.Log ("Street found");
 								Data.Instance.streets.Add (wayId, new OsmStreet (wayId, wayTags, wayNodes));
 							}
 						}
@@ -102,13 +100,8 @@ public class LoadData : MonoBehaviour {
 		Debug.Log ("Done");
 		Data.Instance.dataLoaded = true;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
-	private void readWaySubtree(XmlReader subtree, List<OsmNodeReference> references, List<OsmTag> tags) {
+	private static void readWaySubtree(XmlReader subtree, List<OsmNodeReference> references, List<OsmTag> tags) {
 		while (subtree.Read ()) {
 			switch (subtree.Name) {
 			case "tag":
@@ -121,7 +114,7 @@ public class LoadData : MonoBehaviour {
 		}
 	}
 
-	private void readRelationSubtree(XmlReader subtree, List<OsmRelationMember> members, List<OsmTag> tags) {
+	private static void readRelationSubtree(XmlReader subtree, List<OsmRelationMember> members, List<OsmTag> tags) {
 		while (subtree.Read ()) {
 			switch (subtree.Name) {
 			case "member":
@@ -134,7 +127,7 @@ public class LoadData : MonoBehaviour {
 			}
 		}
 	}
-	private void readNodeSubtree(XmlReader subtree, List<OsmTag> tags) {
+	private static void readNodeSubtree(XmlReader subtree, List<OsmTag> tags) {
 		while (subtree.Read ()) {
 			switch (subtree.Name) {
 			case "tag":

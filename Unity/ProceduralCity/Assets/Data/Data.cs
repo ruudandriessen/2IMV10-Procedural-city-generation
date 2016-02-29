@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace AssemblyCSharp
+namespace ProceduralCity
 {
 	public class Data : Singleton<Data>
 	{

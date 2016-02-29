@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AssemblyCSharp
+namespace ProceduralCity
 {
 	public enum EntityType
 	{

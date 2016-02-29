@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AssemblyCSharp
+namespace ProceduralCity
 {
 	public class OsmEntity
 	{
