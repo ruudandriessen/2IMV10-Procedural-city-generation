@@ -9,9 +9,83 @@ public class Building : MonoBehaviour
 		OsmBuilding building = Data.Instance.buildings [buildingId];
 		//float[] points = building.getPolygon ();
 		Vector3[] points = building.getPolygonAsVector3 ();
+		Vector2[] meshPoints = new Vector2[points.Length];
+		for (int i = 0; i < meshPoints.Length; i++) {
+			meshPoints [i] = new Vector2 (points [i].x, points [i].z);
+		}
+		Triangulator tr = new Triangulator (meshPoints);
+		int[] indices = tr.Triangulate ();
+
+		int[] indicesReverse = new int[indices.Length];
+		int j = 0;
+		for (int i = indices.Length -1; i >= 0; i--) {
+			indicesReverse [j] = indices [i];
+			j++;
+		}
+
+		int[] topAndBottom = new int[indices.Length*2];
+		Vector3[] topAndBottomPoints = new Vector3[points.Length * 2];
+
+		for (int i = 0; i < points.Length; i++) {
+			topAndBottomPoints [i] = points [i];
+			topAndBottomPoints [points.Length + i] = new Vector3 (points [i].x, 10, points [i].z);
+			Debug.DrawLine (points [i], topAndBottomPoints [points.Length + i], Color.red, 2000f);
+		}
+		for (int i = 0; i < indices.Length; i++) {
+			topAndBottom [i] = indicesReverse [i];
+			topAndBottom [indices.Length + i] = indices [i] + points.Length;
+		}
+		int[] topAndBottomAndSides = new int[topAndBottom.Length + 6 * points.Length];
+		for (int i = 0; i < topAndBottom.Length; i++) {
+			topAndBottomAndSides [i] = topAndBottom [i];
+		}
+		for (int i = 0; i < points.Length; i++) {
+				topAndBottomAndSides [topAndBottom.Length + i * 6] = i;
+				topAndBottomAndSides [topAndBottom.Length + i * 6 + 4] = i;
+			if (i != points.Length - 1) {
+				topAndBottomAndSides [topAndBottom.Length + i * 6 + 1] = points.Length + i + 1;
+				topAndBottomAndSides [topAndBottom.Length + i * 6 + 2] = points.Length+ i;
+				topAndBottomAndSides [topAndBottom.Length + i * 6 + 3] = points.Length + i + 1;
+				topAndBottomAndSides [topAndBottom.Length + i * 6 + 5] = i+1;
+			} else {
+				topAndBottomAndSides [topAndBottom.Length + i * 6 + 1] = points.Length;
+				topAndBottomAndSides [topAndBottom.Length + i * 6 + 2] = points.Length+ i;
+				topAndBottomAndSides [topAndBottom.Length + i * 6 + 3] = points.Length;
+				topAndBottomAndSides [topAndBottom.Length + i * 6 + 5] = 0;
+			}
+		}
+		//for(int i = topAndBottom.Length
+
+		// Create the mesh
+		Mesh msh = new Mesh();
+		msh.name = "Building";
+		msh.vertices = topAndBottomPoints;
+		msh.triangles = topAndBottomAndSides;
+		msh.RecalculateNormals();
+		msh.RecalculateBounds();
+
+		Vector2[] uvs = new Vector2[topAndBottomPoints.Length];
+		Bounds bounds = msh.bounds;
+		for(int i = 0; i < topAndBottomPoints.Length; i++) {
+			uvs[i] = new Vector2(topAndBottomPoints[i].x / bounds.size.x, topAndBottomPoints[i].z / bounds.size.x);
+		}
+		msh.uv = uvs;
+
+		GameObject meshObject = new GameObject ();
+		meshObject.AddComponent<MeshFilter> ().mesh = msh;
+		meshObject.AddComponent<MeshRenderer> ();
+		meshObject.transform.parent = this.transform;
+
+	}
+
+
+	void StartOld() {
+		OsmBuilding building = Data.Instance.buildings [buildingId];
+		//float[] points = building.getPolygon ();
+		Vector3[] points = building.getPolygonAsVector3 ();
 		var tess = new LibTessDotNet.Tess();
 
-
+		//Debug.Log ("-"  + buildingId);
 		var contour = new LibTessDotNet.ContourVertex[points.Length];
 		for (int i = 0; i < points.Length; i++)
 		{
@@ -19,8 +93,12 @@ public class Building : MonoBehaviour
 			contour[i].Position = new LibTessDotNet.Vec3 { X = points[i].x, Y = points[i].y, Z = points[i].z };
 			// Data can contain any per-vertex data, here a constant color.
 			contour[i].Data = Color.cyan;
+			if (i != points.Length-1) {
+				Debug.DrawLine(points [i], points [i + 1],Color.red,2000f);
+			}
+
 		}
-		tess.AddContour(contour, LibTessDotNet.ContourOrientation.Clockwise);
+		tess.AddContour(contour, LibTessDotNet.ContourOrientation.Original);
 		tess.Tessellate(LibTessDotNet.WindingRule.EvenOdd, LibTessDotNet.ElementType.Polygons, 3, VertexCombine);
 
 		//gameObject.AddComponent<MeshFilter>();
@@ -43,6 +121,7 @@ public class Building : MonoBehaviour
 		GameObject meshObject = new GameObject ();
 		meshObject.AddComponent<MeshFilter> ().mesh = mesh;
 		meshObject.AddComponent<MeshRenderer> ();
+		meshObject.transform.parent = this.transform;
 		//meshObject.transform.position = new Vector3(-mesh.bounds.center.x, -mesh.bounds.center.y, -mesh.bounds.center.z);
 
 		//gameObject.transform.position = new Vector3(-mesh.bounds.center.x, -mesh.bounds.center.y, -mesh.bounds.center.z);
