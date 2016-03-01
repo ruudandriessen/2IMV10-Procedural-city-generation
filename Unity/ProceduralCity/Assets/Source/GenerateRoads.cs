@@ -6,7 +6,7 @@ using ProceduralCity;
 public class GenerateRoads : MonoBehaviour {
 	// Use this for initialization
 	public static void Generate () {
-		Debug.Log ("START GENERATE");
+		Debug.Log ("Generating roads..");
 		foreach (long key in Data.Instance.streets.Keys) {
 			List<Vector3> road = new List<Vector3>();
 			OsmStreet streets = (OsmStreet) Data.Instance.streets[key];
@@ -21,6 +21,7 @@ public class GenerateRoads : MonoBehaviour {
 			}
 			createRoad(road);
 		}
+		Debug.Log ("Generated " + Data.Instance.streets.Keys.Count + " roads!");
 	}
 
 	static void createRoad(List<Vector3> points) {
