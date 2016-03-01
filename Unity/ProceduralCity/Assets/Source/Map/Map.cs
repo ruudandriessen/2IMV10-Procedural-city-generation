@@ -6,6 +6,7 @@ namespace ProceduralCity
 	{
 		private static float latOrigin = -90, 
 							 lonOrigin = -180;
+		private static float minLat = 90, maxLat = -90, minLon = 180, maxLon = -180;
 
 		public static void setOrigin(float lat, float lon) {
 			latOrigin = lat;
@@ -14,8 +15,6 @@ namespace ProceduralCity
 		}
 
 		public static void loadOrigin() {
-			float minLat = 90;
-			float minLon = 180;
 			foreach (long key in Data.Instance.ways.Keys) {
 				OsmWay ways = (OsmWay)Data.Instance.ways [key];
 				for (int i = 0; i < ways.getNumberOfNodes (); i++) {
@@ -24,6 +23,8 @@ namespace ProceduralCity
 					float lon = node.getLongitude ();
 					if (lat < minLat) minLat = lat;
 					if (lon < minLon) minLon = lon;
+					if (lat > maxLat) maxLat = lat;
+					if (lon > maxLon) maxLon = lon;
 				}
 			}
 			setOrigin (minLat, minLon);
