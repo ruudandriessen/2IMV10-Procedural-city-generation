@@ -17,6 +17,7 @@ namespace ProceduralCity
 
 		public Dictionary<long, OsmBuilding> buildings = new Dictionary<long, OsmBuilding> ();
 		public Dictionary<long, OsmStreet> streets = new Dictionary<long, OsmStreet> ();
+		public Dictionary<long, OsmSurface> surfaces = new Dictionary<long, OsmSurface> ();
 	
 		public bool dataLoaded = false;
 	}
