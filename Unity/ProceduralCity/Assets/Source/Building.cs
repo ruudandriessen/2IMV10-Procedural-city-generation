@@ -29,7 +29,6 @@ public class Building : MonoBehaviour
 		for (int i = 0; i < points.Length; i++) {
 			topAndBottomPoints [i] = points [i];
 			topAndBottomPoints [points.Length + i] = new Vector3 (points [i].x, 10, points [i].z);
-			Debug.DrawLine (points [i], topAndBottomPoints [points.Length + i], Color.red, 2000f);
 		}
 		for (int i = 0; i < indices.Length; i++) {
 			topAndBottom [i] = indicesReverse [i];
@@ -73,9 +72,11 @@ public class Building : MonoBehaviour
 
 		GameObject meshObject = new GameObject ();
 		meshObject.AddComponent<MeshFilter> ().mesh = msh;
-		meshObject.AddComponent<MeshRenderer> ();
+		Renderer renderer = meshObject.AddComponent<MeshRenderer> ();
 		meshObject.transform.parent = this.transform;
 
+		Material newMat = Resources.Load("Materials/House") as Material;
+		renderer.material = newMat;
 	}
 
 
@@ -120,8 +121,9 @@ public class Building : MonoBehaviour
 	
 		GameObject meshObject = new GameObject ();
 		meshObject.AddComponent<MeshFilter> ().mesh = mesh;
-		meshObject.AddComponent<MeshRenderer> ();
+		Renderer renderer = meshObject.AddComponent<MeshRenderer> ();
 		meshObject.transform.parent = this.transform;
+
 		//meshObject.transform.position = new Vector3(-mesh.bounds.center.x, -mesh.bounds.center.y, -mesh.bounds.center.z);
 
 		//gameObject.transform.position = new Vector3(-mesh.bounds.center.x, -mesh.bounds.center.y, -mesh.bounds.center.z);

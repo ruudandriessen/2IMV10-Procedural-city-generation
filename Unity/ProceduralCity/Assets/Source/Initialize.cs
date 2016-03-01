@@ -10,6 +10,7 @@ public class Initialize : MonoBehaviour {
 		Map.loadOrigin ();
 		GenerateRoads.Generate ();
 		GenerateBuildings.Generate ();
+		GenerateLanduse.Generate ();
 	}
 	
 	// Update is called once per frame

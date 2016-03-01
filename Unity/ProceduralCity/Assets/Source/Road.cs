@@ -24,9 +24,9 @@ public class Road : MonoBehaviour {
 		int[] newTriangles = new int[(newVertices.Length - 2) * 3]; 
 		Bounds bounds = mesh.bounds;
 
-		for (int i = 0; i < points.Count - 1; i++) {
-			Debug.DrawLine (points[i], points[i+1], Color.red, 200, false);
-		}
+//		for (int i = 0; i < points.Count - 1; i++) {
+//			Debug.DrawLine (points[i], points[i+1], Color.red, 200, false);
+//		}
 
 		float width = 2.0f;
 		for (int i = 0; i < points.Count; i++) {
@@ -54,7 +54,7 @@ public class Road : MonoBehaviour {
 		}
 
 		for (int i = 0; i < newUV.Length; i++) {
-			newUV[i] = new Vector2(newVertices[i].x / bounds.size.x, newVertices[i].z / bounds.size.x);
+			newUV[i] = new Vector2(newVertices[i].x, newVertices[i].z);
 		}
 
 
@@ -87,11 +87,11 @@ public class Road : MonoBehaviour {
 
 		Vector3 result = (d1.normalized + d2.normalized).normalized * offsetX;
 		Vector3 cross = Vector3.Cross (d1, d2).normalized;
-		Debug.DrawRay(pivot, cross, Color.grey, 200, false);
+//		Debug.DrawRay(pivot, cross, Color.grey, 200, false);
 
-		Debug.DrawRay (pivot, d1.normalized, Color.cyan, 200, false);
-		Debug.DrawRay (pivot, d2.normalized, Color.blue, 200, false);
-		Debug.DrawRay (pivot, result, Color.yellow, 200);
+//		Debug.DrawRay (pivot, d1.normalized, Color.cyan, 200, false);
+//		Debug.DrawRay (pivot, d2.normalized, Color.blue, 200, false);
+//		Debug.DrawRay (pivot, result, Color.yellow, 200);
 		if (cross.y > 0) {
 			return pivot - result;
 		} else {

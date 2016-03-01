@@ -17,6 +17,7 @@ public class GenerateRoads : MonoBehaviour {
 				float lon = node.getLongitude();
 
 				Vector3 result = Map.getVectorFromOrigin (lat, lon);
+				result.y += 0.01f;
 				road.Add(result);
 			}
 			createRoad(road);
