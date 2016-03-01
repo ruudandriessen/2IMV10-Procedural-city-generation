@@ -11,8 +11,8 @@ public class LoadData {
 
 	// Use this for initialization
 	public static void Load () {
-//		using(XmlTextReader reader = new XmlTextReader("Assets/Maps/andorra"))
-		using (XmlReader reader = XmlReader.Create("Assets/Maps/map"))
+		using(XmlTextReader reader = new XmlTextReader("Assets/Maps/andorra"))
+//		using (XmlReader reader = XmlReader.Create("Assets/Maps/map"))
 		{
 			while (reader.Read())
 			{
@@ -59,6 +59,10 @@ public class LoadData {
 							if (tag.getKey () == "highway") {
 								Data.Instance.streets.Add (wayId, new OsmStreet (wayId, wayTags, wayNodes));
 							}
+							if (tag.getKey () == "landuse" || tag.getKey() == "natural" || tag.getKey() == "surface") {
+								if (!Data.Instance.surfaces.ContainsKey(wayId))
+									Data.Instance.surfaces.Add (wayId, new OsmSurface (wayId, wayTags, wayNodes, tag.getValue()));
+							}
 						}
 
 						Data.Instance.ways.Add(wayId, way);
@@ -87,6 +91,8 @@ public class LoadData {
 			OsmWay w = (OsmWay) Data.Instance.ways[key];
 			for(int i = 0; i < w.getNumberOfNodes(); i++) {
 				OsmNodeReference nodeRef = w.getNodeReference (i);
+				if (!Data.Instance.nodes.ContainsKey (nodeRef.getId ()))
+					continue;
 				OsmNode n = (OsmNode) Data.Instance.nodes [nodeRef.getId()];
 				nodeRef.setLattitudeAndLongitude (n.getLatitude (), n.getLongitude ());
 			}
