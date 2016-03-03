@@ -12,6 +12,5 @@ public class GenerateBuildings : MonoBehaviour {
 			Building script = obj.AddComponent<Building> ();
 			script.buildingId = key;
 		}
-
 	}
 }
