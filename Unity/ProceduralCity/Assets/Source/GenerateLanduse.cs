@@ -8,20 +8,24 @@ namespace ProceduralCity
 		public static void Generate () {
 			Vector3 min = Map.getMin ();
 			Vector3 max = Map.getMax ();
-			min.y -= 0.5f;
-			max.y -= 0.5f;
+			min.y -= 0.15f;
+			max.y -= 0.15f;
 
 			GameObject terrain = GameObject.CreatePrimitive (PrimitiveType.Cube);
 			terrain.transform.position = min + max/2;
 			terrain.transform.localScale = max;
-			terrain.GetComponent<Renderer> ().material.color = new Color (228.0f/256.0f, 220.0f/256.0f, 213.0f/256.0f);
+			float r = 242.0f / 256.0f;
+			float g = 239.0f / 256.0f;
+			float b = 233.0f / 256.0f;
+						
+			terrain.GetComponent<Renderer> ().material.color = new Color (r, g, b);
 
-			// Get surfaces
-			foreach (long key in Data.Instance.surfaces.Keys) {
-				GameObject obj = new GameObject("Surface");
-				Surface script = obj.AddComponent<Surface> ();
-				script.surfaceId = key;
-			}
+//			// Get surfaces
+//			foreach (long key in Data.Instance.surfaces.Keys) {
+//				GameObject obj = new GameObject("Surface");
+//				Surface script = obj.AddComponent<Surface> ();
+//				script.surfaceId = key;
+//			}
 		}
 	}
 }
