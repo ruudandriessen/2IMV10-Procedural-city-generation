@@ -5,20 +5,39 @@ namespace ProceduralCity
 {
 	public class OsmNode : OsmEntity
 	{
-		public OsmNode (long id, List<OsmTag> tags, double longitude, double latitude) : base(id, tags)
+		public OsmNode (long id, List<OsmTag> tags, float longitude, float latitude) : base(id, tags)
 		{
 			this.latitude = latitude;
 			this.longitude = longitude;
+			this.containedIn = new List<OsmWay> ();
 		}
 
-		private double longitude;
-		private double latitude;
+		private float longitude;
+		private float latitude;
+		private List<OsmWay> containedIn;
 
-		public double getLongitude() {
+		public List<OsmWay> getContainedIn() {
+			return containedIn;
+		}
+
+		public OsmWay getContainedIn(int index) {
+			return containedIn [index];
+		}
+
+		public void addContainedIn(OsmWay way) {
+			containedIn.Add (way);
+		}
+
+		public int amountContainedIn() {
+			return containedIn.Count;
+		}
+
+
+		public float getLongitude() {
 			return this.longitude;
 		}
 
-		public double getLatitude() {
+		public float getLatitude() {
 			return this.latitude;
 		}
 	}

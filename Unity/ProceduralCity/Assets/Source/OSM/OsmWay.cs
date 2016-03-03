@@ -23,6 +23,10 @@ namespace ProceduralCity
 		public OsmNodeReference getNodeReference(int n) {
 			return nodes [n];
 		}
+
+		public OsmNode getNode(int n) {
+			return Data.Instance.nodes[nodes [n].getId ()];
+		}
 			
 	}
 }

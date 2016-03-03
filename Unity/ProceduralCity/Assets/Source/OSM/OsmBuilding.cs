@@ -16,7 +16,7 @@ namespace ProceduralCity
 			for (int i = 0; i < this.getNumberOfNodes (); i++) {
 				OsmNodeReference nodeRef = this.getNodeReference (i);
 				points [i] = nodeRef.getLongitude() *10000f;
-				points [i + 1] = nodeRef.getLattitude() *10000f;
+				points [i + 1] = nodeRef.getLatitude() *10000f;
 			}
 			return points;
 		}
@@ -25,7 +25,7 @@ namespace ProceduralCity
 			Vector3[] points = new Vector3[this.getNumberOfNodes()-1];
 			for (int i = 0; i < this.getNumberOfNodes ()-1; i++) {
 				OsmNodeReference nodeRef = this.getNodeReference (i);
-				float lat = nodeRef.getLattitude();
+				float lat = nodeRef.getLatitude();
 				float lon = nodeRef.getLongitude();
 				points [i] = Map.getVectorFromOrigin (lat, lon);
 			}

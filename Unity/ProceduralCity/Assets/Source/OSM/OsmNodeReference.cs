@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace ProceduralCity
 {
@@ -10,7 +11,7 @@ namespace ProceduralCity
 		}
 
 		private long id;
-		private float lattitude;
+		private float latitude;
 		private float longitude;
 
 		public long getId() {
@@ -18,19 +19,19 @@ namespace ProceduralCity
 		}
 
 		public Vector2 getVector() {
-			return new Vector2(longitude, lattitude);
+			return new Vector2(longitude, latitude);
 		}
 
-		public float getLattitude() {
-			return this.lattitude;
+		public float getLatitude() {
+			return this.latitude;
 		}
 
 		public float getLongitude() {
 			return this.longitude;
 		}
 
-		public void setLattitudeAndLongitude(double lattitude, double longitude) {
-			this.lattitude = (float) lattitude;
+		public void setLattitudeAndLongitude(double latitude, double longitude) {
+			this.latitude = (float) latitude;
 			this.longitude = (float) longitude;
 		}
 	}
