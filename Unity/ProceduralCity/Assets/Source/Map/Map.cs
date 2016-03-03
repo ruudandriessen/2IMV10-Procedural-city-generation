@@ -19,7 +19,7 @@ namespace ProceduralCity
 				OsmWay ways = (OsmWay)Data.Instance.ways [key];
 				for (int i = 0; i < ways.getNumberOfNodes (); i++) {
 					OsmNodeReference node = ways.getNodeReference (i);
-					float lat = node.getLattitude ();
+					float lat = node.getLatitude ();
 					float lon = node.getLongitude ();
 					if (lat < minLat) minLat = lat;
 					if (lon < minLon) minLon = lon;
