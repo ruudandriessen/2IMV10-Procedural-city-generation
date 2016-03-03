@@ -69,7 +69,7 @@ public class Surface : MonoBehaviour
 			newMat = Resources.Load ("Materials/Recreation") as Material;
 			break;
 		default:
-			newMat = Resources.Load("Materials/House") as Material;
+			newMat = Resources.Load("Materials/Unknown") as Material;
 			Debug.Log("Unknown surface type: " + type);
 			break;
 		}
@@ -86,22 +86,6 @@ public class Surface : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-	}
-
-	// The data array contains 4 values, it's the associated data of the vertices that resulted in an intersection.
-	private static object VertexCombine(LibTessDotNet.Vec3 position, object[] data, float[] weights)
-	{
-		// Fetch the vertex data.
-		var colors = new Color[] { (Color)data[0], (Color)data[1], (Color)data[2], (Color)data[3] };
-		// Interpolate with the 4 weights.
-		var rgba = new float[] {
-			(float)colors[0].r * weights[0] + (float)colors[1].r * weights[1] + (float)colors[2].r * weights[2] + (float)colors[3].r * weights[3],
-			(float)colors[0].g * weights[0] + (float)colors[1].g * weights[1] + (float)colors[2].g * weights[2] + (float)colors[3].g * weights[3],
-			(float)colors[0].b * weights[0] + (float)colors[1].b * weights[1] + (float)colors[2].b * weights[2] + (float)colors[3].b * weights[3],
-			(float)colors[0].a * weights[0] + (float)colors[1].a * weights[1] + (float)colors[2].a * weights[2] + (float)colors[3].a * weights[3]
-		};
-		// Return interpolated data for the new vertex.
-		return new Color(rgba[0], rgba[1], rgba[2], rgba[3]);
 	}
 }
 

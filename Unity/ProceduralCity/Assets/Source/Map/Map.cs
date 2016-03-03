@@ -30,6 +30,14 @@ namespace ProceduralCity
 			setOrigin (minLat, minLon);
 		}
 
+		public static Vector3 getMin() {
+			return getVectorFromOrigin (minLat, minLon);
+		}
+
+		public static Vector3 getMax() {
+			return getVectorFromOrigin (maxLat, maxLon);
+		}
+
 		public static Vector3 getVectorFromOrigin(float lat, float lon) {
 			float latDiff = getLocationDistance (latOrigin, lonOrigin, lat, lonOrigin);
 			float lonDiff = getLocationDistance (latOrigin, lonOrigin, latOrigin, lon);
