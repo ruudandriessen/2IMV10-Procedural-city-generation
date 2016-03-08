@@ -7,11 +7,11 @@ using System;
 public class GenerateRoads : MonoBehaviour {
 	// Use this for initialization
 	public static void Generate () {
-		Debug.Log ("Generating roads..");
+		Debug.Log ("Generating streets..");
 		foreach (long key in Data.Instance.streets.Keys) {
-			createRoad(key);
+			createStreet(key);
 		}
-		Debug.Log ("Generated " + Data.Instance.streets.Keys.Count + " roads!");
+		Debug.Log ("Generated " + Data.Instance.streets.Keys.Count + " streets!");
 	}
 
 	static OsmEntity getEntity(OsmRelationMember m) {
@@ -34,9 +34,9 @@ public class GenerateRoads : MonoBehaviour {
 		return entity;
 	}
 
-	static void createRoad(long id) {
-		GameObject obj = new GameObject("Road");
-		Road script = obj.AddComponent<Road>();
+	static void createStreet(long id) {
+		GameObject obj = new GameObject("Street");
+		Street script = obj.AddComponent<Street>();
 		script.streetId = id;
 	}
 }
