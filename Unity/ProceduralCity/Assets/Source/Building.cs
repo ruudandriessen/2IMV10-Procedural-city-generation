@@ -1,11 +1,70 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using ProceduralCity;
 
+[RequireComponent(typeof(MeshRenderer))]
 public class Building : MonoBehaviour
 {
 	public long buildingId;
+	public string output;
 	void Start() {
+		OsmBuilding building = Data.Instance.buildings [buildingId];
+		//float[] points = building.getPolygon ();
+		Vector3[] topPoints = building.getPolygonAsVector3(5f);
+		Vector3[] bottomPoints = building.getPolygonAsVector3(0f);
+
+		GameObject g2 = building.getMesh(building.getPolygonAsVector3(5f));
+		//g2.transform.parent = this.transform;
+
+		Vector3[] points = new Vector3[topPoints.Length*2];
+		for (int i = 0; i < topPoints.Length; i++) {
+			points [i] = topPoints [i];
+			points [topPoints.Length + i] = bottomPoints [i];
+		}
+		for (int i = 0; i < topPoints.Length; i++) {
+			int[] verticeIndices = new int[4];
+			verticeIndices [0] = i;
+			verticeIndices [1] = (i + 1) % topPoints.Length;
+			verticeIndices [2] = topPoints.Length + ((i+1) % bottomPoints.Length);
+			verticeIndices [3] = topPoints.Length + i;
+
+			GameObject g = building.createSimpleMesh (points, verticeIndices, g2.GetComponent<MeshFilter>().mesh.bounds.center, "Mesh");
+			g.transform.parent = this.transform;
+		}
+		MeshFilter[] filters = GetComponentsInChildren<MeshFilter>();
+		int total = 0;
+		int errors = 0;
+		Output[] outputs = GetComponentsInChildren<Output> ();
+		for (int i = 0; i < outputs.Length; i++) {
+			errors += outputs [i].numberOfWrongs;
+			total += outputs [i].numberOfTriangles;
+		}
+		if (errors * 1.8 >= total) {
+			for (int i = 1; i < filters.Length; i++) {
+				filters [i].mesh.triangles = building.reverseArray<int> (filters [i].mesh.triangles);
+			}
+		}
+		int[] newTriangles = new int[total * 3];
+		for (int i = 0; i < filters.Length; i++)  {
+			for (int j = 0; j < filters [i].mesh.triangles.Length; j++) {
+				newTriangles [i * 6 + j] = filters [i].mesh.triangles [j];
+			}
+		}
+
+		//Debug.Log (errors + " / " + total + " - " + outputs.Length);
+
+		//CombineInstance[] combine = building.combineMeshes (filters);
+		gameObject.AddComponent<MeshFilter> ().mesh = new Mesh ();
+		gameObject.GetComponent<MeshFilter> ().mesh.vertices = points;
+		gameObject.GetComponent<MeshFilter> ().mesh.triangles = newTriangles;
+		gameObject.GetComponent<MeshFilter> ().mesh.RecalculateNormals ();
+		gameObject.GetComponent<MeshFilter> ().mesh.RecalculateBounds ();
+		gameObject.SetActive (true);
+
+	}
+
+	void StartOld2() {
 		OsmBuilding building = Data.Instance.buildings [buildingId];
 		//float[] points = building.getPolygon ();
 		Vector3[] points = building.getPolygonAsVector3 ();

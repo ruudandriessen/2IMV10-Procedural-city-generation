@@ -21,16 +21,7 @@ namespace ProceduralCity
 			return points;
 		}
 
-		public Vector3[] getPolygonAsVector3() {
-			Vector3[] points = new Vector3[this.getNumberOfNodes()-1];
-			for (int i = 0; i < this.getNumberOfNodes ()-1; i++) {
-				OsmNodeReference nodeRef = this.getNodeReference (i);
-				float lat = nodeRef.getLattitude();
-				float lon = nodeRef.getLongitude();
-				points [i] = Map.getVectorFromOrigin (lat, lon);
-			}
-			return points;
-		}
+
 
 	}
 }
