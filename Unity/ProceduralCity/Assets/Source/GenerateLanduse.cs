@@ -20,12 +20,12 @@ namespace ProceduralCity
 						
 			terrain.GetComponent<Renderer> ().material.color = new Color (r, g, b);
 
-//			// Get surfaces
-//			foreach (long key in Data.Instance.surfaces.Keys) {
-//				GameObject obj = new GameObject("Surface");
-//				Surface script = obj.AddComponent<Surface> ();
-//				script.surfaceId = key;
-//			}
+			// Get surfaces
+			foreach (long key in Data.Instance.surfaces.Keys) {
+				GameObject obj = new GameObject("Surface");
+				Surface script = obj.AddComponent<Surface> ();
+				script.surfaceId = key;
+			}
 		}
 	}
 }
