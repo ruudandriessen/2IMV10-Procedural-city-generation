@@ -117,6 +117,7 @@ public class Face {
 	public Face(Vector3 c, Vector3 n) {
 		this.center = c;
 		this.normal = n;
+        //Debug.DrawRay(c, n, Color.cyan, 200);
 		this.edges = new List<Edge> ();
 		this.vertices = new List<Vertex> ();
 	}
@@ -191,9 +192,14 @@ public class CreateEdges : MonoBehaviour {
 		Vector3 p3 = v3.getPoint ();
 
 		Vector3 center = (p1 + p2 + p3) / 3;
-		Vector3 normal = normals [i / 3];
 
-		Face f = new Face (center, normal);
+        Vector3 n1 = normals[triangles[i]];
+        Vector3 n2 = normals[triangles[i + 1]];
+        Vector3 n3 = normals[triangles[i + 2]];
+
+        Vector3 normal = (n1 + n2 + n3) / 3;
+
+        Face f = new Face (center, normal);
 
 		Edge e1 = new Edge (p1, p2); 
 		Edge e2 = new Edge (p2, p3);
@@ -236,18 +242,6 @@ public class CreateEdges : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-	}
-		
-	public static bool VectorsEqual(Vector3 v1, Vector3 v2) {
-		if (v1.x != v2.x) {
-			return false;
-		}
-		if (v1.y != v2.y) {
-			return false;
-		}
-		if (v1.z != v2.z) {
-			return false;
-		}
-		return true;
-	}
+	}	
+	
 }
