@@ -30,6 +30,17 @@ namespace ProceduralCity
 			this.rules.Add (r);
 			return this;
 		}
+
+		public LSystem executeRules(int id = -1) {
+			if (id != -1 && id < rules.Count) {
+				rules [id].execute ();
+			} else {
+				for (int i = 0; i < rules.Count; i++) {
+					rules [i].execute ();
+				}
+			}
+			return this;
+		}
 	}
 }
 

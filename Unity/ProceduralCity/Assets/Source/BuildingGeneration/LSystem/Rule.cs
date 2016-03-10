@@ -13,14 +13,8 @@ namespace ProceduralCity
 		{
 			operations = new List<Operation> ();
 		}
-		private int id;
 		private Condition condition;
 		private double probability= 1;
-
-
-		public int getId() {
-			return this.id;
-		}
 
 		public Condition getCondition() {
 			return this.condition;
@@ -37,6 +31,12 @@ namespace ProceduralCity
 		public Rule add(Operation o) {
 			operations.Add(o);
 			return this;
+		}
+
+		public void execute() {
+			for (int i = 0; i < operations.Count; i++) {
+				operations [i].applyOperation ();
+			}
 		}
 
 
