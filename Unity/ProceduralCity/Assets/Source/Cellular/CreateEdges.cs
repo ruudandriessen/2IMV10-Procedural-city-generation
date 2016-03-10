@@ -5,46 +5,29 @@ using System.Collections.Generic;
 using ProceduralCity;
 
 public class CreateEdges : MonoBehaviour {
-	Dictionary<int, Vertex> indexToVertex = new Dictionary<int, Vertex> ();
-	List<Edge> edges = new List<Edge> ();
+	MeshStructure meshStruct;
+	HighLevelMesh highMesh;
 	Vector3[] vertices;
 	Vector3[] normals;
 	int[] triangles;
 
 	// Use this for initialization
 	void Start () {
-		List<Face> faces = new List<Face> ();
-
 		Mesh mesh = GetComponent<MeshFilter>().mesh;
 		vertices = mesh.vertices;
 		normals = mesh.normals;
 		triangles = mesh.triangles;
+		meshStruct = new MeshStructure ();
 
 		for (int i = 0; i < triangles.Length - 1; i+=3) {
 			Face f = createFace (i);
-			faces.Add (f);
+			meshStruct.addFace (f);
 		}
 
-		for (int i = 0; i < edges.Count; i++) {
-			Edge e = edges [i];
-			List<Face> edgeFaces = e.getFaces();
-			if (edgeFaces.Count < 2) {
-				continue;
-			}
-			Vector3 n1 = edgeFaces[0].getNormal();
-			Vector3 n2 = edgeFaces[1].getNormal();
+		meshStruct.recalculateLabels ();
 
-			float angle = Vector3.Angle (n1, n2);
-			if (angle == 180 || angle == 0) {
-				e.setLabel (Edge.EdgeLabel.flat);
-			} else {
-				float dot = Vector3.Dot (n1, n2);
-				if ( dot < 0 )
-					e.setLabel (Edge.EdgeLabel.concave);
-				else
-					e.setLabel (Edge.EdgeLabel.convex);
-			}
-		}
+		highMesh = new HighLevelMesh(meshStruct);
+		highMesh.construct ();
 	}
 
 	public Face createFace(int i) {
@@ -66,16 +49,13 @@ public class CreateEdges : MonoBehaviour {
 
         Face f = new Face (center, normal);
 
-		Edge e1 = new Edge (p1, p2); 
-		Edge e2 = new Edge (p2, p3);
-		Edge e3 = new Edge (p3, p1);
+		Edge e1 = new Edge (v1, v2); 
+		Edge e2 = new Edge (v2, v3);
+		Edge e3 = new Edge (v3, v1);
 
-		if (edges.Contains (e1))
-			e1 = edges[edges.IndexOf (e1)];
-		if (edges.Contains(e2))
-			e2 = edges[edges.IndexOf (e2)];
-		if (edges.Contains(e3))
-			e3 = edges[edges.IndexOf (e3)];
+		e1 = getEdge (e1);
+		e2 = getEdge (e2);
+		e3 = getEdge (e3);
 
 		f.addVertex (v1);
 		f.addVertex (v2);
@@ -85,22 +65,45 @@ public class CreateEdges : MonoBehaviour {
 		f.addEdge (e2);
 		f.addEdge (e3);
 
+		v1.addEdge (e1);
+		v2.addEdge (e1);
+		v2.addEdge (e2);
+		v3.addEdge (e2);
+		v3.addEdge (e3);
+		v1.addEdge (e3);
+
 		e1.addFace (f);
 		e2.addFace (f);
 		e3.addFace (f);
 
-		edges.Add (e1);
-		edges.Add (e2);
-		edges.Add (e3);
+		meshStruct.addVertex (v1);
+		meshStruct.addVertex (v2);
+		meshStruct.addVertex (v3);
+		meshStruct.addEdge (e1);
+		meshStruct.addEdge (e2);
+		meshStruct.addEdge (e3);
 
 		return f;
 	}
 
 	public Vertex getVertex(int index) {
-		if (indexToVertex.ContainsKey (index)) {
-			return indexToVertex [index];
+		int vertexIndex = triangles [index];
+		Vertex v = new Vertex (vertices [vertexIndex]);
+		int vIndex = meshStruct.indexOfVertex (v);
+		if (vIndex == -1) {
+			meshStruct.addVertex (v);	
+			return v;
 		} else {
-			return new Vertex (vertices[triangles[index]]);
+			return meshStruct.getVertex(vIndex);
+		}	
+	}
+
+	public Edge getEdge(Edge e) {
+		int eIndex = meshStruct.indexOfEdge (e);
+		if (eIndex == -1) {
+			return e;
+		} else {			
+			return meshStruct.getEdge (eIndex);
 		}
 	}
 
