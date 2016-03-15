@@ -4,7 +4,7 @@ namespace ProceduralCity
 {
 	public abstract class RegionModule : Module
 	{
-		public RegionModule ()
+		public RegionModule () : base()
 		{
 			this.inputType = ModuleInput.region;
 		}

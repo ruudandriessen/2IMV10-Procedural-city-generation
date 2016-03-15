@@ -5,7 +5,7 @@ namespace ProceduralCity
 {
 	public abstract class CornerModule : Module
 	{
-		public CornerModule ()
+		public CornerModule () : base()
 		{
 			this.inputType = ModuleInput.corner;
 		}

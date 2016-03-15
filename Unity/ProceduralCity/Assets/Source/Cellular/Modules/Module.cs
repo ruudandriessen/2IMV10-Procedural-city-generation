@@ -10,12 +10,24 @@ namespace ProceduralCity
 		protected List<Module> children;
 		protected ModuleInput inputType;
 
-		public Module ()
-		{
+		public Module () {
+			children = new List<Module> ();
+		}
+
+		public Module (List<Module> children) {
+			this.children = children;
 		}
 
 		public ModuleInput getInputType() {
 			return inputType;
+		}
+
+		public void addChild(Module m){
+			children.Add (m);
+		}
+
+		public List<Module> getChildren() {
+			return children;
 		}
 	}
 }

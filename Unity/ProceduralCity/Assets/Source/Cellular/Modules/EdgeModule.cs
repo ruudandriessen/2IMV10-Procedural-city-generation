@@ -5,7 +5,7 @@ namespace ProceduralCity
 {
 	public abstract class EdgeModule : Module
 	{
-		public EdgeModule ()
+		public EdgeModule () : base()
 		{
 			this.inputType = ModuleInput.edge;
 		}

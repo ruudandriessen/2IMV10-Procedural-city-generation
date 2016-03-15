@@ -4,7 +4,7 @@ namespace ProceduralCity
 {
 	public abstract class ModelModule : Module
 	{
-		public ModelModule ()
+		public ModelModule () : base()
 		{
 			this.inputType = ModuleInput.model;
 		}
