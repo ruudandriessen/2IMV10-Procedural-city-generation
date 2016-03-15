@@ -8,15 +8,19 @@ namespace ProceduralCity
 {
 	public class Region
 	{
-		private List<Vector3> plane;
+		private List<Vertex> plane;
 
-		public Region (List<Vector3> points)
+		public Region (List<Vertex> points)
 		{
 			plane = points;
 		}
 
-		public void addPlanePoint(Vector3 p){
+		public void addPlanePoint(Vertex p){
 			plane.Add (p);
+		}
+
+		public List<Vertex> getPoints() {
+			return plane;
 		}
 	}
 }

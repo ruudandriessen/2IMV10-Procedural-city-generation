@@ -28,6 +28,8 @@ public class CreateEdges : MonoBehaviour {
 
 		highMesh = new HighLevelMesh(meshStruct);
 		highMesh.construct ();
+		RGBModule module = new RGBModule (this.transform);
+		module.apply (highMesh);
 	}
 
 	public Face createFace(int i) {
@@ -71,6 +73,10 @@ public class CreateEdges : MonoBehaviour {
 		v3.addEdge (e2);
 		v3.addEdge (e3);
 		v1.addEdge (e3);
+
+		v1.addFace (f);
+		v2.addFace (f);
+		v3.addFace (f);
 
 		e1.addFace (f);
 		e2.addFace (f);

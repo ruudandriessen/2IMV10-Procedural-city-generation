@@ -7,23 +7,25 @@ namespace ProceduralCity
 {
 	public class HighLevelMesh
 	{
+		private List<Vertex> corners;
 		private List<Edge> edges;
 		private List<Region> regions;
 		private MeshStructure sourceMesh;
 
-		public HighLevelMesh (MeshStructure structure)
-		{
+		public HighLevelMesh (MeshStructure structure) {
 			sourceMesh = structure;
 			edges = new List<Edge> ();
 			regions = new List<Region> ();
+			corners = new List<Vertex> ();
 		}
 
 		public void construct() {
 			foreach (Vertex v in sourceMesh.getCornerVertices()) {
-				edges.AddRange(constructEdge (v));
-			}
-			foreach (Edge e in edges) {
-				Debug.DrawLine (e.getFrom ().getPoint(), e.getTo ().getPoint(), Color.red, 200);
+				corners.Add (v);
+				List<Edge> edgeResult = constructEdge (v);
+				v.clearEdges ();
+				v.addEdges (edgeResult);
+				edges.AddRange(edgeResult);
 			}
 		}
 
@@ -41,7 +43,7 @@ namespace ProceduralCity
 
 			foreach (Edge e in source.getEdges()) {
 				Edge.EdgeLabel edgeLabel = e.getLabel ();
-				Vertex target = e.getTo ();
+				Vertex target = e.getTo () == source ? e.getFrom() : e.getTo();
 				if (convex) {
 					if (target.getLabel () == Vertex.VertexLabel.onEdgeConvex && edgeLabel == Edge.EdgeLabel.convex) {
 						edges.AddRange(constructEdge (source, true));
@@ -58,7 +60,14 @@ namespace ProceduralCity
 					}
 				}
 			}
+			return edges;
+		}
 
+		public List<Vertex> getCorners() {
+			return corners;
+		}
+
+		public List<Edge> getEdges() {
 			return edges;
 		}
 	}

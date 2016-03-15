@@ -10,10 +10,12 @@ namespace ProceduralCity
 		private Vector3 p;
 		private VertexLabel lbl;
 		private List<Edge> edges;
+		private List<Face> faces;
 
 		public Vertex (Vector3 p) {
 			this.p = p;
 			edges = new List<Edge> ();
+			faces = new List<Face> ();
 		}
 
 		public VertexLabel getLabel() {
@@ -41,43 +43,42 @@ namespace ProceduralCity
 				}
 			}
 
-			Color activeColor = Color.yellow;
 			if (numFlat == edges.Count) {
-				// In region
-				activeColor = Color.white;
 				lbl = VertexLabel.inRegionFlat;
 			} else if (edges.Count - numFlat == numConcave) {
-				// Concave corner
-				activeColor = Color.magenta;
 				lbl = VertexLabel.cornerConcave;
 			} else if (edges.Count - numFlat == numConvex) {
-				// Convex corner
-				activeColor = Color.cyan;
 				lbl = VertexLabel.cornerConvex;
 			} else if (numConvex > 0 && numConcave > 0) {
-				// Corner saddle
-				activeColor = Color.red;
 				lbl = VertexLabel.cornerSaddle;
 			} else if (numConcave == 2) {
-				// Edge
-				activeColor = Color.black;
 				lbl = VertexLabel.onEdgeConcave;
 			} else if (numConvex == 2) {
-				activeColor = Color.gray;
 				lbl = VertexLabel.onEdgeConvex;
 			}
-			float size = 0.2f;
-			Debug.DrawRay (p, Vector3.up * size, activeColor, 200);
-			Debug.DrawRay (p, Vector3.down * size, activeColor, 200);
-			Debug.DrawRay (p, Vector3.left * size, activeColor, 200);
-			Debug.DrawRay (p, Vector3.right * size, activeColor, 200);
-			Debug.DrawRay (p, Vector3.forward * size, activeColor, 200);
-			Debug.DrawRay (p, Vector3.back * size, activeColor, 200);
+		}
+
+		public void clearEdges() {
+			edges.Clear ();
 		}
 
 		public void addEdge(Edge e){ 
 			if (!edges.Contains(e))
 				edges.Add (e);
+		}
+
+		public void addEdges(List<Edge> edges) {
+			foreach (Edge e in edges) {
+				this.addEdge (e);
+			}
+		}
+
+		public void addFace(Face f) {
+			faces.Add(f);
+		}
+
+		public List<Face> getFaces() {
+			return faces;
 		}
 
 		public Vector3 getPoint() {

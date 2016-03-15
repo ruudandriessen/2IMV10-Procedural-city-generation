@@ -95,7 +95,7 @@ namespace ProceduralCity
 				Vector3 n2 = edgeFaces[1].getNormal();
 
 				float angle = Vector3.Angle (n1, n2);
-				if (angle == 180 || angle == 0) {
+				if (angle != 90 || angle == 180 || angle == 0) {
 					e.setLabel (Edge.EdgeLabel.flat);
 				} else {
 					float dot = Vector3.Dot (n1, n2);
