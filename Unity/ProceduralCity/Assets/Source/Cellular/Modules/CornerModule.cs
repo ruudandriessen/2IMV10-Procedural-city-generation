@@ -10,7 +10,7 @@ namespace ProceduralCity
 			this.inputType = ModuleInput.corner;
 		}
 
-		abstract public void apply(Vertex corner);
+		abstract public void apply(Corner corner);
 	}
 }
 

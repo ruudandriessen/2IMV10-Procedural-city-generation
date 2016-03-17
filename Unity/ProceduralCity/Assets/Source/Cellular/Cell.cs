@@ -7,9 +7,10 @@ namespace ProceduralCity
 	{
 		GameObject cell;
 
-		public Cell (Transform parent, Vector3 position, Vector3 scale, Quaternion rotation)
+		public Cell (Transform parent, Vector3 position, Vector3 scale, Quaternion rotation, String name)
 		{ 
 			cell = GameObject.CreatePrimitive(PrimitiveType.Cube);
+			cell.name = name;
 			cell.transform.parent = parent;
 			cell.transform.localRotation = rotation;
 			cell.transform.localScale = scale;

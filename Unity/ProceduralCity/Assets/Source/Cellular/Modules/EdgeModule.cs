@@ -10,7 +10,7 @@ namespace ProceduralCity
 			this.inputType = ModuleInput.edge;
 		}
 
-		abstract public void apply(Edge e);
+		abstract public void apply(HighLevelEdge e);
 	}
 }
 

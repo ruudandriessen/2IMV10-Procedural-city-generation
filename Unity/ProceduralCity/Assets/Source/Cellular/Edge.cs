@@ -11,15 +11,38 @@ namespace ProceduralCity
 		EdgeLabel lbl;
 		private Vertex v1, v2;
 		private List<Face> faces;
+		bool processed;
+		HighLevelEdge parent;
 
 		public Edge (Vertex v1, Vertex v2) {
 			this.v1 = v1;
 			this.v2 = v2;
 			this.faces = new List<Face> ();
 		}
+			
+		public void setProcessed(bool state) {
+			processed = state;
+		}
+
+		public bool isProcessed() {
+			return processed;
+		}
 
 		public void setLabel(EdgeLabel lbl) {
 			this.lbl = lbl;
+//			Color c = Color.grey;
+//			switch (lbl) {
+//			case EdgeLabel.concave:
+//				c = Color.red;
+//				break;
+//			case EdgeLabel.convex:
+//				c = Color.blue;
+//				break;
+//			case EdgeLabel.flat:
+//				c = Color.cyan;
+//				break;
+//			}
+//			Debug.DrawLine(v1.getPoint(), v2.getPoint(), c, 200);
 		}
 
 		public Vertex getFrom() {
@@ -60,6 +83,14 @@ namespace ProceduralCity
 		public static bool operator !=(Edge e1, Edge e2)
 		{
 			return !(e1 == e2);
+		}
+
+		public void setParent(HighLevelEdge e) {
+			this.parent = e;
+		}
+
+		public void draw() {
+			Debug.DrawLine (v1.getPoint (), v2.getPoint(), Color.red, 200);
 		}
 	}
 }

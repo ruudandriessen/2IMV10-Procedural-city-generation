@@ -10,13 +10,26 @@ namespace ProceduralCity
 		private Vector3 normal;
 		List<Edge> edges;
 		List<Vertex> vertices;
+		bool processed;
+		Region parent;
 
 		public Face(Vector3 c, Vector3 n) {
 			this.center = c;
 			this.normal = n;
-			//Debug.DrawRay(c, n, Color.cyan, 200);
 			this.edges = new List<Edge> ();
 			this.vertices = new List<Vertex> ();
+		}
+			
+		public void setProcessed(bool state) {
+			processed = state;
+		}
+
+		public bool isProcessed() {
+			return processed;
+		}
+
+		public bool hasEdge(Edge e) {
+			return this.edges.Contains (e);
 		}
 
 		public void addEdge (Edge e) {
@@ -33,6 +46,34 @@ namespace ProceduralCity
 
 		public Vector3 getCenter() {
 			return center;
+		}
+
+		public List<Vertex> getVertices() {
+			return vertices;
+		}
+
+		public bool sharesVertex(Face f) {
+			foreach (Vertex v1 in vertices) {
+				foreach (Vertex v2 in f.getVertices()) {
+					if (v2.Equals (v1))
+						return true;
+				}
+			}
+			return false;
+		}
+
+		public void setParent(Region r) {
+			this.parent = r;
+		}
+
+		public Region getParent() {
+			return parent;
+		}
+
+		public void draw() {
+			foreach (Edge e in edges) {
+				e.draw ();
+			}
 		}
 	}
 
