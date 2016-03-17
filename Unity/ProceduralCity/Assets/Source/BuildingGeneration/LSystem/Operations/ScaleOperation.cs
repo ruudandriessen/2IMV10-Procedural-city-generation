@@ -6,7 +6,7 @@ namespace ProceduralCity
 	public class ScaleOperation : Operation
 	{
 		float sx, sy, sz;
-		public ScaleOperation (GameObject g, float sx, float sy, float sz) : base(g)
+		public ScaleOperation (Scope g, float sx, float sy, float sz) : base(g)
 		{
 			this.sx = sx;
 			this.sy = sy;
@@ -14,7 +14,7 @@ namespace ProceduralCity
 		}
 
 		public override void applyOperation() {
-			scope.transform.localScale = new Vector3 (sx, sy, sz);
+			setScale (sx, sy, sz);
 		}
 	}
 }

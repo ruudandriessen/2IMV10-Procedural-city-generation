@@ -8,9 +8,12 @@ namespace ProceduralCity
 	public class Rule
 	{
 		List<Operation> operations;
+		//Predecessor is the name of the symbols that are relevant for this rule
+		private string predeccessor;
 
-		public Rule ()
+		public Rule (string predecessor)
 		{
+			this.predeccessor = predecessor;
 			operations = new List<Operation> ();
 		}
 		private Condition condition;
@@ -33,10 +36,14 @@ namespace ProceduralCity
 			return this;
 		}
 
-		public void execute() {
+		public void execute(Symbol s) {
 			for (int i = 0; i < operations.Count; i++) {
 				operations [i].applyOperation ();
 			}
+		}
+
+		public string getPredeccessorType() {
+			return this.predeccessor;
 		}
 
 

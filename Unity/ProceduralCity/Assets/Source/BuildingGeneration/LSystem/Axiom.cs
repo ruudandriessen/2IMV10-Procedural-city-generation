@@ -2,10 +2,11 @@
 
 namespace ProceduralCity
 {
-	public class Axiom
+	public class Axiom : Symbol
 	{
-		public Axiom ()
+		public Axiom (string name) : base (name)
 		{
+			
 		}
 	}
 }

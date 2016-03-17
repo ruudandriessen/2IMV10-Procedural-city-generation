@@ -2,7 +2,7 @@
 using System.Collections;
 using ProceduralCity;
 
-public class BuildingGenerationScript : MonoBehaviour
+public class HouseGeneration : MonoBehaviour
 {
 
 	// Use this for initialization
@@ -23,13 +23,12 @@ public class BuildingGenerationScript : MonoBehaviour
 			.add (new ScaleOperation (s, 8, 15f/2f, 8))
 			.add (new InsertOperation (s, PrimitiveType.Cylinder));
 
-			//.add (new TranslateOperation (g3, 8 / 2, 15 / 2, 8 / 2))
-			//.add (new TranslateOperation (g3, 0, 0, 16));
+		//.add (new TranslateOperation (g3, 8 / 2, 15 / 2, 8 / 2))
+		//.add (new TranslateOperation (g3, 0, 0, 16));
 
-		LSystem lsystem = new LSystem (new Axiom("A"),1);
+		LSystem lsystem = new LSystem (new Axiom("A"), 1);
 		lsystem.add (r)
-			.executeRules ();
-	}
+			.executeRules ();	}
 	
 	// Update is called once per frame
 	void Update ()

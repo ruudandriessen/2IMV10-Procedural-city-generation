@@ -30,8 +30,8 @@ public class LoadData {
 						break;
 					case "node":
 						long nodeId = long.Parse (reader ["id"]);
-						double lat = double.Parse (reader ["lat"]);
-						double lon = double.Parse (reader ["lon"]);
+						float lat = float.Parse (reader ["lat"]);
+						float lon = float.Parse (reader ["lon"]);
 
 						List<OsmTag> nodeTags = new List<OsmTag> ();
 						XmlReader nodeSubtree = reader.ReadSubtree ();

@@ -9,12 +9,20 @@ namespace ProceduralCity
 		//A list of rules, in order of execution.
 		private List<Rule> rules;
 
+		private List<Symbol> state;
+
+		private int iterations;
+
 		//Axiom is the starting point, it is the footprint of the buildings.
 		private Axiom axiom;
 
-		public LSystem ()
+		public LSystem (Axiom a, int iterations)
 		{
-			rules = new List<Rule> ();
+			this.axiom = a;
+			this.iterations = iterations;
+			this.rules = new List<Rule> ();
+			this.state = new List<Symbol> ();
+			state.Add (axiom);
 		}
 
 		public LSystem add(Axiom a) {
@@ -31,12 +39,15 @@ namespace ProceduralCity
 			return this;
 		}
 
-		public LSystem executeRules(int id = -1) {
-			if (id != -1 && id < rules.Count) {
-				rules [id].execute ();
-			} else {
-				for (int i = 0; i < rules.Count; i++) {
-					rules [i].execute ();
+		public LSystem executeRules(int itrts = 1) {
+			//Apply all iterations
+			for (int i = 0; i < itrts; i++) {
+				for (int j = 0; j < state.Count; j++) {
+					for (int k = 0; k < rules.Count; k++) {
+						if (state [j].getName () == rules [k].getPredeccessorType ()) {
+							rules [k].execute (state [j]);
+						}
+					}
 				}
 			}
 			return this;

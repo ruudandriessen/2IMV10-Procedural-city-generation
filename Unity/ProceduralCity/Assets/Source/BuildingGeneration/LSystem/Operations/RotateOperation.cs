@@ -6,7 +6,7 @@ namespace ProceduralCity
 	public class RotateOperation : Operation
 	{
 		float rx, ry, rz;
-		public RotateOperation (GameObject g, float rx, float ry, float rz) : base(g)
+		public RotateOperation (Scope g, float rx, float ry, float rz) : base(g)
 		{
 			this.rx = rx;
 			this.ry = ry;
@@ -14,7 +14,7 @@ namespace ProceduralCity
 		}
 
 		public override void applyOperation() {
-			scope.transform.Rotate (new Vector3 (rx, ry, rz));
+			scope.getGameObject().transform.Rotate (new Vector3 (rx, ry, rz));
 		}
 	}
 }
