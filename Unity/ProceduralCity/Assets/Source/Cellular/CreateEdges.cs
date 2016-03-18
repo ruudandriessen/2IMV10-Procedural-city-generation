@@ -28,7 +28,8 @@ public class CreateEdges : MonoBehaviour {
 
 		highMesh = new HighLevelMesh(meshStruct);
 		highMesh.construct ();
-		BrickModule module = new BrickModule (this.transform);
+//		BrickModule module = new BrickModule (this.transform);
+		RGBModule module = new RGBModule (this.transform);
 		module.apply (highMesh);
 	}
 

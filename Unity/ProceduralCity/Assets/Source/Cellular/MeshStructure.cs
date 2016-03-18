@@ -32,7 +32,7 @@ namespace ProceduralCity
 			List<Vertex> cornerVertices = new List<Vertex> ();
 			foreach (Vertex v in vertices) {
 				Vertex.VertexLabel label = v.getLabel ();
-				if (label == Vertex.VertexLabel.cornerConcave || label == Vertex.VertexLabel.cornerConvex) {
+				if (label == Vertex.VertexLabel.cornerConcave || label == Vertex.VertexLabel.cornerConvex || label == Vertex.VertexLabel.cornerSaddle) {
 					cornerVertices.Add (v);
 				}
 			}
@@ -91,18 +91,19 @@ namespace ProceduralCity
 				if (edgeFaces.Count < 2) {
 					continue;
 				}
-				Vector3 n1 = edgeFaces[0].getNormal();
-				Vector3 n2 = edgeFaces[1].getNormal();
 
-				float angle = Vector3.Angle (n1, n2);
-				if (angle != 90 || angle == 180 || angle == 0) {
+				Vector3 n1 = edgeFaces[0].getNormal();
+				Vector3 c1 = edgeFaces [0].getCenter ();
+				Vector3 c2 = edgeFaces [1].getCenter ();
+				Vector3 w = c2 - c1;
+
+				float angle = Vector3.Angle (w, n1);
+				if (angle == 90) {
 					e.setLabel (Edge.EdgeLabel.flat);
+				} else if (angle < 90) {
+					e.setLabel (Edge.EdgeLabel.concave);
 				} else {
-					float dot = Vector3.Dot (n1, n2);
-					if ( dot < 0 )
-						e.setLabel (Edge.EdgeLabel.concave);
-					else
-						e.setLabel (Edge.EdgeLabel.convex);
+					e.setLabel (Edge.EdgeLabel.convex);
 				}
 			}
 

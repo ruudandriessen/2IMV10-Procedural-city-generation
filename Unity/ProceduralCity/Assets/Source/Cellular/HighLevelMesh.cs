@@ -24,7 +24,6 @@ namespace ProceduralCity
 				Corner c = new Corner (v);
 				corners.Add (c);
 				v.setParent (c);
-				v.setProcessed (true);
 			}
 
 			foreach (Corner c in corners) {
@@ -106,7 +105,7 @@ namespace ProceduralCity
 			Vertex sourceVertex = source.getVertex ();
 			List<HighLevelEdge> hlEdges = new List<HighLevelEdge> ();
 			foreach (Edge e in sourceVertex.getEdges()) {
-				if (e.isProcessed())
+				if (e.hasParent())
 					continue;
 				Edge.EdgeLabel edgeLabel = e.getLabel ();
 				Vertex target = e.getTo () == sourceVertex ? e.getFrom() : e.getTo();
@@ -129,7 +128,7 @@ namespace ProceduralCity
 			Vertex sourceVertex = source.getVertex ();
 			List<HighLevelEdge> hlEdges = new List<HighLevelEdge> ();
 			foreach (Edge e in sourceVertex.getEdges()) {
-				if (e.isProcessed())
+				if (e.hasParent())
 					continue;
 				Edge.EdgeLabel edgeLabel = e.getLabel ();
 				Vertex target = e.getTo () == sourceVertex ? e.getFrom() : e.getTo();
@@ -156,7 +155,7 @@ namespace ProceduralCity
 			while (changed) {
 				changed = false;
 				foreach (Edge e in current.getEdges()) {
-					if (e.isProcessed()) {
+					if (e.hasParent()) {
 						continue;
 					}
 					if (e.getLabel() != eLabel) {
@@ -194,7 +193,6 @@ namespace ProceduralCity
 
 						// Set all edges to processed
 						foreach (Edge en in usedEdges) {
-							en.setProcessed(true);
 							en.setParent (hle);
 						}
 						return hle;

@@ -11,7 +11,6 @@ namespace ProceduralCity
 		private VertexLabel lbl;
 		private List<Edge> edges;
 		private List<Face> faces;
-		private bool processed;
 		private Corner parent;
 
 		public Vertex (Vector3 p) {
@@ -36,12 +35,8 @@ namespace ProceduralCity
 			return parent;
 		}
 
-		public void setProcessed(bool state) {
-			processed = state;
-		}
-
-		public bool isProcessed() {
-			return processed;
+		public bool hasParent() {
+			return parent != null;
 		}
 
 		public void calculateLabel() {
