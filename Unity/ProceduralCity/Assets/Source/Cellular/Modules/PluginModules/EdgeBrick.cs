@@ -28,12 +28,13 @@ namespace ProceduralCity
 
 			// Get direction and translate to world space
 			Vector3 direction = edge.getDirection ();
-			float edgeMagnitude = parent.TransformVector (direction).magnitude - cornerDimensions.magnitude;
+			direction = parent.TransformDirection (direction);
 
 			// Set from and to actual center points of the corner
 			from = from + Vector3.Scale (edge.getFrom ().getTranslateVector (), cornerDimensions / 2) + Vector3.Scale(direction, cornerDimensions /2);
 			to = to + Vector3.Scale (edge.getTo ().getTranslateVector (), cornerDimensions / 2) - Vector3.Scale(direction, cornerDimensions / 2);
 
+			float edgeMagnitude = (to-from).magnitude;
 
 			// These are all world space
 			Vector3 dimensions = this.getCellDimensions ();
@@ -51,7 +52,6 @@ namespace ProceduralCity
 
 			float stepSize = dimensions.x;
 
-//			Debug.DrawLine (from, to, Color.red, 200);
 			for (Vector3 p = start; i < maxCount; p += direction * stepSize) {
 				if (i == maxCount - 1) {
 					Vector3 prevP = p - direction * stepSize;

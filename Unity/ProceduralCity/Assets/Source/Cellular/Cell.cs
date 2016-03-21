@@ -13,11 +13,11 @@ namespace ProceduralCity
 			cell.name = name;
 //			cell.transform.parent = parent; //This seems to break everything when using non-uniform scaled parents with rotations derp.
 
-			cell.transform.rotation = rotation;
+			cell.transform.localRotation = rotation;
 //			scale = div (scale, parent.lossyScale);
 			cell.transform.localScale = scale;
 
-			cell.transform.position = position;
+			cell.transform.localPosition = position;
 		}
 
 		public void setColor(Color c) {

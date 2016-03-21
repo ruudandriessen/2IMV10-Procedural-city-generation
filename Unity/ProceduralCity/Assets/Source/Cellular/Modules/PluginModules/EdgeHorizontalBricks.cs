@@ -28,31 +28,44 @@ namespace ProceduralCity
 
 			// Get direction and translate to world space
 			Vector3 direction = edge.getDirection ();
+			direction = parent.TransformDirection (direction);
 			float edgeMagnitude = parent.TransformVector (direction).magnitude - cornerDimensions.magnitude;
 
 			// Set from and to actual center points of the corner
 			from = from + Vector3.Scale (edge.getFrom ().getTranslateVector (), cornerDimensions / 2) + Vector3.Scale(direction, cornerDimensions /2);
 			to = to + Vector3.Scale (edge.getTo ().getTranslateVector (), cornerDimensions / 2) - Vector3.Scale(direction, cornerDimensions / 2);
 
+			edgeMagnitude = (to-from).magnitude;
 
 			// These are all world space
 			Vector3 dimensions = this.getCellDimensions ();
 			Vector3 scale = this.getCellSize();
 
 			// Calculate rotation
-//			Quaternion rotation = Quaternion.FromToRotation (Vector3.Scale(Vector3.up, direction), Vector3.right);
+			Quaternion rotationNinety = Quaternion.AngleAxis(90, Vector3.up);
+			Quaternion rotationNormal = Quaternion.identity;
+			rotationNinety *= parent.rotation;
+			rotationNormal *= parent.rotation;
 
 			// Calculate start position
-			Vector3 start = from + direction * dimensions.x / 2;
+			Vector3 start = from + direction * dimensions.y / 2;
 
 			// Create each cell
-			int maxCount = (int) Mathf.Floor(edgeMagnitude / scale.x);
+			int maxCount = (int) Mathf.Floor(edgeMagnitude / scale.y);
 			int i = 0;
 
-			float stepSize = dimensions.x;
+			float stepSize = dimensions.y;
+
+			Vector3 r1 = edge.getRegions ()[0].getNormal();
+			Vector3 r2 = edge.getRegions ()[1].getNormal();				
 
 			for (Vector3 p = start; i < maxCount; p += direction * stepSize) {
-				Cell c = new Cell (parent, p, scale, Quaternion.identity, "Brick");
+				Cell c;
+				if (i % 2 == 0) {
+					c = new Cell (parent, p - (dimensions.x/2-cornerDimensions.x/2) * r1, scale, rotationNinety, "Brick");
+				} else {
+					c = new Cell (parent, p - (dimensions.x/2-cornerDimensions.x/2) * r2, scale, rotationNormal, "Brick");
+				}
 				c.setColor (color);
 				i++;
 			}
