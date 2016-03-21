@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace ProceduralCity
 {
@@ -9,6 +10,7 @@ namespace ProceduralCity
 		public enum ModuleInput {corner, edge, region, model, cell, allEdges, allCorners, allRegions};
 		protected List<Module> children;
 		protected ModuleInput inputType;
+		protected Transform parent;
 
 		public Module () {
 			children = new List<Module> ();

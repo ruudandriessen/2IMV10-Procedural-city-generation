@@ -57,6 +57,26 @@ namespace ProceduralCity
 			return to;
 		}
 
+		public Vector3 getNormal() {
+			Vector3 normal = Vector3.zero;
+			foreach (Region r in regions) {
+				normal += r.getNormal();
+			}
+			normal /= regions.Count;
+			return normal;
+		}
+
+		public Vector3 getTranslateVector() {
+			// Get translate vector according to normal
+			Vector3 normal = this.getNormal();
+			// Get translate vector according to normal
+			float transX = normal.x > 0 ? -1 : normal.x < 0 ? 1 : 0;
+			float transY = normal.y > 0 ? -1 : normal.y < 0 ? 1 : 0;
+			float transZ = normal.z > 0 ? -1 : normal.z < 0 ? 1 : 0;
+			Vector3 translateVector = new Vector3 (transX, transY, transZ);
+			return translateVector;
+		}
+
 		public void draw() {
 			foreach (Edge e in edges) {
 				e.draw ();

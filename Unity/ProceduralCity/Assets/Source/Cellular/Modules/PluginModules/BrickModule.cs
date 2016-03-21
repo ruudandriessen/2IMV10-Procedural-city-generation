@@ -18,7 +18,7 @@ namespace ProceduralCity
 			float size = 0.1f; 
 			float cellPadding = 0.005f;
 
-			public override void apply(Corner corner) {
+			public override bool apply(Corner corner) {
 				Vector3 p = corner.getVertex ().getPoint();
 				p = parent.TransformPoint (p);
 
@@ -40,6 +40,7 @@ namespace ProceduralCity
 				value = 0.4f * value;
 				color = Color.Lerp(color, Color.black ,value);
 				c.setColor (color);
+				return true;
 			}
 		}
 
@@ -58,7 +59,7 @@ namespace ProceduralCity
 			float targetBrickWidth = 0.2f;
 			float targetBrickHeight = 0.05f;
 
-			public override void apply(HighLevelEdge e) {
+			public override bool apply(HighLevelEdge e) {
 				Corner c1 = e.getFrom (); 
 				Corner c2 = e.getTo ();
 
@@ -138,7 +139,7 @@ namespace ProceduralCity
 						}
 						
 						float value = UnityEngine.Random.value;
-						value = 0.4f * value;
+						value = 0.8f * value;
 						Color color = Color.red;
 						color = Color.Lerp(color, Color.black ,value);
 						c.setColor (color);
@@ -161,6 +162,7 @@ namespace ProceduralCity
 						c.setColor (color);
 					}
 				}
+				return true;
 			}
 		}
 
@@ -178,7 +180,7 @@ namespace ProceduralCity
 			float cellTargetHeight = 0.05f;
 			float cellPadding = 0.005f;
 
-			public override void apply(Region r) {
+			public override bool apply(Region r) {
 				HighLevelEdge hle1 = null, hle2 = null;
 
 				// Take one of the edges as a basis
@@ -198,7 +200,7 @@ namespace ProceduralCity
 				}
 				if (hle2 == null) {
 					Debug.Log ("Failed to fill region, no perp. edges");
-					return;
+					return false;
 				}
 
 				// Use these points to fill
@@ -228,22 +230,23 @@ namespace ProceduralCity
 					sharedPoint = points [1];
 				} else {
 					Debug.Log ("Warning - no shared points for edges, can't draw region!");
-					return;
+					return false;
 				}
 
 				sharedPoint = parent.TransformPoint (sharedPoint);
 
 				if (!horizontalPlane) {
-//					if (dir1.y == 0)
-//						fillVerticalPlane (dir1, dir2, sharedPoint, r);
-//					else
-//						fillVerticalPlane (dir2, dir1, sharedPoint, r);
+					if (dir1.y == 0)
+						fillVerticalPlane (dir1, dir2, sharedPoint, r);
+					else
+						fillVerticalPlane (dir2, dir1, sharedPoint, r);
 				} else {
 					if (dir1.x > 0)
 						fillHorizontalPlane (dir1, dir2, sharedPoint, r);
 					else
 						fillHorizontalPlane (dir2, dir1, sharedPoint, r);
 				}
+				return true;
 			}
 
 			public void fillHorizontalPlane(Vector3 dir1, Vector3 dir2, Vector3 sharedPoint, Region r) {
@@ -299,6 +302,11 @@ namespace ProceduralCity
 					actualNodeWidth - cellPadding);
 				scale = div(scale, parent.lossyScale);
 
+				Vector3 smallScale = new Vector3 (actualNodeWidth/2 - cellPadding,
+					actualNodeHeight - cellPadding, 
+					actualNodeWidth/2 - cellPadding);
+				smallScale = div(smallScale, parent.lossyScale);
+
 				horizontalDir.Normalize ();
 				verticalDir.Normalize ();
 
@@ -309,6 +317,10 @@ namespace ProceduralCity
 							(i * (actualNodeHeight)+ actualNodeHeight / 2) * verticalDir + 
 							0.1f * verticalDir + 0.1f * horizontalDir;
 
+						if (i % 2 == 1) {
+							position += brickWidth/2 * horizontalDir;
+						}
+						
 						position -= (r.getNormal ().normalized) * (actualNodeWidth/2);
 
 						Cell c = new Cell (parent, position, scale, Quaternion.identity, "Region");
@@ -328,7 +340,7 @@ namespace ProceduralCity
 			this.parent = parent;
 		}
 
-		public override void apply(HighLevelMesh mesh) { 
+		public override bool apply(HighLevelMesh mesh) { 
 			WhiteCorners cornerModule = new WhiteCorners (parent);
 			WhiteEdges edgeModule = new WhiteEdges (parent);
 			BrickRegions regionModule = new BrickRegions (parent);
@@ -341,6 +353,7 @@ namespace ProceduralCity
 			foreach (Region r in mesh.getRegions()) {
 				regionModule.apply (r);
 			}
+			return true;
 		}
 
 		static public Vector3 div(Vector3 v1, Vector3 v2) {

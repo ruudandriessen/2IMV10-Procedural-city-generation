@@ -9,7 +9,7 @@ namespace ProceduralCity
 			this.inputType = ModuleInput.region;
 		}
 
-		abstract public void apply(Region r);
+		abstract public bool apply(Region r);
 	}
 }
 

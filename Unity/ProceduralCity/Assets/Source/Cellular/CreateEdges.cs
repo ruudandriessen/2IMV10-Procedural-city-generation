@@ -28,8 +28,9 @@ public class CreateEdges : MonoBehaviour {
 
 		highMesh = new HighLevelMesh(meshStruct);
 		highMesh.construct ();
+		ModelBlackBricks module = new ModelBlackBricks (this.transform);
 //		BrickModule module = new BrickModule (this.transform);
-		RGBModule module = new RGBModule (this.transform);
+//		RGBModule module = new RGBModule (this.transform);
 		module.apply (highMesh);
 	}
 
@@ -101,7 +102,8 @@ public class CreateEdges : MonoBehaviour {
 			meshStruct.addVertex (v);	
 			return v;
 		} else {
-			return meshStruct.getVertex(vIndex);
+			v = meshStruct.getVertex(vIndex);
+			return v;
 		}	
 	}
 
