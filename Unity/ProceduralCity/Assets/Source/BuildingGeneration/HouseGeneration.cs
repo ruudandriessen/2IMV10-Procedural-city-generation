@@ -8,27 +8,69 @@ public class HouseGeneration : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		GameObject g1 = new GameObject ("Scope 1");
-		g1.transform.parent = this.transform;
 		Scope s = new Scope (this.gameObject);
-		Scope s1 = new Scope (g1);
-		Rule r = new Rule ("A")
-			.add (new TranslateOperation (s1, 0, 0, 6))
-			.add (new ScaleOperation (s1, 8, 10, 18))
-			.add (new InsertOperation (s1, PrimitiveType.Cube))
-			.add (new TranslateOperation (s, 6, 0, 0))
-			.add (new ScaleOperation (s, 7, 13, 18))
-			.add (new InsertOperation (s, PrimitiveType.Cube))
-			.add (new TranslateOperation (s, 0, 0, 16))
-			.add (new ScaleOperation (s, 8, 15f/2f, 8))
-			.add (new InsertOperation (s, PrimitiveType.Cylinder));
+		Rule r1 = new Rule ("Footprint")
+			.add (new ScaleOperation (s, 1, 25, 1))
+			.add (new SaveOperation(s, "Facades"));
+		Rule r2 = new Rule ("Facades")
+			.add (new ComputeOperation (s, "sidefaces", "Facade",
+										new string[] {
+						
+										}));
+		Rule r3 = new Rule ("Facade")
+			.add (new SubdivideOperation (s, "Y",
+										new string[] {
+											"1r", "0.5", "3.5"
+										},
+										new string[] {
+											"Floors", "Ledge", "Groundfloor"
+										}));
+		Rule r4 = new Rule("Floors")
+			.add(new RepeatOperation(s, "Y", "3", "Floor"));
+		Rule r5 = new Rule ("Floor")
+			.add (new RepeatOperation (s, "X", "2", "WindowTile"));
+		Rule r6 = new Rule("WindowTile")
+			.add(new SubdivideOperation(s, "X",
+				new string[] {
+					"1r", "1", "1r"
+				},
+				new string[] {
+					"Wall", "VerticalWindowTile", "Wall"
+				}));
+		Rule r7 = new Rule("VerticalWindowTile")
+			.add(new SubdivideOperation(s, "Y",
+				new string[] {
+					"1r", "1", "1r"
+				},
+				new string[] {
+					"Wall", "Window", "Wall"
+				}));
 
 		//.add (new TranslateOperation (g3, 8 / 2, 15 / 2, 8 / 2))
 		//.add (new TranslateOperation (g3, 0, 0, 16));
-
-		LSystem lsystem = new LSystem (new Axiom("A"), 1);
-		lsystem.add (r)
-			.executeRules ();	}
+		Vector3[] footprint = new Vector3[] {
+			new Vector3 (0, 0, 0),
+			new Vector3 (10, 0, 0),
+			new Vector3 (15, 0, 5),
+			new Vector3 (10, 0, 10),
+			new Vector3 (0, 0, 10)
+		};
+		Debug.DrawLine (new Vector3 (0, 0, 0), new Vector3 (10, 0, 0), Color.red, 2000f);
+		Debug.DrawLine (new Vector3 (10, 0, 0), new Vector3 (15, 0, 5), Color.red, 2000f);
+		Debug.DrawLine (new Vector3 (15, 0, 5), new Vector3 (10, 0, 10), Color.red, 2000f);
+		Debug.DrawLine (new Vector3 (10, 0, 10), new Vector3 (0, 0, 10), Color.red, 2000f);
+		Debug.DrawLine (new Vector3 (0, 0, 10), new Vector3 (0, 0, 0), Color.red, 2000f);
+		LSystem lsystem = new LSystem (new Axiom("Footprint", footprint), 7);
+		lsystem
+			.add (r1)
+			.add (r2)
+			.add (r3)
+			.add (r4)
+			.add (r5)
+			.add (r6)
+			.add (r7)
+			.executeRules ();	
+	}
 	
 	// Update is called once per frame
 	void Update ()

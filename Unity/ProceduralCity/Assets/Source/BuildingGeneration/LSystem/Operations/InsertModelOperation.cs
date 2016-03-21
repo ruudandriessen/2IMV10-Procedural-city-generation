@@ -1,16 +1,13 @@
 ﻿using System;
-using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace ProceduralCity
 {
-	public class InsertOperation : Operation
+	public class InsertModelOperation : Operation
 	{
-		PrimitiveType shape;
-		public InsertOperation (Scope g, PrimitiveType shape) : base(g)
+		string model;
+		public InsertModelOperation (Scope g, string model) : base(g)
 		{
-			this.shape = shape;
+			this.model = model;
 		}
 
 		public override void applyOperation(Symbol s, ref List<Symbol> symbols) {

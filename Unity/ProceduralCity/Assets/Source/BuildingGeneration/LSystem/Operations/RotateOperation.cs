@@ -1,5 +1,7 @@
 ﻿using System;
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace ProceduralCity
 {
@@ -13,7 +15,7 @@ namespace ProceduralCity
 			this.rz = rz;
 		}
 
-		public override void applyOperation() {
+		public override void applyOperation(Symbol s, ref List<Symbol> symbols) {
 			scope.getGameObject().transform.Rotate (new Vector3 (rx, ry, rz));
 		}
 	}

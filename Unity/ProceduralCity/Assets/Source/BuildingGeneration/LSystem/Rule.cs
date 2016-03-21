@@ -36,10 +36,15 @@ namespace ProceduralCity
 			return this;
 		}
 
-		public void execute(Symbol s) {
+		public List<Symbol> execute(Symbol s, ref List<Symbol> newState) {
 			for (int i = 0; i < operations.Count; i++) {
-				operations [i].applyOperation ();
+				List<Symbol> newSymbols = new List<Symbol>();
+				operations [i].applyOperation (s, ref newSymbols);
+				if (newSymbols.Count > 0) {
+					newState.AddRange(newSymbols);
+				}
 			}
+			return newState;
 		}
 
 		public string getPredeccessorType() {

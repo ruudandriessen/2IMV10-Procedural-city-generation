@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace ProceduralCity
 {
@@ -39,16 +40,27 @@ namespace ProceduralCity
 			return this;
 		}
 
-		public LSystem executeRules(int itrts = 1) {
+		public LSystem executeRules() {
+			List<Symbol> currentShapes = new List<Symbol> ();
+			currentShapes = state;
 			//Apply all iterations
-			for (int i = 0; i < itrts; i++) {
-				for (int j = 0; j < state.Count; j++) {
+			for (int i = 0; i < iterations; i++) {
+				Debug.Log ("----------------------");
+				Debug.Log ("Iteration: " + i);
+				Debug.Log ("Shapes: " + currentShapes.Count);
+				for (int x = 0; x < currentShapes.Count; x++) {
+					Debug.Log(currentShapes[x].getName());
+				}
+				List<Symbol> nextState = new List<Symbol> ();
+				for (int j = 0; j < currentShapes.Count; j++) {
 					for (int k = 0; k < rules.Count; k++) {
-						if (state [j].getName () == rules [k].getPredeccessorType ()) {
-							rules [k].execute (state [j]);
+						Debug.Log ((currentShapes [j].getName () == rules [k].getPredeccessorType ()) + ", " + currentShapes [j].getName () + ", " + rules [k].getPredeccessorType ()); 
+						if (currentShapes [j].getName () == rules [k].getPredeccessorType ()) {
+							rules [k].execute (currentShapes [j], ref nextState);
 						}
 					}
 				}
+				currentShapes = nextState;
 			}
 			return this;
 		}

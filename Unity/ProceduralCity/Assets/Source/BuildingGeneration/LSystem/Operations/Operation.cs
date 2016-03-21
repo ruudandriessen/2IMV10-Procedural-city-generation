@@ -1,5 +1,7 @@
 ﻿using System;
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace ProceduralCity
 {
@@ -10,7 +12,7 @@ namespace ProceduralCity
 			this.scope = scope;
 		}
 
-		abstract public void applyOperation();
+		abstract public void applyOperation(Symbol s, ref List<Symbol> symbols);
 
 		protected GameObject getGameObject() {
 			return this.scope.getGameObject();

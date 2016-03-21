@@ -26,7 +26,7 @@ public class BuildingGenerationScript : MonoBehaviour
 			//.add (new TranslateOperation (g3, 8 / 2, 15 / 2, 8 / 2))
 			//.add (new TranslateOperation (g3, 0, 0, 16));
 
-		LSystem lsystem = new LSystem (new Axiom("A"),1);
+		LSystem lsystem = new LSystem (new Axiom("A", null), 1);
 		lsystem.add (r)
 			.executeRules ();
 	}
