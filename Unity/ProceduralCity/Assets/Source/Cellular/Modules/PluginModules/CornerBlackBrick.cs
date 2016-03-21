@@ -11,7 +11,7 @@ namespace ProceduralCity
 		{
 			this.parent = parent;
 			this.setDimensions(new Vector3(0.1f, 0.1f, 0.1f));
-			this.setPadding(new Vector3(0.005f, 0.005f, 0.005f));
+			this.setPadding(new Vector3(0.001f, 0.001f, 0.001f));
 			this.color = c;
 		}
 

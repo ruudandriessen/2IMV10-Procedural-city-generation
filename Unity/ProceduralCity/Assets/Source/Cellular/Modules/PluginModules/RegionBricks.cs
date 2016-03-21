@@ -10,7 +10,7 @@ namespace ProceduralCity
 		{
 			this.parent = parent;
 			this.setCellDimensions(new Vector3(0.2f, 0.1f, 0.1f));
-			this.setCellPadding(new Vector3(0.005f, 0.005f, 0.005f));
+			this.setCellPadding(new Vector3(0.001f, 0.001f, 0.001f));
 			this.color = c;
 		}
 

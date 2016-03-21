@@ -10,6 +10,10 @@ namespace ProceduralCity
 		public Cell (Transform parent, Vector3 position, Vector3 scale, Quaternion rotation, String name)
 		{ 
 			cell = GameObject.CreatePrimitive(PrimitiveType.Cube);
+			MeshRenderer renderer = cell.GetComponent<MeshRenderer>();
+			Material newMat = Resources.Load("Materials/Concrete_Asphalt_02", typeof(Material)) as Material;
+			renderer.material = newMat;
+
 			cell.name = name;
 //			cell.transform.parent = parent; //This seems to break everything when using non-uniform scaled parents with rotations derp.
 
