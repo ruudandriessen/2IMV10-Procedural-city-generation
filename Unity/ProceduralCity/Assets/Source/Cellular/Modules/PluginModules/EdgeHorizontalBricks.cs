@@ -61,12 +61,13 @@ namespace ProceduralCity
 
 			for (Vector3 p = start; i < maxCount; p += direction * stepSize) {
 				Cell c;
+				Color finalColor = Color.Lerp (color, Color.black, UnityEngine.Random.value * 0.3f);
 				if (i % 2 == 0) {
-					c = new Cell (parent, p - (dimensions.x/2-cornerDimensions.x/2) * r1, scale, rotationNinety, "Brick");
+					c = new Cell (parent, p - (dimensions.x / 2 - cornerDimensions.x / 2) * r1, scale, rotationNinety, "Brick");
 				} else {
-					c = new Cell (parent, p - (dimensions.x/2-cornerDimensions.x/2) * r2, scale, rotationNormal, "Brick");
+					c = new Cell (parent, p - (dimensions.x / 2 - cornerDimensions.x / 2) * r2, scale, rotationNormal, "Brick");
 				}
-				c.setColor (color);
+				c.setColor (finalColor);
 				i++;
 			}
 			return true;

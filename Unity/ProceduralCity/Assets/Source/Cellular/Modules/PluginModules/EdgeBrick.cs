@@ -53,6 +53,7 @@ namespace ProceduralCity
 			float stepSize = dimensions.x;
 
 			for (Vector3 p = start; i < maxCount; p += direction * stepSize) {
+				Color finalColor = Color.Lerp (color, Color.black, UnityEngine.Random.value * 0.3f);
 				if (i == maxCount - 1) {
 					Vector3 prevP = p - direction * stepSize;
 					Vector3 prevPStart = prevP + direction * stepSize / 2;
@@ -62,11 +63,11 @@ namespace ProceduralCity
 						scale.x = overshoot.x / 2;
 						Vector3 targetPoint = prevPStart + 0.5f * (to - prevPStart);
 						Cell c = new Cell (parent, targetPoint, scale, rotation, "Brick");
-						c.setColor (color);
+						c.setColor (finalColor);
 					}
 				} else {
 					Cell c = new Cell (parent, p, scale, rotation, "Brick");
-					c.setColor (color);
+					c.setColor (finalColor);
 				}
 				i++;
 			}

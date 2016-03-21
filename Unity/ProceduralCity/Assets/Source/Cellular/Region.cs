@@ -58,6 +58,14 @@ namespace ProceduralCity
 			return faces;
 		}
 
+		public bool isHorizontal() {
+			foreach (HighLevelEdge e in edges) {
+				if (e.getDirection().y != 0)
+					return false;
+			}
+			return true;
+		}
+
 		public bool addFace(Face f) {
 			if (faces.Count == 0) {
 				// We take this face as our base normal

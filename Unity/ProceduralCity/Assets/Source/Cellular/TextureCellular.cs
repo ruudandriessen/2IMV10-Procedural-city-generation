@@ -4,12 +4,13 @@ using System.Collections;
 using System.Collections.Generic;
 using ProceduralCity;
 
-public class CreateEdges : MonoBehaviour {
-	MeshStructure meshStruct;
-	HighLevelMesh highMesh;
-	Vector3[] vertices;
-	Vector3[] normals;
-	int[] triangles;
+public class TextureCellular : MonoBehaviour {
+
+	private MeshStructure meshStruct;
+	private HighLevelMesh highMesh;
+	private Vector3[] vertices;
+	private Vector3[] normals;
+	private int[] triangles;
 
 	// Use this for initialization
 	void Start () {
@@ -28,10 +29,16 @@ public class CreateEdges : MonoBehaviour {
 
 		highMesh = new HighLevelMesh(meshStruct);
 		highMesh.construct ();
-		ModelBlackBricks module = new ModelBlackBricks (this.transform);
+		float num = UnityEngine.Random.value;
+		if (num < 0.5f) {
+			ModelBlackBricks module = new ModelBlackBricks (this.transform);
+			module.apply (highMesh);
+		} else {
+			ModelRedBricks module = new ModelRedBricks (this.transform);
+			module.apply (highMesh);
+		}
 //		BrickModule module = new BrickModule (this.transform);
 //		RGBModule module = new RGBModule (this.transform);
-		module.apply (highMesh);
 	}
 
 	public Face createFace(int i) {

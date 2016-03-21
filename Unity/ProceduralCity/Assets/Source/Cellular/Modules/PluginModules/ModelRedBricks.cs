@@ -3,17 +3,17 @@ using UnityEngine;
 
 namespace ProceduralCity
 {
-	public class ModelBlackBricks : ModelModule
+	public class ModelRedBricks : ModelModule
 	{
-		public ModelBlackBricks (Transform parent)
+		public ModelRedBricks (Transform parent)
 		{
 			this.parent = parent;
 			Color colorWhite = Color.Lerp(Color.white, Color.black, 0.3f);
-			Color colorBlack = Color.Lerp(Color.black, Color.white, 0.3f);
+			Color colorRed = Color.Lerp(Color.red, Color.black, 0.5f);
 			this.setCornerModule (new CornerBlackBrick (parent, colorWhite));
-			this.setVerticalEdgesModule (new EdgeHorizontalBricks (parent, colorBlack));
+			this.setVerticalEdgesModule (new EdgeHorizontalBricks (parent, colorRed));
 			this.setHorizontalEdgesModule (new EdgeBrick (parent, colorWhite));
-			this.setVerticalRegionModule (new RegionBricks (parent, colorBlack));
+			this.setVerticalRegionModule (new RegionBricks (parent, colorRed));
 			this.setHorizontalRegionModule (new RegionBricks (parent, colorWhite));
 		}
 
@@ -40,3 +40,4 @@ namespace ProceduralCity
 		}
 	}
 }
+

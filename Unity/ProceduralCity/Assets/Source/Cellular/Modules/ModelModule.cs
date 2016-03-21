@@ -8,10 +8,14 @@ namespace ProceduralCity
 	{
 		private EdgeModule verticalEdges, horizontalEdges;
 		private CornerModule cornerModule;
-
+		private RegionModule horizontalRegion, verticalRegion;
 		public ModelModule () : base()
 		{
 			this.inputType = ModuleInput.model;
+		}
+
+		public void setTransform(Transform parent) {
+			this.parent = parent;
 		}
 
 		public abstract bool apply (HighLevelMesh mesh);
@@ -75,6 +79,46 @@ namespace ProceduralCity
 				} else if (verticalEdges != null) {
 					// Apply vertical
 					if (!this.verticalEdges.apply (e)) {
+						// If it went wrong, return false
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+
+		// -- Region handling --
+		public void setRegionModule(RegionModule m) {
+			this.verticalRegion = m;
+			this.horizontalRegion = m;
+		}
+
+		public void setHorizontalRegionModule(RegionModule m) {
+			this.horizontalRegion = m;
+		}
+
+		public RegionModule getHorizontalRegionModule () {
+			return horizontalRegion;
+		}
+
+		public void setVerticalRegionModule(RegionModule m) {
+			this.verticalRegion = m;
+		}
+
+		public RegionModule getVerticalRegionModule () {
+			return verticalRegion;
+		}
+
+		public bool applyRegions(List<Region> regions) {
+			foreach (Region r in regions) {
+
+				if (r.isHorizontal ()) {
+					if (horizontalRegion == null || !this.horizontalRegion.apply (r)) {
+						// If it went wrong, return false
+						return false;
+					}
+				} else {
+					if (verticalRegion == null || !this.verticalRegion.apply (r)) {
 						// If it went wrong, return false
 						return false;
 					}
