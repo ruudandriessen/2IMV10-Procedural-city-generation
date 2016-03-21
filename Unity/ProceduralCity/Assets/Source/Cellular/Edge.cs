@@ -9,36 +9,40 @@ namespace ProceduralCity
 		public enum EdgeLabel {convex, flat, concave};
 
 		EdgeLabel lbl;
-		private Vector3 p1, p2;
+		private Vertex v1, v2;
 		private List<Face> faces;
+		HighLevelEdge parent;
 
-		public Edge (Vector3 p1, Vector3 p2) {
-			this.p1 = p1;
-			this.p2 = p2;
+		public Edge (Vertex v1, Vertex v2) {
+			this.v1 = v1;
+			this.v2 = v2;
 			this.faces = new List<Face> ();
+			this.parent = null;
 		}
 
 		public void setLabel(EdgeLabel lbl) {
 			this.lbl = lbl;
-			switch (lbl) {
-			case EdgeLabel.concave: 
-				Debug.DrawLine (p1, p2, Color.red, 200, true);
-				break;
-			case EdgeLabel.convex:
-				Debug.DrawLine (p1, p2, Color.green, 200, true);
-				break;
-			case EdgeLabel.flat:
-				Debug.DrawLine (p1, p2, Color.blue, 200, true);
-				break;
-			}
+//			Color c = Color.grey;
+//			switch (lbl) {
+//			case EdgeLabel.concave:
+//				c = Color.red;
+//				break;
+//			case EdgeLabel.convex:
+//				c = Color.blue;
+//				break;
+//			case EdgeLabel.flat:
+//				c = Color.cyan;
+//				break;
+//			}
+//			Debug.DrawLine(v1.getPoint(), v2.getPoint(), c, 200);
 		}
 
-		public Vector3 getFrom() {
-			return p1;
+		public Vertex getFrom() {
+			return v1;
 		}	
 
-		public Vector3 getTo() {
-			return p2;
+		public Vertex getTo() {
+			return v2;
 		}
 
 		public void addFace(Face f) {
@@ -53,6 +57,24 @@ namespace ProceduralCity
 			return lbl;
 		}
 
+		public void setParent(HighLevelEdge e) {
+			this.parent = e;
+		}
+
+		public HighLevelEdge getParent() {
+			return parent;
+		}
+
+		public bool hasParent() {
+			return parent != null;
+		}
+
+		// Debug
+		public void draw() {
+			Debug.DrawLine (v1.getPoint (), v2.getPoint(), Color.red, 200);
+		}
+
+		// Overrides
 		public override bool Equals(System.Object obj)
 		{
 			if (obj == null)
