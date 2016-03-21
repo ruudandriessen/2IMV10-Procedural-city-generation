@@ -32,7 +32,7 @@ public class HouseGeneration : MonoBehaviour
 		Rule r6 = new Rule("WindowTile")
 			.add(new SubdivideOperation(s, "X",
 				new string[] {
-					"1r", "1", "1r"
+					"1r", "0.9", "1r"
 				},
 				new string[] {
 					"Wall", "VerticalWindowTile", "Wall"
@@ -40,11 +40,39 @@ public class HouseGeneration : MonoBehaviour
 		Rule r7 = new Rule("VerticalWindowTile")
 			.add(new SubdivideOperation(s, "Y",
 				new string[] {
-					"1r", "1", "1r"
+					"1r", "1.55", "1r"
 				},
 				new string[] {
 					"Wall", "Window", "Wall"
 				}));
+		Rule r8 = new Rule("Window")
+			.add(new InsertModelOperation(s, "window"));
+		Rule r9 = new Rule ("Groundfloor")
+			.add (new SubdivideOperation (s, "X",
+			          new string[] {
+				"1r", "1.8", "1r"
+			},
+			          new string[] {
+				"WindowTile", "DoorTile", "WindowTile" 
+			}));
+		Rule r10 = new Rule ("DoorTile")
+			.add (new SubdivideOperation (s, "X",
+			           new string[] {
+				"1r", "2", "1r"
+			},
+			           new string[] {
+				"Wall", "VerticalDoorTile", "Wall"
+			}));
+		Rule r11 = new Rule ("VerticalDoorTile")
+			.add (new SubdivideOperation (s, "Y",
+			           new string[] {
+					"1r", "3.5"
+			},
+			           new string[] {
+					"Wall", "Door"
+			}));
+		Rule r12 = new Rule ("Door")
+			.add (new InsertModelOperation (s, "door"));
 
 		//.add (new TranslateOperation (g3, 8 / 2, 15 / 2, 8 / 2))
 		//.add (new TranslateOperation (g3, 0, 0, 16));
@@ -60,7 +88,7 @@ public class HouseGeneration : MonoBehaviour
 		Debug.DrawLine (new Vector3 (15, 0, 5), new Vector3 (10, 0, 10), Color.red, 2000f);
 		Debug.DrawLine (new Vector3 (10, 0, 10), new Vector3 (0, 0, 10), Color.red, 2000f);
 		Debug.DrawLine (new Vector3 (0, 0, 10), new Vector3 (0, 0, 0), Color.red, 2000f);
-		LSystem lsystem = new LSystem (new Axiom("Footprint", footprint), 7);
+		LSystem lsystem = new LSystem (new Axiom("Footprint", footprint), 10);
 		lsystem
 			.add (r1)
 			.add (r2)
@@ -69,6 +97,11 @@ public class HouseGeneration : MonoBehaviour
 			.add (r5)
 			.add (r6)
 			.add (r7)
+			.add (r8)
+			.add (r9)
+			.add (r10)
+			.add (r11)
+			.add (r12)
 			.executeRules ();	
 	}
 	
