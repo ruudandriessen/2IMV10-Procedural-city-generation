@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace ProceduralCity
 {
-	public class RegionBricks : RegionModule
+	public class RegionHorizontalBricks : RegionModule
 	{
 		Color color;
-		public RegionBricks (Transform parent, Color c)
+		public RegionHorizontalBricks (Transform parent, Color c)
 		{
 			this.parent = parent;
 			this.setCellDimensions(new Vector3(0.2f, 0.1f, 0.1f));
@@ -65,39 +65,17 @@ namespace ProceduralCity
 			start += cornerDimensions.x / 2 * horizontalDir + dimensions.x / 2 * horizontalDir;
 			start += cornerDimensions.y / 2 * verticalDir + dimensions.y / 2 * verticalDir;
 
-			bool topBrickIn = horizontalDir.x == 0;
-
 			int maxHorizontal = (int) (horizontalMagnitude / dimensions.x);
 			int maxVertical = (int) (verticalMagnitude / dimensions.y) - 1;
 
 			for (int i = 0; i < maxHorizontal; i++) {
 				for (int j = 0; j < maxVertical; j++) {
 					Color finalColor = Color.Lerp (color, Color.black, UnityEngine.Random.value * 0.3f);
-					if (j % 2 == 0) {
-						Vector3 location = start + i * dimensions.x * horizontalDir;
-
-						if (!topBrickIn)
-							location -= dimensions.x / 2 * horizontalDir;
-						if (topBrickIn) 
-							location -= dimensions.x / 2 * horizontalDir;
-						
-						location += horizontalDir * dimensions.x / 2;
-						location += j * dimensions.y * verticalDir;
-						Cell c = new Cell (parent, location, scale, rotation, "Region brick");
-						c.setColor (finalColor);
-					} else {
-						if (!topBrickIn && maxHorizontal - 1 == i)
-							continue;
-						
-						Vector3 location = start + i * dimensions.x * horizontalDir;
-						if (!topBrickIn)
-							location += dimensions.x / 2 * horizontalDir;
-						if (topBrickIn) 
-							location -= dimensions.x / 2 * horizontalDir;
-						location += j * dimensions.y * verticalDir;
-						Cell c = new Cell (parent, location, scale, rotation, "Region brick");
-						c.setColor (finalColor);
-					}
+					Vector3 location = start + i * dimensions.x * horizontalDir;
+//					location += horizontalDir * dimensions.x / 2;
+					location += j * dimensions.y * verticalDir;
+					Cell c = new Cell (parent, location, scale, rotation, "Region brick");
+					c.setColor (finalColor);
 				}
 			}
 
