@@ -21,7 +21,7 @@ namespace ProceduralCity
 				foreach(GameObject go in allObjects) {
 					Rigidbody body = go.GetComponent<Rigidbody>();
 					body.isKinematic = false;
-					body.AddExplosionForce (100, Vector3.zero, 50);
+					body.AddExplosionForce (1000, Vector3.zero, 50);
 				}
 			}
 		}
