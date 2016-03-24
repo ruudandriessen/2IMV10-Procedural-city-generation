@@ -10,9 +10,13 @@ namespace ProceduralCity
 		public Cell (Transform parent, Vector3 position, Vector3 scale, Quaternion rotation, String name)
 		{ 
 			cell = GameObject.CreatePrimitive(PrimitiveType.Cube);
+
+			// Add rigidbody and disable movement by default
 			Rigidbody body = cell.AddComponent<Rigidbody> ();
 			body.useGravity = true;
 			body.isKinematic = true;
+
+			// Get renderer and apply material
 			MeshRenderer renderer = cell.GetComponent<MeshRenderer>();
 			Material newMat = Resources.Load("Materials/Concrete_Asphalt_02", typeof(Material)) as Material;
 			renderer.material = newMat;
