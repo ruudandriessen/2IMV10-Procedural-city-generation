@@ -61,6 +61,17 @@ namespace ProceduralCity
 			horizontalDir = parent.InverseTransformVector (horizontalDir);
 			verticalDir = parent.InverseTransformVector (verticalDir);
 
+
+//			if (horizontalDir.y == 0 && verticalDir.y == 0 && p.y > 0.3f) {
+//				Vector3 roofLocation = p + horizontalMagnitude *horizontalDir / 2 + verticalMagnitude * verticalDir / 2;
+//				roofLocation.y -= scale.y / 2;
+//				Vector3 roofScale = new Vector3 (horizontalMagnitude, scale.y, verticalMagnitude);
+//				Cell c = new Cell (parent, roofLocation, roofScale, rotation, "Region roof");
+//				Color finalColor = Color.Lerp (color, Color.black, UnityEngine.Random.value * 0.3f);
+//				c.setColor (finalColor);
+//				return true;
+//			}
+
 			Vector3 start = p + Vector3.Scale(corner.getTranslateVector(), cornerDimensions / 2);
 			start += cornerDimensions.x / 2 * horizontalDir + dimensions.x / 2 * horizontalDir;
 			start += cornerDimensions.y / 2 * verticalDir + dimensions.y / 2 * verticalDir;

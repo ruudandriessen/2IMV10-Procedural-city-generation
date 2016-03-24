@@ -57,7 +57,7 @@ namespace ProceduralCity
 			float stepSize = dimensions.y;
 
 			Vector3 r1 = edge.getRegions ()[0].getNormal();
-			Vector3 r2 = edge.getRegions ()[1].getNormal();				
+			Vector3 r2 = edge.getRegions ()[1].getNormal();	
 
 			for (Vector3 p = start; i < maxCount; p += direction * stepSize) {
 				Cell c;

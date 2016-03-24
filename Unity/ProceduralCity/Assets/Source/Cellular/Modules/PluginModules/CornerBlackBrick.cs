@@ -10,7 +10,7 @@ namespace ProceduralCity
 		public CornerBlackBrick (Transform parent, Color c)
 		{
 			this.parent = parent;
-			this.setDimensions(new Vector3(0.1f, 0.1f, 0.1f));
+			this.setDimensions(new Vector3(1.0f, 1.0f, 1.0f));
 			this.setPadding(new Vector3(0.005f, 0.005f, 0.005f));
 			this.color = c;
 		}
