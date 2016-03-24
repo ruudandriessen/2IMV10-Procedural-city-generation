@@ -131,7 +131,7 @@ public class HouseGeneration : MonoBehaviour
 			}
 			centers [2*i] = c1;
 			centers [2 * i + 1] = c2;
-			Vector3 n = Vector3.Cross (points [1] - points [0], points [2] - points [0]);
+			Vector3 n = Vector3.Cross (points [1] - points [0], points [2] - points [0]).normalized;
 			normals [i] = n;
 			if (Vector3.Dot (n + c1, pc) < 0) {
 				numberOfWrongs++;
@@ -194,6 +194,7 @@ public class HouseGeneration : MonoBehaviour
 		GameObject meshObject = new GameObject ();
 		meshObject.AddComponent<MeshFilter> ().mesh = msh;
 		Renderer renderer = meshObject.AddComponent<MeshRenderer> ();
+		meshObject.AddComponent<TextureCellular> ();
 		meshObject.transform.parent = this.transform;
 
 		Material newMat = Resources.Load("Materials/House") as Material;
