@@ -40,7 +40,7 @@ namespace ProceduralCity
 			return this;
 		}
 
-		public LSystem executeRules() {
+		public List<Symbol> executeRules() {
 			List<Symbol> currentShapes = new List<Symbol> ();
 			currentShapes = state;
 			//Apply all iterations
@@ -53,16 +53,27 @@ namespace ProceduralCity
 				}
 				List<Symbol> nextState = new List<Symbol> ();
 				for (int j = 0; j < currentShapes.Count; j++) {
-					for (int k = 0; k < rules.Count; k++) {
-						Debug.Log ((currentShapes [j].getName () == rules [k].getPredeccessorType ()) + ", " + currentShapes [j].getName () + ", " + rules [k].getPredeccessorType ()); 
-						if (currentShapes [j].getName () == rules [k].getPredeccessorType ()) {
-							rules [k].execute (currentShapes [j], ref nextState);
+					if (currentShapes [j].isFinal ()) {
+						nextState.Add (currentShapes[j]);
+					}
+					if (!currentShapes [j].getIsEvaluated ()) {
+						for (int k = 0; k < rules.Count; k++) {
+							Debug.Log ((currentShapes [j].getName () == rules [k].getPredeccessorType ()) + ", " + currentShapes [j].getName () + ", " + rules [k].getPredeccessorType ()); 
+							if (currentShapes [j].getName () == rules [k].getPredeccessorType ()) {
+								rules [k].execute (currentShapes [j], ref nextState);
+							}
 						}
+						currentShapes [j].evaluate ();
 					}
 				}
 				currentShapes = nextState;
 			}
-			return this;
+			/*Debug.Log (currentShapes.Count);
+			for (int i = 0; i < currentShapes.Count; i++) {
+				Debug.Log(currentShapes[i].extraValues["center"]);
+			}*/
+			//Debug.Log (currentShapes [1].extraValues ["center"]);
+			return currentShapes;
 		}
 	}
 }

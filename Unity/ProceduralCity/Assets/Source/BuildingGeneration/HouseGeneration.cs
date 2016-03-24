@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using ProceduralCity;
 
 public class HouseGeneration : MonoBehaviour
@@ -10,7 +11,7 @@ public class HouseGeneration : MonoBehaviour
 	{
 		Scope s = new Scope (this.gameObject);
 		Rule r1 = new Rule ("Footprint")
-			.add (new ScaleOperation (s, 1, 25, 1))
+			.add (new ScaleOperation (s, 1, new System.Random().Next(12, 30), 1))
 			.add (new SaveOperation(s, "Facades"));
 		Rule r2 = new Rule ("Facades")
 			.add (new ComputeOperation (s, "sidefaces", "Facade",
@@ -89,7 +90,8 @@ public class HouseGeneration : MonoBehaviour
 		Debug.DrawLine (new Vector3 (10, 0, 10), new Vector3 (0, 0, 10), Color.red, 2000f);
 		Debug.DrawLine (new Vector3 (0, 0, 10), new Vector3 (0, 0, 0), Color.red, 2000f);
 		LSystem lsystem = new LSystem (new Axiom("Footprint", footprint), 10);
-		lsystem
+		List<Symbol> symbols = 
+			lsystem
 			.add (r1)
 			.add (r2)
 			.add (r3)
@@ -102,13 +104,109 @@ public class HouseGeneration : MonoBehaviour
 			.add (r10)
 			.add (r11)
 			.add (r12)
-			.executeRules ();	
+			.executeRules ();
+		
+		drawResult (symbols);
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
-	
+
+	}
+
+	void drawResult(List<Symbol> symbols) {
+		Debug.Log ("T");
+		Vector3 pc = symbols [0].extraValues ["center"];
+		Vector3[] normals = new Vector3[symbols.Count];
+		Vector3[] centers = new Vector3[2*symbols.Count];
+		int numberOfWrongs = 0;
+		for (int i = 0; i < symbols.Count; i++) {
+			List<Vector3> points = symbols[i].getPoints ();
+			Vector3 c1 = new Vector3 (0, 0, 0);
+			Vector3 c2 = new Vector3 (0, 0, 0);
+			for (int j = 0; j < points.Count-1; j++) {
+				c1 += points [j] / (points.Count-1);
+				c2 += points [j + 1] / (points.Count - 1);
+			}
+			centers [2*i] = c1;
+			centers [2 * i + 1] = c2;
+			Vector3 n = Vector3.Cross (points [1] - points [0], points [2] - points [0]);
+			normals [i] = n;
+			if (Vector3.Dot (n + c1, pc) < 0) {
+				numberOfWrongs++;
+			}
+
+		}
+		if (numberOfWrongs > Mathf.FloorToInt((float)symbols.Count / 2f)) {
+			normals = flipNormals (normals);
+		}
+		for (int i = 0; i < normals.Length; i++) {
+			Debug.DrawRay (centers[2*i], normals[i], Color.yellow, 2000f);
+		}
+
+
+
+
+		Vector3[] meshPoints = new Vector3[symbols.Count*6];
+		Vector2[] topAndBottomPoints = new Vector2[symbols.Count];
+		for(int i = 0; i < symbols.Count; i++) {
+			topAndBottomPoints [i] = new Vector2(symbols [i].getPoint (0).x, symbols[i].getPoint(0).z);
+		}
+		Triangulator tr = new Triangulator (topAndBottomPoints);
+		int[] indices = tr.Triangulate ();
+		Debug.Log ("Found " + indices.Length + " vertices");
+		int[] triangles = new int[symbols.Count * 6+indices.Length*2];
+		Vector3[] meshNormals = new Vector3[symbols.Count*6];
+		for (int i = 0; i < symbols.Count; i++) {
+			List<Vector3> symbolPoints = symbols [i].getPoints ();
+			for(int j = 0; j < symbolPoints.Count; j++) {
+				meshPoints [i * 4 + j] = symbolPoints [j];
+				meshNormals [i * 4 + j] = normals [i];
+			}
+			triangles [i * 6] = i * 4+2;
+			triangles [i * 6 + 1] = i * 4 + 1;
+			triangles [i * 6 + 2] = i * 4 + 0;
+			triangles [i * 6 + 3] = i * 4 + 2;
+			triangles [i * 6 + 4] = i * 4 + 3;
+			triangles [i * 6 + 5] = i * 4 + 1;
+			meshPoints [symbols.Count * 4 + i] = symbolPoints [0];
+			meshPoints [symbols.Count * 5 + i] = symbolPoints [2];
+			meshNormals [symbols.Count * 4 + i] = Vector3.up;
+			meshNormals [symbols.Count * 5 + i] = Vector3.down;
+				
+		}
+
+
+
+		for (int i = 0; i < indices.Length; i++) {
+			triangles [symbols.Count * 6 + +indices.Length-1-i] = indices [i] + symbols.Count * 4;
+			triangles [symbols.Count * 6 + indices.Length + i] = indices [i] + symbols.Count * 5;
+		}
+
+
+		Mesh msh = new Mesh();
+		msh.name = "Building";
+		msh.vertices = meshPoints;
+		msh.triangles = triangles;
+		msh.normals = meshNormals;
+
+		GameObject meshObject = new GameObject ();
+		meshObject.AddComponent<MeshFilter> ().mesh = msh;
+		Renderer renderer = meshObject.AddComponent<MeshRenderer> ();
+		meshObject.transform.parent = this.transform;
+
+		Material newMat = Resources.Load("Materials/House") as Material;
+		renderer.material = newMat;
+			
+	}
+
+	private Vector3[] flipNormals(Vector3[] normals) {
+		Vector3[] nx = new Vector3 [normals.Length];
+		for(int i = 0; i < normals.Length; i++) {
+			nx [i] = normals [i] * -1;
+		}
+		return nx;
 	}
 }
 

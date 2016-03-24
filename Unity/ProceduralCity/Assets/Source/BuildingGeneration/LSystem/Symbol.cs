@@ -10,8 +10,11 @@ namespace ProceduralCity
 		private string name;
 		private string id;
 		private List<Vector3> points;
+		private bool finalShape;
+		private bool isEvaluated = false;
+		public Dictionary<string, Vector3> extraValues;
 
-		public Symbol (string name, Vector3[] pointsA)
+		public Symbol (string name, Vector3[] pointsA, bool isFinal = false)
 		{
 			this.points = new List<Vector3> ();
 			this.id = GetUniqueID ();
@@ -19,10 +22,24 @@ namespace ProceduralCity
 			for (int i = 0; i < pointsA.Length; i++) {
 				this.points.Add (pointsA [i]);
 			}
+			this.finalShape = isFinal;
+			this.extraValues = new Dictionary<string, Vector3> ();
 		}
 
 		public bool hasId(String id) {
 			return this.id == id;
+		}
+
+		public bool isFinal() {
+			return this.finalShape;
+		}
+
+		public void evaluate() {
+			this.isEvaluated = true;
+		}
+
+		public bool getIsEvaluated() {
+			return this.isEvaluated;
 		}
 
 		public string getName() {

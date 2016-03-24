@@ -21,15 +21,25 @@ namespace ProceduralCity
 			switch (type) {
 			case "sidefaces":
 				List<Vector3> points = s.getPoints ();
-				int numberOfFaces = s.getPoints().Count /2;
+				int numberOfFaces = s.getPoints ().Count / 2;
 				Debug.Log ("Sidefaces: " + numberOfFaces);
+				Vector3 c = new Vector3 (0, 0, 0);
+				int numberOfPoints = points.Count/2;
+				for (int i = 0; i < numberOfPoints; i++) {
+					c += points [i]/  numberOfPoints;
+					//c.y += points [i].y / (float) numberOfPoints;
+					//c.z += points [i].z / (float) numberOfPoints;
+				}
 				for(int i = 0; i < numberOfFaces; i++) {
 					Vector3[] sidefacePoints = new Vector3[4];
 					sidefacePoints [0] = points [i];
 					sidefacePoints [1] = points [(i + 1) % numberOfFaces];
 					sidefacePoints [2] = points [numberOfFaces+i];
 					sidefacePoints [3] = points [numberOfFaces+(i + 1) % numberOfFaces];
-					symbols.Add (new Symbol (this.param, sidefacePoints));
+					Symbol newSymbol = new Symbol (this.param, sidefacePoints, true);
+
+					newSymbol.extraValues.Add ("center", c);
+					symbols.Add (newSymbol);
 				}
 
 
