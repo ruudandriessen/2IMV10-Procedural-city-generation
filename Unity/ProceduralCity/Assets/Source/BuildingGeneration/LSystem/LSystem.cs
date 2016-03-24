@@ -45,11 +45,11 @@ namespace ProceduralCity
 			currentShapes = state;
 			//Apply all iterations
 			for (int i = 0; i < iterations; i++) {
-				Debug.Log ("----------------------");
-				Debug.Log ("Iteration: " + i);
-				Debug.Log ("Shapes: " + currentShapes.Count);
+				//Debug.Log ("----------------------");
+				//Debug.Log ("Iteration: " + i);
+				//Debug.Log ("Shapes: " + currentShapes.Count);
 				for (int x = 0; x < currentShapes.Count; x++) {
-					Debug.Log(currentShapes[x].getName());
+					//Debug.Log(currentShapes[x].getName());
 				}
 				List<Symbol> nextState = new List<Symbol> ();
 				for (int j = 0; j < currentShapes.Count; j++) {
@@ -58,7 +58,7 @@ namespace ProceduralCity
 					}
 					if (!currentShapes [j].getIsEvaluated ()) {
 						for (int k = 0; k < rules.Count; k++) {
-							Debug.Log ((currentShapes [j].getName () == rules [k].getPredeccessorType ()) + ", " + currentShapes [j].getName () + ", " + rules [k].getPredeccessorType ()); 
+							//Debug.Log ((currentShapes [j].getName () == rules [k].getPredeccessorType ()) + ", " + currentShapes [j].getName () + ", " + rules [k].getPredeccessorType ()); 
 							if (currentShapes [j].getName () == rules [k].getPredeccessorType ()) {
 								rules [k].execute (currentShapes [j], ref nextState);
 							}

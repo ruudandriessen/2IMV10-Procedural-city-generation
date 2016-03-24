@@ -14,7 +14,7 @@ namespace ProceduralCity
 		}
 
 		public override void applyOperation(Symbol s, ref List<Symbol> symbols) {
-			Debug.Log ("Shape gemaakt");
+			//Debug.Log ("Shape gemaakt");
 			GameObject shapeg = GameObject.CreatePrimitive (shape);
 			shapeg.transform.parent = scope.getGameObject ().transform;
 			shapeg.transform.localScale = new Vector3 (scope.getSx (), scope.getSy (), scope.getSz ());

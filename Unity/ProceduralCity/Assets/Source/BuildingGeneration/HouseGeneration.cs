@@ -6,9 +6,11 @@ using ProceduralCity;
 public class HouseGeneration : MonoBehaviour
 {
 
-	// Use this for initialization
-	void Start ()
-	{
+	public long buildingId;
+	void Start() {
+		OsmBuilding building = Data.Instance.buildings [buildingId];
+		//float[] points = building.getPolygon ();
+		Vector3[] points = building.getPolygonAsVector3 ();
 		Scope s = new Scope (this.gameObject);
 		Rule r1 = new Rule ("Footprint")
 			.add (new ScaleOperation (s, 1, new System.Random().Next(12, 30), 1))
@@ -77,13 +79,14 @@ public class HouseGeneration : MonoBehaviour
 
 		//.add (new TranslateOperation (g3, 8 / 2, 15 / 2, 8 / 2))
 		//.add (new TranslateOperation (g3, 0, 0, 16));
-		Vector3[] footprint = new Vector3[] {
+		/*Vector3[] footprint = new Vector3[] {
 			new Vector3 (0, 0, 0),
 			new Vector3 (10, 0, 0),
 			new Vector3 (15, 0, 5),
 			new Vector3 (10, 0, 10),
 			new Vector3 (0, 0, 10)
-		};
+		};*/
+		Vector3[] footprint = points;
 		Debug.DrawLine (new Vector3 (0, 0, 0), new Vector3 (10, 0, 0), Color.red, 2000f);
 		Debug.DrawLine (new Vector3 (10, 0, 0), new Vector3 (15, 0, 5), Color.red, 2000f);
 		Debug.DrawLine (new Vector3 (15, 0, 5), new Vector3 (10, 0, 10), Color.red, 2000f);
@@ -116,7 +119,7 @@ public class HouseGeneration : MonoBehaviour
 	}
 
 	void drawResult(List<Symbol> symbols) {
-		Debug.Log ("T");
+		//Debug.Log ("T");
 		Vector3 pc = symbols [0].extraValues ["center"];
 		Vector3[] normals = new Vector3[symbols.Count];
 		Vector3[] centers = new Vector3[2*symbols.Count];
@@ -133,13 +136,20 @@ public class HouseGeneration : MonoBehaviour
 			centers [2 * i + 1] = c2;
 			Vector3 n = Vector3.Cross (points [1] - points [0], points [2] - points [0]).normalized;
 			normals [i] = n;
-			if (Vector3.Dot (n + c1, pc) < 0) {
+			//Debug.Log (Vector3.Dot (n, pc-c1));
+			if (Vector3.Dot (n, (pc-c1).normalized) > 0) {
+				numberOfWrongs++;
+			}
+			else if (Vector3.Dot (n, (pc-c2).normalized) > 0) {
 				numberOfWrongs++;
 			}
 
 		}
-		if (numberOfWrongs > Mathf.FloorToInt((float)symbols.Count / 2f)) {
+		bool flipped = false;
+		Debug.Log (symbols.Count + " - " + numberOfWrongs + " - " + symbols.Count + " - " + flipped);
+		if (1.8*(float)numberOfWrongs > symbols.Count) {
 			normals = flipNormals (normals);
+			flipped = true;
 		}
 		for (int i = 0; i < normals.Length; i++) {
 			Debug.DrawRay (centers[2*i], normals[i], Color.yellow, 2000f);
@@ -155,7 +165,7 @@ public class HouseGeneration : MonoBehaviour
 		}
 		Triangulator tr = new Triangulator (topAndBottomPoints);
 		int[] indices = tr.Triangulate ();
-		Debug.Log ("Found " + indices.Length + " vertices");
+		//Debug.Log ("Found " + indices.Length + " vertices");
 		int[] triangles = new int[symbols.Count * 6+indices.Length*2];
 		Vector3[] meshNormals = new Vector3[symbols.Count*6];
 		for (int i = 0; i < symbols.Count; i++) {
@@ -164,12 +174,21 @@ public class HouseGeneration : MonoBehaviour
 				meshPoints [i * 4 + j] = symbolPoints [j];
 				meshNormals [i * 4 + j] = normals [i];
 			}
-			triangles [i * 6] = i * 4+2;
-			triangles [i * 6 + 1] = i * 4 + 1;
-			triangles [i * 6 + 2] = i * 4 + 0;
-			triangles [i * 6 + 3] = i * 4 + 2;
-			triangles [i * 6 + 4] = i * 4 + 3;
-			triangles [i * 6 + 5] = i * 4 + 1;
+			if (flipped) {
+				triangles [i * 6] = i * 4 + 2;
+				triangles [i * 6 + 1] = i * 4 + 1;
+				triangles [i * 6 + 2] = i * 4 + 0;
+				triangles [i * 6 + 3] = i * 4 + 2;
+				triangles [i * 6 + 4] = i * 4 + 3;
+				triangles [i * 6 + 5] = i * 4 + 1;
+			} else {
+				triangles [i * 6] = i * 4 + 0;
+				triangles [i * 6 + 1] = i * 4 + 1;
+				triangles [i * 6 + 2] = i * 4 + 2;
+				triangles [i * 6 + 3] = i * 4 + 1;
+				triangles [i * 6 + 4] = i * 4 + 3;
+				triangles [i * 6 + 5] = i * 4 + 2;
+			}
 			meshPoints [symbols.Count * 4 + i] = symbolPoints [0];
 			meshPoints [symbols.Count * 5 + i] = symbolPoints [2];
 			meshNormals [symbols.Count * 4 + i] = Vector3.up;
@@ -194,7 +213,7 @@ public class HouseGeneration : MonoBehaviour
 		GameObject meshObject = new GameObject ();
 		meshObject.AddComponent<MeshFilter> ().mesh = msh;
 		Renderer renderer = meshObject.AddComponent<MeshRenderer> ();
-		meshObject.AddComponent<TextureCellular> ();
+		//meshObject.AddComponent<TextureCellular> ();
 		meshObject.transform.parent = this.transform;
 
 		Material newMat = Resources.Load("Materials/House") as Material;

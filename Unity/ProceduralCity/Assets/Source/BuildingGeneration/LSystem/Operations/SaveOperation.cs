@@ -14,7 +14,7 @@ namespace ProceduralCity
 		}
 
 		public override void applyOperation(Symbol s, ref List<Symbol> symbols) {
-			Debug.Log ("Trying to save " + shapeType);
+			//Debug.Log ("Trying to save " + shapeType);
 			Vector3[] points = new Vector3[s.getPoints ().Count];
 			for (int i = 0; i < s.getPoints ().Count; i++) {
 				points [i] = s.getPoint (i);

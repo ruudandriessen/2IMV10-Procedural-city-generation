@@ -18,7 +18,7 @@ namespace ProceduralCity
 		}
 
 		public override void applyOperation(Symbol s, ref List<Symbol> symbols) {
-			Debug.Log("Subdivide Operation on "+ dimension + " with " + parameters.Length + " parameters and " + outputs.Length + " outputs");
+			//Debug.Log("Subdivide Operation on "+ dimension + " with " + parameters.Length + " parameters and " + outputs.Length + " outputs");
 			List<Vector3> points = s.getPoints ();
 			Color c = UnityEngine.Random.ColorHSV();
 			//Debug.DrawLine (points [0], points [3], c, 2000f);
@@ -30,8 +30,8 @@ namespace ProceduralCity
 				distance = (points [0] - points [3]).magnitude;
 			}
 				float rDistance = solveR (distance, parameters);
-				Debug.Log ("Distance :" + distance);
-				Debug.Log ("RDISTANCE = " + rDistance);
+				//Debug.Log ("Distance :" + distance);
+				//Debug.Log ("RDISTANCE = " + rDistance);
 				float oldFraction = 0;
 			for (int i = 0; i < parameters.Length; i++) {
 				float value;
@@ -53,9 +53,9 @@ namespace ProceduralCity
 					newPoints [3] = points [1] * oldFraction + points [3] * (1 - oldFraction);
 					newPoints [1] = points [1] * fraction + points [3] * (1 - fraction);
 				}
-				Debug.DrawLine (newPoints [0], newPoints [1], c, 2000f);
-				Debug.DrawLine (newPoints [2], newPoints [3], c, 2000f);
-				Debug.DrawLine (newPoints [1], newPoints [3], c, 2000f);
+				//Debug.DrawLine (newPoints [0], newPoints [1], c, 2000f);
+				//Debug.DrawLine (newPoints [2], newPoints [3], c, 2000f);
+				//Debug.DrawLine (newPoints [1], newPoints [3], c, 2000f);
 				oldFraction = fraction;
 				symbols.Add (new Symbol (outputs [i], newPoints));
 

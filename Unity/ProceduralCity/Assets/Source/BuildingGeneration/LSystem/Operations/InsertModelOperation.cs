@@ -14,7 +14,7 @@ namespace ProceduralCity
 		}
 
 		public override void applyOperation(Symbol s, ref List<Symbol> symbols) {
-			Debug.Log ("Going to insert model " + this.model);
+			//Debug.Log ("Going to insert model " + this.model);
 			GameObject newObj = new GameObject("Window");
 			newObj.AddComponent <MeshRenderer>();
 

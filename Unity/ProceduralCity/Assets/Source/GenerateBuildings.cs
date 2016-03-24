@@ -9,7 +9,7 @@ public class GenerateBuildings : MonoBehaviour {
 		// Get buildings
 		foreach (long key in Data.Instance.buildings.Keys) {
 			GameObject obj = new GameObject("Building");
-			Building script = obj.AddComponent<Building> ();
+			HouseGeneration script = obj.AddComponent<HouseGeneration> ();
 			script.buildingId = key;
 		}
 	}

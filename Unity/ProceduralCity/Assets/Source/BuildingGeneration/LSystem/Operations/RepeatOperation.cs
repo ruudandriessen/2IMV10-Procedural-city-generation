@@ -18,7 +18,7 @@ namespace ProceduralCity
 		}
 
 		public override void applyOperation(Symbol s, ref List<Symbol> symbols) {
-			Debug.Log("Repeat Operation on "+ dimension + " parameters and " + output + " as output");
+			//Debug.Log("Repeat Operation on "+ dimension + " parameters and " + output + " as output");
 			List<Vector3> points = s.getPoints ();
 			Color c = UnityEngine.Random.ColorHSV();
 			float distance = 0;
@@ -31,7 +31,7 @@ namespace ProceduralCity
 			int repetitions = (int)Math.Ceiling ((double)distance / float.Parse (this.length));
 			float repDistance = distance / repetitions;
 			float oldFraction = 0;
-			Debug.Log ("Repetitions: " + repetitions + " , RepDistance: " + repDistance);
+			//Debug.Log ("Repetitions: " + repetitions + " , RepDistance: " + repDistance);
 			for (int i = 0; i < repetitions; i++) {
 				Vector3[] newPoints = new Vector3[4];
 				float fraction = (oldFraction * distance + repDistance) / distance;
@@ -40,17 +40,17 @@ namespace ProceduralCity
 					newPoints [1] = points [0] * fraction + points [1] * (1 - fraction);
 					newPoints [2] = points [2] * oldFraction + points [3] * (1 - oldFraction);
 					newPoints [3] = points [2] * fraction + points [3] * (1 - fraction);
-					Debug.DrawLine (newPoints [0], newPoints [1], c, 2000f);
-					Debug.DrawLine (newPoints [2], newPoints [3], c, 2000f);
-					Debug.DrawLine (newPoints [1], newPoints [3], c, 2000f);
+					//Debug.DrawLine (newPoints [0], newPoints [1], c, 2000f);
+					//Debug.DrawLine (newPoints [2], newPoints [3], c, 2000f);
+					//Debug.DrawLine (newPoints [1], newPoints [3], c, 2000f);
 				} else if (dimension == "Y") {
 					newPoints [2] = points [0] * oldFraction + points [2] * (1 - oldFraction);
 					newPoints [0] = points [0] * fraction + points [2] * (1 - fraction);
 					newPoints [3] = points [1] * oldFraction + points [3] * (1 - oldFraction);
 					newPoints [1] = points [1] * fraction + points [3] * (1 - fraction);
-					Debug.DrawLine (newPoints [0], newPoints [1], c, 2000f);
-					Debug.DrawLine (newPoints [2], newPoints [3], c, 2000f);
-					Debug.DrawLine (newPoints [1], newPoints [3], c, 2000f);
+					//Debug.DrawLine (newPoints [0], newPoints [1], c, 2000f);
+					//Debug.DrawLine (newPoints [2], newPoints [3], c, 2000f);
+					//Debug.DrawLine (newPoints [1], newPoints [3], c, 2000f);
 				}
 				oldFraction = fraction;
 

@@ -22,7 +22,7 @@ namespace ProceduralCity
 			case "sidefaces":
 				List<Vector3> points = s.getPoints ();
 				int numberOfFaces = s.getPoints ().Count / 2;
-				Debug.Log ("Sidefaces: " + numberOfFaces);
+				//Debug.Log ("Sidefaces: " + numberOfFaces);
 				Vector3 c = new Vector3 (0, 0, 0);
 				int numberOfPoints = points.Count/2;
 				for (int i = 0; i < numberOfPoints; i++) {
