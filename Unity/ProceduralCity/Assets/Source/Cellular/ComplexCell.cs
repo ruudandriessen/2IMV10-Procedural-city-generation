@@ -10,6 +10,7 @@ namespace ProceduralCity
 
 		public ComplexCell (List<Vector3> poly3D, float height, String name)
 		{ 
+			float yPos = poly3D [0].y;
 			List<Vector2> polygon = new List<Vector2> ();
 			foreach (Vector3 v3 in poly3D) {
 				polygon.Add(new Vector2(v3.x, v3.z));
@@ -21,7 +22,7 @@ namespace ProceduralCity
 			// Create the Vector3 vertices
 			Vector3[] vertices = new Vector3[polygon.Count];
 			for (int i=0; i<vertices.Length; i++) {
-				vertices[i] = new Vector3(polygon[i].x, 0, polygon[i].y);
+				vertices[i] = new Vector3(polygon[i].x, yPos, polygon[i].y);
 			}
 
 			// Add rigidbody and disable movement by default
@@ -37,6 +38,7 @@ namespace ProceduralCity
 			msh.RecalculateBounds();
 
 			// Create game object
+			obj = new GameObject();
 			obj.AddComponent(typeof(MeshRenderer));
 			MeshFilter filter = obj.AddComponent(typeof(MeshFilter)) as MeshFilter;
 			filter.mesh = msh;
