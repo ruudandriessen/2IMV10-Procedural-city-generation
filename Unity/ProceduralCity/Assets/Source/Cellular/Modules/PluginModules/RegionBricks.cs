@@ -9,7 +9,7 @@ namespace ProceduralCity
 		public RegionBricks (Transform parent, Color c)
 		{
 			this.parent = parent;
-			this.setCellDimensions(new Vector3(0.1f, 0.1f, 0.2f));
+			this.setCellDimensions(new Vector3(1.0f, 1.0f, 2.0f));
 			this.setCellPadding(new Vector3(0.005f, 0.005f, 0.005f));
 			this.color = c;
 		}
@@ -18,7 +18,7 @@ namespace ProceduralCity
 
 		public override bool apply (Region r)
 		{
-			Vector3 cornerDimensions = new Vector3 (0.1f, 0.1f, 0.1f);
+			Vector3 cornerDimensions = new Vector3 (1.0f, 1.0f, 1.0f);
 
 			HighLevelEdge e1 = r.getEdges ()[0];
 			HighLevelEdge e2 = null;
@@ -55,8 +55,12 @@ namespace ProceduralCity
 			float horizontalMagnitude = horizontalDir.magnitude - dimensions.z;
 			float verticalMagnitude = verticalDir.magnitude;
 
+
 			horizontalDir = parent.InverseTransformVector (horizontalDir);
 			verticalDir = parent.InverseTransformVector (verticalDir);
+
+			verticalDir.Normalize ();
+			horizontalDir.Normalize ();
 
 			Vector3 start = p + Vector3.Scale(corner.getTranslateVector(), cornerDimensions / 2);
 			start += cornerDimensions.z / 2 * horizontalDir;// + dimensions.z / 2 * horizontalDir;
@@ -74,8 +78,7 @@ namespace ProceduralCity
 					rowStart += dimensions.z / 2 * horizontalDir;
 					rowEnd -= dimensions.z / 2 * horizontalDir;
 				}
-//				Debug.DrawLine (rowStart, rowEnd, Color.green, 200);
-				FillCellModule.fillCell (rowStart, rowEnd, scale, dimensions, parent);
+				FillCellModule.fillCell (rowStart, rowEnd, scale, dimensions, parent, color);
 				brickOut = !brickOut;
 			}
 			return true;

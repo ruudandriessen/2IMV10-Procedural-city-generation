@@ -26,12 +26,10 @@ namespace ProceduralCity
 			from = parent.TransformPoint (from);
 			to = parent.TransformPoint (to);
 
-			if (from.y > 0.3f)
-				return true;
-
 			// Get direction and translate to world space
 			Vector3 direction = edge.getDirection ();
 			direction = parent.TransformDirection (direction);
+			direction.Normalize ();
 
 			// Set from and to actual center points of the corner
 			from = from + Vector3.Scale (edge.getFrom ().getTranslateVector (), cornerDimensions / 2) + Vector3.Scale(direction, cornerDimensions /2);
@@ -43,7 +41,7 @@ namespace ProceduralCity
 			Vector3 dimensions = this.getCellDimensions ();
 			Vector3 scale = this.getCellSize();
 
-			FillCellModule.fillCell (from, to, scale, dimensions, parent);
+			FillCellModule.fillCell (from, to, scale, dimensions, parent, color);
 
 			return true;
 		}

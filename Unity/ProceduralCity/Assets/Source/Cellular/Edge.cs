@@ -22,19 +22,6 @@ namespace ProceduralCity
 
 		public void setLabel(EdgeLabel lbl) {
 			this.lbl = lbl;
-//			Color c = Color.grey;
-//			switch (lbl) {
-//			case EdgeLabel.concave:
-//				c = Color.red;
-//				break;
-//			case EdgeLabel.convex:
-//				c = Color.blue;
-//				break;
-//			case EdgeLabel.flat:
-//				c = Color.cyan;
-//				break;
-//			}
-//			Debug.DrawLine(v1.getPoint(), v2.getPoint(), c, 200);
 		}
 
 		public Vertex getFrom() {

@@ -31,11 +31,11 @@ namespace ProceduralCity
 				return false;
 			}
 
-//			// Apply all regions
-//			if (!this.applyRegions (mesh.getRegions ())) {
-//				Debug.Log ("Failed to apply region module");
-//				return false;
-//			}
+			// Apply all regions
+			if (!this.applyRegions (mesh.getRegions ())) {
+				Debug.Log ("Failed to apply region module");
+				return false;
+			}
 			return true;
 		}
 	}
