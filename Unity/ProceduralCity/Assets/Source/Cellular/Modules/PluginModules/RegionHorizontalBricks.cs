@@ -9,7 +9,7 @@ namespace ProceduralCity
 		public RegionHorizontalBricks (Transform parent, Color c)
 		{
 			this.parent = parent;
-			this.setCellDimensions(new Vector3(2.0f, 1.0f, 1.0f));
+			this.setCellDimensions(new Vector3(4.0f, 1.0f, 4.0f));
 			this.setCellPadding(new Vector3(0.005f, 0.005f, 0.005f));
 			this.color = c;
 		}
@@ -18,8 +18,12 @@ namespace ProceduralCity
 
 		public override bool apply (Region r)
 		{
-			Vector3 cornerDimensions = new Vector3 (0.1f, 0.1f, 0.1f);
+			Vector3 cornerDimensions = new Vector3 (2.0f, 2.0f, 2.0f);
 
+			if (r.getEdges ().Count == 0) {
+				Debug.Log ("Warning - no edges found near region, error");
+				return true;
+			}
 			HighLevelEdge e1 = r.getEdges ()[0];
 			HighLevelEdge e2 = null;
 			foreach (HighLevelEdge edge in r.getEdges ()) {
@@ -33,53 +37,65 @@ namespace ProceduralCity
 			}
 			if (e2 == null) {
 				Debug.Log ("Error - no two edges from same start vertex in region");
-				return false;
+				return true;
 			}
-			Vector3 horizontalDir, verticalDir;
-			if (e1.getDirection ().y == 0) {
-				horizontalDir = e1.getDirection ();
-				verticalDir = e2.getDirection ();
-			} else {
-				horizontalDir = e2.getDirection ();
-				verticalDir = e1.getDirection ();
-			}
+			Vector3 dir1, dir2;
+			dir1 = e1.getDirection ();
+			dir2 = e2.getDirection ();
 			Corner corner = e1.getFrom ();
 			Vector3 p = corner.getVertex().getPoint();
-			horizontalDir = parent.TransformVector(horizontalDir);
-			verticalDir = parent.TransformVector(verticalDir);
+			dir1 = parent.TransformVector(dir1);
+			dir2 = parent.TransformVector(dir2);
 			p = parent.TransformPoint (p);
 
 			// Calculate rotation
-			Quaternion rotation = Quaternion.FromToRotation (horizontalDir, Vector3.right);
+			Quaternion rotation = Quaternion.FromToRotation (dir1, Vector3.right);
 
-			float horizontalMagnitude = horizontalDir.magnitude;
-			float verticalMagnitude = verticalDir.magnitude;
+			float dir1Magnitude = dir1.magnitude;
+			float dir2Magnitude = dir2.magnitude;
 
 			Vector3 dimensions = this.getCellDimensions ();
 			Vector3 scale = this.getCellSize ();
 
-			horizontalDir = parent.InverseTransformVector (horizontalDir);
-			verticalDir = parent.InverseTransformVector (verticalDir);
-			horizontalDir.Normalize ();
-			verticalDir.Normalize ();
+			dir1 = parent.InverseTransformVector (dir1);
+			dir2 = parent.InverseTransformVector (dir2);
+			dir1.Normalize ();
+			dir2.Normalize ();
 
 			Vector3 start = p + Vector3.Scale(corner.getTranslateVector(), cornerDimensions / 2);
-			start += cornerDimensions.x / 2 * horizontalDir + dimensions.x / 2 * horizontalDir;
-			start += cornerDimensions.y / 2 * verticalDir + dimensions.y / 2 * verticalDir;
+			start += cornerDimensions.x / 2 * dir1 + dimensions.x / 2 * dir1;
+			start += cornerDimensions.y / 2 * dir2 + dimensions.y / 2 * dir2;
 
-			int maxHorizontal = (int) (horizontalMagnitude / dimensions.x);
-			int maxVertical = (int) (verticalMagnitude / dimensions.y) - 1;
+			int maxDir1 = (int) (dir1Magnitude / dimensions.x);
+			int maxDir2 = (int) (dir2Magnitude / dimensions.z) - 1;
 
-			for (int i = 0; i < maxHorizontal; i++) {
-				for (int j = 0; j < maxVertical; j++) {
+			MeshFilter[] meshFilters = new MeshFilter[maxDir1 * maxDir2];
+			for (int i = 0; i < maxDir1; i++) {
+				for (int j = 0; j < maxDir2; j++) {
 					Color finalColor = Color.Lerp (color, Color.black, UnityEngine.Random.value * 0.3f);
-					Vector3 location = start + i * dimensions.x * horizontalDir;
-					location += j * dimensions.y * verticalDir;
+					Vector3 location = start + i * dimensions.x * dir1;
+					location += j * dimensions.z * dir2;
 					Cell c = new Cell (parent, location, scale, rotation, "Region brick");
 					c.setColor (finalColor);
+					meshFilters [i * maxDir2 + j] = c.getCell ().GetComponent<MeshFilter>();
 				}
-			}
+			}	
 
+			// Optimize by combining mesh
+			CombineInstance[] combine = new CombineInstance[meshFilters.Length];
+			GameObject region = new GameObject ();
+			MeshFilter filter = region.AddComponent<MeshFilter> ();
+			region.name = "HorzRegion";
+			int index = 0;
+			while (index < meshFilters.Length) {
+				combine[index].mesh = meshFilters[index].sharedMesh;
+				combine[index].transform = meshFilters[index].transform.localToWorldMatrix;
+				meshFilters [index].gameObject.SetActive (false);
+				index++;
+			}
+			filter.mesh = new Mesh();
+			filter.mesh.CombineMeshes(combine);
+			region.transform.gameObject.SetActive (true);
 
 			return true;
 		}

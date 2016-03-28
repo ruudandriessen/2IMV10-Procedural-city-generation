@@ -98,7 +98,7 @@ namespace ProceduralCity
 				Vector3 w = c2 - c1;
 
 				float angle = Vector3.Angle (w, n1);
-				if (angle == 90) {
+				if (angle > 89.5f && angle <= 90.5f) {
 					e.setLabel (Edge.EdgeLabel.flat);
 				} else if (angle < 90) {
 					e.setLabel (Edge.EdgeLabel.concave);

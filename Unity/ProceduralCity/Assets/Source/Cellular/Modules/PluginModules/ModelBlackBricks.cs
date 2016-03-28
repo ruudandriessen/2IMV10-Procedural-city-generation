@@ -14,7 +14,7 @@ namespace ProceduralCity
 			this.setVerticalEdgesModule (new EdgeHorizontalBricks (parent, colorBlack));
 			this.setHorizontalEdgesModule (new EdgeBrick (parent, colorWhite));
 			this.setVerticalRegionModule (new RegionBricks (parent, colorBlack));
-			this.setHorizontalRegionModule (new RegionHorizontalBricks (parent, colorWhite));
+//			this.setHorizontalRegionModule (new SingleHorizontalRegion (parent, colorWhite));
 		}
 
 		public override bool apply (HighLevelMesh mesh)

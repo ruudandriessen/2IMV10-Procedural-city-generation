@@ -11,7 +11,7 @@ namespace ProceduralCity
 		{
 			this.parent = parent;
 			this.setDimensions(new Vector3(1.0f, 1.0f, 1.0f));
-			this.setPadding(new Vector3(0.005f, 0.005f, 0.005f));
+			this.setPadding(new Vector3(0.05f, 0.05f, 0.05f));
 			this.color = c;
 		}
 
@@ -26,7 +26,7 @@ namespace ProceduralCity
 
 			p += Vector3.Scale(translateVector, dimensions / 2);
 
-			Cell c = new Cell (parent, p, scale, Quaternion.identity, "BlackBrickCorner");
+			Cell c = new Cell (parent, p, scale, Quaternion.identity, "BrickCorner");
 			Color finalColor = Color.Lerp (color, Color.black, UnityEngine.Random.value * 0.3f);
 			c.setColor (finalColor);
 
