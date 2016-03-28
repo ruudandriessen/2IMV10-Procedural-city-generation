@@ -87,11 +87,6 @@ public class HouseGeneration : MonoBehaviour
 			new Vector3 (0, 0, 10)
 		};*/
 		Vector3[] footprint = points;
-		Debug.DrawLine (new Vector3 (0, 0, 0), new Vector3 (10, 0, 0), Color.red, 2000f);
-		Debug.DrawLine (new Vector3 (10, 0, 0), new Vector3 (15, 0, 5), Color.red, 2000f);
-		Debug.DrawLine (new Vector3 (15, 0, 5), new Vector3 (10, 0, 10), Color.red, 2000f);
-		Debug.DrawLine (new Vector3 (10, 0, 10), new Vector3 (0, 0, 10), Color.red, 2000f);
-		Debug.DrawLine (new Vector3 (0, 0, 10), new Vector3 (0, 0, 0), Color.red, 2000f);
 		LSystem lsystem = new LSystem (new Axiom("Footprint", footprint), 10);
 		List<Symbol> symbols = 
 			lsystem
@@ -136,7 +131,6 @@ public class HouseGeneration : MonoBehaviour
 			centers [2 * i + 1] = c2;
 			Vector3 n = Vector3.Cross (points [1] - points [0], points [2] - points [0]).normalized;
 			normals [i] = n;
-			//Debug.Log (Vector3.Dot (n, pc-c1));
 			if (Vector3.Dot (n, (pc-c1).normalized) > 0) {
 				numberOfWrongs++;
 			}
@@ -160,12 +154,14 @@ public class HouseGeneration : MonoBehaviour
 
 		Vector3[] meshPoints = new Vector3[symbols.Count*6];
 		Vector2[] topAndBottomPoints = new Vector2[symbols.Count];
+		Vector2[] uv1 = new Vector2[symbols.Count*4];
+		Vector2[] uv2 = new Vector2[symbols.Count];
 		for(int i = 0; i < symbols.Count; i++) {
 			topAndBottomPoints [i] = new Vector2(symbols [i].getPoint (0).x, symbols[i].getPoint(0).z);
 		}
 		Triangulator tr = new Triangulator (topAndBottomPoints);
 		int[] indices = tr.Triangulate ();
-		//Debug.Log ("Found " + indices.Length + " vertices");
+
 		int[] triangles = new int[symbols.Count * 6+indices.Length*2];
 		Vector3[] meshNormals = new Vector3[symbols.Count*6];
 		for (int i = 0; i < symbols.Count; i++) {
@@ -191,8 +187,10 @@ public class HouseGeneration : MonoBehaviour
 			}
 			meshPoints [symbols.Count * 4 + i] = symbolPoints [0];
 			meshPoints [symbols.Count * 5 + i] = symbolPoints [2];
-			meshNormals [symbols.Count * 4 + i] = Vector3.up;
-			meshNormals [symbols.Count * 5 + i] = Vector3.down;
+			meshNormals [symbols.Count * 4 + i] = Vector3.down;
+			meshNormals [symbols.Count * 5 + i] = Vector3.up;
+			//Debug.DrawRay (meshPoints[symbols.Count*4+i], Vector3.up, Color.yellow, 2000f);
+			//Debug.DrawRay (meshPoints[symbols.Count*5+i], Vector3.down, Color.yellow, 2000f);
 				
 		}
 
@@ -203,12 +201,37 @@ public class HouseGeneration : MonoBehaviour
 			triangles [symbols.Count * 6 + indices.Length + i] = indices [i] + symbols.Count * 5;
 		}
 
+		/*for (int i = 0; i < symbols.Count; i++) {
+			uv1 [i * 4] = new Vector2 (0, 1);
+			uv1 [i * 4+1] = new Vector2 (1, 1);
+			uv1 [i * 4+2] = new Vector2 (0, 0);
+			uv1 [i * 4+3] = new Vector2 (1, 0);
 
+		}
+
+*/
 		Mesh msh = new Mesh();
 		msh.name = "Building";
 		msh.vertices = meshPoints;
 		msh.triangles = triangles;
 		msh.normals = meshNormals;
+		msh.RecalculateBounds ();
+		msh.RecalculateNormals ();
+		Bounds bounds = msh.bounds;
+		for(int i = 0; i < topAndBottomPoints.Length; i++) {
+			
+		}
+
+		for (int i = 0; i < symbols.Count; i++) {
+			uv1 [i * 4] = new Vector2 (0, 1);
+			uv1 [i * 4+1] = new Vector2 (1, 1);
+			uv1 [i * 4+2] = new Vector2 (0, 0);
+			uv1 [i * 4+3] = new Vector2 (1, 0);
+			uv2[i] = new Vector2(symbols[i].getPoint(0).x / bounds.size.x, symbols[i].getPoint(0).z / bounds.size.z);
+		}
+		msh.uv = uv1;
+		msh.uv2 = uv2;
+
 
 		GameObject meshObject = new GameObject ();
 		meshObject.AddComponent<MeshFilter> ().mesh = msh;

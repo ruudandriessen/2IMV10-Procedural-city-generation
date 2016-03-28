@@ -9,6 +9,15 @@ public class FreeFlight : MonoBehaviour
 
 	void Update()
 	{
+		if (Input.GetKey (KeyCode.LeftShift)) {
+			flySpeed = 50f;
+		} else {
+			flySpeed = 0.5f;
+		}
+
+		if(Input.GetKey(KeyCode.Escape)) {
+			Application.Quit();
+		}
 		
 		if (Input.GetKey(KeyCode.W))
 		{
