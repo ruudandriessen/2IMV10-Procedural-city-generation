@@ -20,16 +20,23 @@ namespace ProceduralCity
 		{
 			Vector3 cornerDimensions = new Vector3 (1.0f, 1.0f, 1.0f);
 
-			HighLevelEdge e1 = r.getEdges ()[0];
+			HighLevelEdge e1 = null;
 			HighLevelEdge e2 = null;
-			foreach (HighLevelEdge edge in r.getEdges ()) {
-				if (edge.Equals (e1))
-					continue;
-				if( e1.getFrom().Equals(edge.getFrom()) && e1.getDirection().y != edge.getDirection().y ) {
-					// Same start vertex
-					e2 = edge;
-					break;
+			foreach (HighLevelEdge edgeFirst in r.getEdges()) {
+				e1 = edgeFirst;
+				foreach (HighLevelEdge edgeSecond in r.getEdges ()) {
+					if (edgeSecond.Equals (e1))
+						continue;
+					if (
+						(e1.getFrom ().Equals (edgeSecond.getFrom ()) || e1.getFrom ().Equals (edgeSecond.getTo ()))
+						&& e1.getDirection ().y != edgeSecond.getDirection ().y) {
+						// Same start vertex
+						e2 = edgeSecond;
+						break;
+					}
 				}
+				if (e2 != null)
+					break;
 			}
 			if (e2 == null) {
 				Debug.Log ("Error - no two edges from same start vertex in region with different y values");
@@ -37,11 +44,11 @@ namespace ProceduralCity
 			}
 			Vector3 horizontalDir, verticalDir;
 			if (e1.getDirection ().y == 0) {
-				horizontalDir = e1.getDirection ();
-				verticalDir = e2.getDirection ();
+				horizontalDir = e1.getDirection (e1.getFrom());
+				verticalDir = e2.getDirection (e1.getFrom());
 			} else {
-				horizontalDir = e2.getDirection ();
-				verticalDir = e1.getDirection ();
+				horizontalDir = e2.getDirection (e1.getFrom());
+				verticalDir = e1.getDirection (e1.getFrom());
 			}
 			Corner corner = e1.getFrom ();
 			Vector3 p = corner.getVertex().getPoint();
