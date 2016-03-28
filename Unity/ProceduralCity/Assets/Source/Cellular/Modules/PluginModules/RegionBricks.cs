@@ -9,7 +9,7 @@ namespace ProceduralCity
 		public RegionBricks (Transform parent, Color c)
 		{
 			this.parent = parent;
-			this.setCellDimensions(new Vector3(0.2f, 0.1f, 0.1f));
+			this.setCellDimensions(new Vector3(1.0f, 1.0f, 2.0f));
 			this.setCellPadding(new Vector3(0.005f, 0.005f, 0.005f));
 			this.color = c;
 		}
@@ -18,7 +18,7 @@ namespace ProceduralCity
 
 		public override bool apply (Region r)
 		{
-			Vector3 cornerDimensions = new Vector3 (0.1f, 0.1f, 0.1f);
+			Vector3 cornerDimensions = new Vector3 (1.0f, 1.0f, 1.0f);
 
 			HighLevelEdge e1 = r.getEdges ()[0];
 			HighLevelEdge e2 = null;
@@ -49,59 +49,38 @@ namespace ProceduralCity
 			verticalDir = parent.TransformVector(verticalDir);
 			p = parent.TransformPoint (p);
 
-			// Calculate rotation
-			Quaternion rotation = Quaternion.FromToRotation (horizontalDir, Vector3.right);
-
-			float horizontalMagnitude = horizontalDir.magnitude;
-			float verticalMagnitude = verticalDir.magnitude;
-
 			Vector3 dimensions = this.getCellDimensions ();
 			Vector3 scale = this.getCellSize ();
+
+			float horizontalMagnitude = horizontalDir.magnitude - dimensions.z;
+			float verticalMagnitude = verticalDir.magnitude;
+
 
 			horizontalDir = parent.InverseTransformVector (horizontalDir);
 			verticalDir = parent.InverseTransformVector (verticalDir);
 
+			verticalDir.Normalize ();
+			horizontalDir.Normalize ();
+
 			Vector3 start = p + Vector3.Scale(corner.getTranslateVector(), cornerDimensions / 2);
-			start += cornerDimensions.x / 2 * horizontalDir + dimensions.x / 2 * horizontalDir;
+			start += cornerDimensions.z / 2 * horizontalDir;// + dimensions.z / 2 * horizontalDir;
 			start += cornerDimensions.y / 2 * verticalDir + dimensions.y / 2 * verticalDir;
 
-			bool topBrickIn = horizontalDir.x == 0;
+			bool brickOut = horizontalDir.x == 0;
 
-			int maxHorizontal = (int) (horizontalMagnitude / dimensions.x);
+			int maxHorizontal = (int) (horizontalMagnitude / dimensions.z);
 			int maxVertical = (int) (verticalMagnitude / dimensions.y) - 1;
 
-			for (int i = 0; i < maxHorizontal; i++) {
-				for (int j = 0; j < maxVertical; j++) {
-					Color finalColor = Color.Lerp (color, Color.black, UnityEngine.Random.value * 0.3f);
-					if (j % 2 == 0) {
-						Vector3 location = start + i * dimensions.x * horizontalDir;
-
-						if (!topBrickIn)
-							location -= dimensions.x / 2 * horizontalDir;
-						if (topBrickIn) 
-							location -= dimensions.x / 2 * horizontalDir;
-						
-						location += horizontalDir * dimensions.x / 2;
-						location += j * dimensions.y * verticalDir;
-						Cell c = new Cell (parent, location, scale, rotation, "Region brick");
-						c.setColor (finalColor);
-					} else {
-						if (!topBrickIn && maxHorizontal - 1 == i)
-							continue;
-						
-						Vector3 location = start + i * dimensions.x * horizontalDir;
-						if (!topBrickIn)
-							location += dimensions.x / 2 * horizontalDir;
-						if (topBrickIn) 
-							location -= dimensions.x / 2 * horizontalDir;
-						location += j * dimensions.y * verticalDir;
-						Cell c = new Cell (parent, location, scale, rotation, "Region brick");
-						c.setColor (finalColor);
-					}
+			for (int i = 0; i < maxVertical; i++) {
+				Vector3 rowStart = start + i * dimensions.y * verticalDir;
+				Vector3 rowEnd = rowStart + horizontalMagnitude * horizontalDir;
+				if (brickOut) {
+					rowStart += dimensions.z / 2 * horizontalDir;
+					rowEnd -= dimensions.z / 2 * horizontalDir;
 				}
+				FillCellModule.fillCell (rowStart, rowEnd, scale, dimensions, parent, color);
+				brickOut = !brickOut;
 			}
-
-
 			return true;
 		}
 

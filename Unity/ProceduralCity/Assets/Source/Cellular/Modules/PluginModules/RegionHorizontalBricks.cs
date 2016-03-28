@@ -9,7 +9,7 @@ namespace ProceduralCity
 		public RegionHorizontalBricks (Transform parent, Color c)
 		{
 			this.parent = parent;
-			this.setCellDimensions(new Vector3(0.2f, 0.1f, 0.1f));
+			this.setCellDimensions(new Vector3(2.0f, 1.0f, 1.0f));
 			this.setCellPadding(new Vector3(0.005f, 0.005f, 0.005f));
 			this.color = c;
 		}
@@ -60,6 +60,8 @@ namespace ProceduralCity
 
 			horizontalDir = parent.InverseTransformVector (horizontalDir);
 			verticalDir = parent.InverseTransformVector (verticalDir);
+			horizontalDir.Normalize ();
+			verticalDir.Normalize ();
 
 			Vector3 start = p + Vector3.Scale(corner.getTranslateVector(), cornerDimensions / 2);
 			start += cornerDimensions.x / 2 * horizontalDir + dimensions.x / 2 * horizontalDir;
@@ -72,7 +74,6 @@ namespace ProceduralCity
 				for (int j = 0; j < maxVertical; j++) {
 					Color finalColor = Color.Lerp (color, Color.black, UnityEngine.Random.value * 0.3f);
 					Vector3 location = start + i * dimensions.x * horizontalDir;
-//					location += horizontalDir * dimensions.x / 2;
 					location += j * dimensions.y * verticalDir;
 					Cell c = new Cell (parent, location, scale, rotation, "Region brick");
 					c.setColor (finalColor);

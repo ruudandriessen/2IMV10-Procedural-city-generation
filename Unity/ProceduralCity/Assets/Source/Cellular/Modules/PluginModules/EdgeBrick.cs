@@ -9,7 +9,7 @@ namespace ProceduralCity
 		public EdgeBrick (Transform parent, Color c)
 		{
 			this.parent = parent;
-			this.setCellDimensions(new Vector3(0.2f, 0.1f, 0.1f));
+			this.setCellDimensions(new Vector3(1.0f, 1.0f, 2.0f));
 			this.setCellPadding(new Vector3(0.005f, 0.005f, 0.005f));
 			this.color = c;
 		}
@@ -18,7 +18,7 @@ namespace ProceduralCity
 
 		public override bool apply (HighLevelEdge edge)
 		{
-			Vector3 cornerDimensions = new Vector3 (0.1f, 0.1f, 0.1f);
+			Vector3 cornerDimensions = new Vector3 (1.0f, 1.0f, 1.0f);
 
 			// Get from and translate to world space
 			Vector3 from = edge.getFrom ().getVertex().getPoint();
@@ -29,6 +29,7 @@ namespace ProceduralCity
 			// Get direction and translate to world space
 			Vector3 direction = edge.getDirection ();
 			direction = parent.TransformDirection (direction);
+			direction.Normalize ();
 
 			// Set from and to actual center points of the corner
 			from = from + Vector3.Scale (edge.getFrom ().getTranslateVector (), cornerDimensions / 2) + Vector3.Scale(direction, cornerDimensions /2);
@@ -40,37 +41,8 @@ namespace ProceduralCity
 			Vector3 dimensions = this.getCellDimensions ();
 			Vector3 scale = this.getCellSize();
 
-			// Calculate rotation
-			Quaternion rotation = Quaternion.FromToRotation (direction, Vector3.right);
+			FillCellModule.fillCell (from, to, scale, dimensions, parent, color);
 
-			// Calculate start position
-			Vector3 start = from + direction * dimensions.x / 2;
-
-			// Create each cell
-			int maxCount = (int) Mathf.Floor(edgeMagnitude / scale.x) + 1;
-			int i = 0;
-
-			float stepSize = dimensions.x;
-
-			for (Vector3 p = start; i < maxCount; p += direction * stepSize) {
-				Color finalColor = Color.Lerp (color, Color.black, UnityEngine.Random.value * 0.3f);
-				if (i == maxCount - 1) {
-					Vector3 prevP = p - direction * stepSize;
-					Vector3 prevPStart = prevP + direction * stepSize / 2;
-					Vector3 overshoot = to - prevPStart;
-					if (overshoot.magnitude > 0.001f) {
-						Debug.Log(overshoot.ToString("F4"));
-						scale.x = overshoot.x / 2;
-						Vector3 targetPoint = prevPStart + 0.5f * (to - prevPStart);
-						Cell c = new Cell (parent, targetPoint, scale, rotation, "Brick");
-						c.setColor (finalColor);
-					}
-				} else {
-					Cell c = new Cell (parent, p, scale, rotation, "Brick");
-					c.setColor (finalColor);
-				}
-				i++;
-			}
 			return true;
 		}
 
