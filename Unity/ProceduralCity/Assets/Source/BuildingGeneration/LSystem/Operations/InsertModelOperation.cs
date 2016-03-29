@@ -15,11 +15,24 @@ namespace ProceduralCity
 
 		public override void applyOperation(Symbol s, ref List<Symbol> symbols) {
 			//Debug.Log ("Going to insert model " + this.model);
-			GameObject newObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
+			GameObject newObj = GameObject.CreatePrimitive(PrimitiveType.Quad);
+
+			Vector3[] symbolPoints = s.getPoints ().ToArray();
+			Vector3 normal = Vector3.Cross ((symbolPoints [1] - symbolPoints [0]), (symbolPoints [2] - symbolPoints [0]));
+			newObj.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+			newObj.isStatic = true;
+
+			newObj.transform.Translate ((symbolPoints [0]+symbolPoints[1]+symbolPoints[2]+symbolPoints[3])/4);
+			normal = normal / normal.magnitude;
+
+			newObj.transform.Rotate (0, 180, 0);
+			Quaternion _facing = newObj.transform.rotation;
+			newObj.transform.rotation = Quaternion.LookRotation (normal)*_facing;
 			newObj.name = this.model;
 			//GameObject newObj = new GameObject(this.model);
 			if (this.model == "window") {
-				newObj.transform.localScale = new Vector3 (1.5f, 0.1f, 2f);
+				newObj.transform.localScale = new Vector3 (1.5f, 2f, 2f);
+				//newObj.transform.localRotation = Quaternion.Euler (0, 180, 0);
 				int random = new System.Random ().Next (0, 4);
 				if (random == 0) {
 					newObj.GetComponent<MeshRenderer> ().material.mainTexture = Resources.Load<Texture> ("Textures/HighRiseGlass0016_1_S");
@@ -33,8 +46,8 @@ namespace ProceduralCity
 					newObj.GetComponent<MeshRenderer> ().material.mainTexture = Resources.Load<Texture> ("Textures/WindowsBLocks0002_4_s");
 				}
 			} else if (this.model == "door") {
-				newObj.transform.localScale = new Vector3 (2.5f, 0.05f, 4.5f);
-				newObj.transform.Translate (0, 0.8f, 0);
+				newObj.transform.localScale = new Vector3 (1.6f, 3.16f, 0.1f);
+				//newObj.transform.Translate (0, 0.8f, 0);
 				int random = new System.Random ().Next (0, 2);
 				if (random == 0) {
 				newObj.GetComponent<MeshRenderer> ().material.mainTexture = Resources.Load<Texture> ("Textures/DoorsWood0133_S");
@@ -42,17 +55,10 @@ namespace ProceduralCity
 					newObj.GetComponent<MeshRenderer> ().material.mainTexture = Resources.Load<Texture> ("Textures/DoorsWood0140_1_S");
 				}
 			}
+			newObj.transform.Translate (-0.25f, 0, -0.25f);
 
-			newObj.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-			newObj.isStatic = true;
+			//newObj.transform.Rotate (Vector3.left, 270);
 
-			Vector3[] symbolPoints = s.getPoints ().ToArray();
-			Vector3 normal = Vector3.Cross ((symbolPoints [1] - symbolPoints [0]), (symbolPoints [2] - symbolPoints [0]));
-			normal = normal / normal.magnitude;
-			newObj.transform.Translate ((symbolPoints [0]+symbolPoints[1]+symbolPoints[2]+symbolPoints[3])/4);
-			newObj.transform.Rotate (Vector3.left, 270);
-			Quaternion _facing = newObj.transform.rotation;
-			newObj.transform.rotation = Quaternion.LookRotation (normal)*_facing;
 			if (this.model == "door") {
 				//objMesh.transform.Translate(new Vector3(0.0f,-0.1f,0.75f));
 			}
