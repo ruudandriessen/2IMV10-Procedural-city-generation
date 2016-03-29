@@ -31,14 +31,13 @@ namespace ProceduralCity
 				edges.AddRange(edgeResult);
 			}
 
-			Debug.Log ("We have: " + edges.Count + " HLEs..");
+//			Debug.Log ("We have: " + edges.Count + " HLEs..");
 			createRegionsEdges (edges);
-
-			Debug.Log ("Started with: " + regions.Count + " regions..");
+//			Debug.Log ("Started with: " + regions.Count + " regions..");
 			while (mergeRegions ()) {
 				// Merge until done!
 			}
-			Debug.Log ("Ended with: " + regions.Count + " regions..");
+//			Debug.Log ("Ended with: " + regions.Count + " regions..");
 		}
 
 		public void createRegionsEdges(List<HighLevelEdge> edges) {

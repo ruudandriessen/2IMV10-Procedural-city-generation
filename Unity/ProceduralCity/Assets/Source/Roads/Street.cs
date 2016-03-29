@@ -25,7 +25,7 @@ public class Street : MonoBehaviour {
 			OsmNode n = streetData.getNode(i);
 			Vector3 p = Map.getVectorFromOrigin 
 				(n.getLatitude(), n.getLongitude());
-			
+			p.y = 0.1f;
 			dataPoints.Add (p);
 			if (isIntersection (n)) {
 				// Create intersection

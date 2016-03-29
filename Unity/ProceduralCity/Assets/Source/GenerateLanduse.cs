@@ -14,18 +14,19 @@ namespace ProceduralCity
 			GameObject terrain = GameObject.CreatePrimitive (PrimitiveType.Cube);
 			terrain.transform.position = min + max/2;
 			terrain.transform.localScale = max;
-			float r = 242.0f / 256.0f;
-			float g = 239.0f / 256.0f;
-			float b = 233.0f / 256.0f;
-						
-			terrain.GetComponent<Renderer> ().material.color = new Color (r, g, b);
+//			float r = 242.0f / 256.0f;
+//			float g = 239.0f / 256.0f;
+//			float b = 233.0f / 256.0f;
+
+//			terrain.GetComponent<Renderer> ().material.color = new Color (r, g, b);
+			terrain.GetComponent<Renderer> ().material = Resources.Load("Materials/Pavement_01", typeof(Material)) as Material;
 
 			// Get surfaces
-			foreach (long key in Data.Instance.surfaces.Keys) {
-				GameObject obj = new GameObject("Surface");
-				Surface script = obj.AddComponent<Surface> ();
-				script.surfaceId = key;
-			}
+//			foreach (long key in Data.Instance.surfaces.Keys) {
+//				GameObject obj = new GameObject("Surface");
+//				Surface script = obj.AddComponent<Surface> ();
+//				script.surfaceId = key;
+//			}
 		}
 	}
 }

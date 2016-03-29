@@ -21,6 +21,13 @@ namespace ProceduralCity
 			this.from = from;
 		}
 
+		public Vector3 getDirection(Corner c) {
+			if (c.Equals(from))
+				return to.getVertex ().getPoint () - from.getVertex ().getPoint ();
+			else
+				return from.getVertex ().getPoint () - to.getVertex ().getPoint ();
+		}
+
 		public Vector3 getDirection() {
 			return to.getVertex ().getPoint () - from.getVertex ().getPoint ();
 		}

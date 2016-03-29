@@ -9,8 +9,8 @@ namespace ProceduralCity
 		public EdgeBrick (Transform parent, Color c)
 		{
 			this.parent = parent;
-			this.setCellDimensions(new Vector3(1.0f, 1.0f, 2.0f));
-			this.setCellPadding(new Vector3(0.005f, 0.005f, 0.005f));
+			this.setCellDimensions(new Vector3(1.0f, 1.0f, 4.0f));
+			this.setCellPadding(new Vector3(0.05f, 0.05f, 0.05f));
 			this.color = c;
 		}
 

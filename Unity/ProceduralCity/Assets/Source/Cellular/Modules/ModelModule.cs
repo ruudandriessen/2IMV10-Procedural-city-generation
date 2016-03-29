@@ -112,10 +112,10 @@ namespace ProceduralCity
 		public bool applyRegions(List<Region> regions) {
 			foreach (Region r in regions) {
 				if (r.isHorizontal ()) {
-					if (horizontalRegion == null || !this.horizontalRegion.apply (r)) {
-						// If it went wrong, return false
-						return false;
-					}
+//					if (horizontalRegion == null || !this.horizontalRegion.apply (r)) {
+//						// If it went wrong, return false
+//						return false;
+//					}
 				} else {
 					if (verticalRegion == null || !this.verticalRegion.apply (r)) {
 						// If it went wrong, return false

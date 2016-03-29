@@ -11,23 +11,20 @@ namespace ProceduralCity
 		{ 
 			cell = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
-			// Add rigidbody and disable movement by default
-			Rigidbody body = cell.AddComponent<Rigidbody> ();
-			body.useGravity = true;
-			body.isKinematic = true;
+			// Improve performance by marking as static and disabling box collider
+			cell.isStatic = true;
+			cell.GetComponent<BoxCollider> ().enabled = false;
+
 
 			// Get renderer and apply material
 			MeshRenderer renderer = cell.GetComponent<MeshRenderer>();
 			Material newMat = Resources.Load("Materials/Concrete_Asphalt_02", typeof(Material)) as Material;
-			renderer.material = newMat;
+			renderer.sharedMaterial = newMat;
 
+			// Set parameters
 			cell.name = name;
-//			cell.transform.parent = parent; //This seems to break everything when using non-uniform scaled parents with rotations derp.
-
 			cell.transform.localRotation = rotation;
-//			scale = div (scale, parent.lossyScale);
 			cell.transform.localScale = scale;
-
 			cell.transform.localPosition = position;
 		}
 
@@ -40,6 +37,10 @@ namespace ProceduralCity
 			v1.y /= v2.y;
 			v1.z /= v2.z;
 			return v1;
+		}
+
+		public GameObject getCell() {
+			return cell;
 		}
 	}
 }

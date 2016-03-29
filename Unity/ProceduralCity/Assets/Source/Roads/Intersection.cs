@@ -9,9 +9,9 @@ public class Intersection : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		GameObject intersection = GameObject.CreatePrimitive (PrimitiveType.Cube);
-		intersection.transform.parent = this.transform;
-		intersection.transform.position = position;
+//		GameObject intersection = GameObject.CreatePrimitive (PrimitiveType.Cube);
+//		intersection.transform.parent = this.transform;
+//		intersection.transform.position = position;
 
 //		foreach (Vector3 dir in roadDirections) {
 //			CreateVertex (position, dir, -1.0f);
@@ -21,7 +21,7 @@ public class Intersection : MonoBehaviour {
 
 	public void addDirection(Vector3 dir) {
 		roadDirections.Add (dir);
-		Debug.DrawRay (position, dir, Color.cyan, 200);
+//		Debug.DrawRay (position, dir, Color.cyan, 200);
 	}
 
 //	Vector3 CreateVertex(Vector3 pos, Vector3 dir,  float offsetX) {
