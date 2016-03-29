@@ -15,7 +15,7 @@ namespace ProceduralCity
 			terrain.transform.position = min + max/2;
 			terrain.transform.localScale = max;
 
-			terrain.GetComponent<Renderer> ().material = Resources.Load("Materials/Desert_Sand_01", typeof(Material)) as Material;
+			terrain.GetComponent<Renderer> ().material = Resources.Load("Materials/ground2", typeof(Material)) as Material;
 
 			// Get surfaces
 			foreach (long key in Data.Instance.surfaces.Keys) {

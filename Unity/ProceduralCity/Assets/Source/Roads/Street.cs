@@ -25,7 +25,7 @@ public class Street : MonoBehaviour {
 			OsmNode n = streetData.getNode(i);
 			Vector3 p = Map.getVectorFromOrigin 
 				(n.getLatitude(), n.getLongitude());
-			p.y = 0.1f;
+			p.y = 0.05f;
 			dataPoints.Add (p);
 			if (isIntersection (n)) {
 				// Create intersection
@@ -73,6 +73,44 @@ public class Street : MonoBehaviour {
 
 	private void createRoad(Vector3[] dataPoints) {
 		Road road = this.gameObject.AddComponent<Road> ();
+
+		for (int i = 0; i < dataPoints.Length - 1; i++) {
+			Vector3 p1 = dataPoints [i];
+			Vector3 p2 = dataPoints [i + 1];
+
+			// Create lantern
+			GameObject lantern = new GameObject ();
+			lantern.name = "Lantern";
+			Vector3 transDirection = Vector3.Cross (p1 - p2, Vector3.up).normalized;
+			lantern.transform.position = (p1 + p2) / 2 + transDirection * 1.2f;
+			lantern.transform.position += new Vector3(0, 0.5f, 0);
+
+			// Create the lightpost
+			GameObject lightPost = GameObject.CreatePrimitive (PrimitiveType.Cylinder);
+			lightPost.transform.parent = lantern.transform;
+			lightPost.transform.position = lantern.transform.position;
+			lightPost.transform.localScale = new Vector3 (0.2f, 3.0f, 0.2f);
+
+			// Create the latern top towards the road
+			GameObject lightHandle = GameObject.CreatePrimitive (PrimitiveType.Cylinder);
+			lightHandle.transform.parent = lantern.transform;
+			lightHandle.transform.position = lantern.transform.position + new Vector3 (0, 3.0f, 0) - transDirection * 0.3f;
+			lightHandle.transform.localScale = new Vector3 (0.2f, 0.6f, 0.2f);
+			lightHandle.transform.localRotation = Quaternion.AngleAxis (90, Vector3.left);
+
+			// Create the light component
+			GameObject light = new GameObject ("Light");
+			Light lightComp = light.AddComponent<Light>();
+			lightComp.type = LightType.Point;
+			lightComp.spotAngle = 20.0f;
+			lightComp.color = Color.white;
+			lightComp.intensity = 10.0f;
+			lightComp.shadowStrength = 0.5f;
+			lightComp.shadows = LightShadows.Hard;
+			lightComp.transform.parent = lantern.transform;
+			lightComp.transform.position = lantern.transform.position + new Vector3 (0, 3.0f, 0) - transDirection * 0.6f;
+
+		}
 		road.points = dataPoints;
 	}
 

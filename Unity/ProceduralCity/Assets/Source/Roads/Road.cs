@@ -31,6 +31,7 @@ public class Road : MonoBehaviour {
 			newUV[i] = new Vector2(newVertices[i].x, newVertices[i].z);
 		}
 
+
 		// Set mesh properties
 		mesh.name = "RoadMesh";
 		mesh.vertices = newVertices;
@@ -40,7 +41,7 @@ public class Road : MonoBehaviour {
 		mesh.RecalculateNormals();
 		mesh.RecalculateBounds();
 
-		Material newMat = Resources.Load("Materials/Road") as Material;
+		Material newMat = Resources.Load("Materials/Road", typeof(Material)) as Material;
 		renderer.material = newMat;
 	}
 
