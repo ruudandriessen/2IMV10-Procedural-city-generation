@@ -18,15 +18,17 @@ namespace ProceduralCity
 //			float g = 239.0f / 256.0f;
 //			float b = 233.0f / 256.0f;
 
+//			terrain.transform.Translate(new Vector3(0, 0.0f, 0));
+
 //			terrain.GetComponent<Renderer> ().material.color = new Color (r, g, b);
-			terrain.GetComponent<Renderer> ().material = Resources.Load("Materials/Pavement_01", typeof(Material)) as Material;
+			terrain.GetComponent<Renderer> ().material = Resources.Load("Materials/Desert_Sand_01", typeof(Material)) as Material;
 
 			// Get surfaces
-//			foreach (long key in Data.Instance.surfaces.Keys) {
-//				GameObject obj = new GameObject("Surface");
-//				Surface script = obj.AddComponent<Surface> ();
-//				script.surfaceId = key;
-//			}
+			foreach (long key in Data.Instance.surfaces.Keys) {
+				GameObject obj = new GameObject("Surface");
+				Surface script = obj.AddComponent<Surface> ();
+				script.surfaceId = key;
+			}
 		}
 	}
 }

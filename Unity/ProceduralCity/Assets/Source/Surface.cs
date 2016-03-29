@@ -36,16 +36,12 @@ public class Surface : MonoBehaviour
 		msh.uv = uvs;
 
 		GameObject meshObject = new GameObject ();
-		meshObject.AddComponent<MeshFilter> ().mesh = msh;
-		Renderer renderer = meshObject.AddComponent<MeshRenderer> ();
 		meshObject.transform.parent = this.transform;
+		meshObject.transform.Translate(new Vector3(0, 0.02f, 0));
 
 		string type = surface.getType ();
 		Material newMat;
 		switch (type) {
-		case "forest":
-			newMat = Resources.Load ("Materials/Forest") as Material;
-			break;
 		case "reservoir":
 		case "reservoir:bottom":
 		case "water":
@@ -53,20 +49,25 @@ public class Surface : MonoBehaviour
 			newMat = Resources.Load ("Materials/Reservoir") as Material;
 			break;
 		case "residential":
-			newMat = Resources.Load ("Materials/Residential") as Material;
+			newMat = Resources.Load ("Materials/Pavement_01", typeof(Material)) as Material;
+			meshObject.transform.Translate(new Vector3(0, -0.01f, 0));
 			break;
+		case "forest":
 		case "grass":
 		case "meadow":
-			newMat = Resources.Load ("Materials/Grass") as Material;
+			newMat = Resources.Load ("Materials/TL_Grass_01") as Material;
 			break;
+		case "farm":
 		case "farmyard":
-			newMat = Resources.Load ("Materials/Farmyard") as Material;
+//			newMat = Resources.Load ("Materials/AQUAS_Lite_Water") as Material;
+//			meshObject.AddComponent<AQUAS_Reflection> ();
+			return;
 			break;
 		case "industrial":
-			newMat = Resources.Load ("Materials/Industrial") as Material;
+			return; //newMat = Resources.Load ("Materials/Industrial") as Material;
 			break;
 		case "recreation_ground":
-			newMat = Resources.Load ("Materials/Recreation") as Material;
+			return; // newMat = Resources.Load ("Materials/Recreation") as Material;
 			break;
 		default:
 			newMat = Resources.Load("Materials/Unknown") as Material;
@@ -74,6 +75,8 @@ public class Surface : MonoBehaviour
 			break;
 		}
 
+		meshObject.AddComponent<MeshFilter> ().mesh = msh;
+		Renderer renderer = meshObject.AddComponent<MeshRenderer> ();
 		newMat.name = type;
 		renderer.material = newMat;
 
