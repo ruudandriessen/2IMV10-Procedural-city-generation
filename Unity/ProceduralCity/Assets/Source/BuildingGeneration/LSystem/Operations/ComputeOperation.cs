@@ -21,7 +21,43 @@ namespace ProceduralCity
 			switch (type) {
 			case "sidefaces":
 				List<Vector3> points = s.getPoints ();
-				int numberOfFaces = s.getPoints ().Count / 2;
+
+				int localFaces = s.getPoints().Count /2;
+				for (int i = 0; i < localFaces && localFaces > 4; i++) {
+					Vector3 point1 = points[i];
+					Vector3 point2 = points[(i+1)%localFaces];
+
+					if (Vector3.Distance (point1, point2) > 0.001) {
+						Vector3 newPoint = (point1 + point2) / 2;
+						if ((i + 1) % localFaces < i) {
+							Vector3 lowerPoint = (points [localFaces] + points [localFaces + i]) / 2;
+							points.RemoveAt (localFaces + i);
+							points.RemoveAt (localFaces);
+
+							points.Insert (localFaces, lowerPoint);
+							points.RemoveAt (i);
+							points.RemoveAt (0);
+
+
+							points.Insert (0, newPoint);
+
+							localFaces--;
+						} else {
+							Vector3 lowerPoint = (points[localFaces+i+1]+points[localFaces+i])/2;
+							points.RemoveAt (localFaces + i+1);
+							points.RemoveAt (localFaces + i);
+							points.Insert(localFaces+i,lowerPoint);
+							points.RemoveAt (i+1);
+							points.RemoveAt (i);
+
+							points.Insert (i, newPoint);
+
+							localFaces--;
+						}
+
+					}
+						
+				}
 				//Debug.Log ("Sidefaces: " + numberOfFaces);
 				Vector3 c = new Vector3 (0, 0, 0);
 				int numberOfPoints = points.Count/2;
@@ -30,6 +66,7 @@ namespace ProceduralCity
 					//c.y += points [i].y / (float) numberOfPoints;
 					//c.z += points [i].z / (float) numberOfPoints;
 				}
+				int numberOfFaces = points.Count / 2;
 				for(int i = 0; i < numberOfFaces; i++) {
 					Vector3[] sidefacePoints = new Vector3[4];
 					sidefacePoints [0] = points [i];
