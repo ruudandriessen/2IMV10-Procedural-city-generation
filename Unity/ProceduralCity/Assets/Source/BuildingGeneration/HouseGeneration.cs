@@ -145,11 +145,6 @@ public class HouseGeneration : MonoBehaviour
 			normals = flipNormals (normals);
 			flipped = true;
 		}
-		for (int i = 0; i < normals.Length; i++) {
-			Debug.DrawRay (centers[2*i], normals[i], Color.yellow, 2000f);
-		}
-
-
 
 
 		Vector3[] meshPoints = new Vector3[symbols.Count*6];
@@ -233,12 +228,12 @@ public class HouseGeneration : MonoBehaviour
 
 		GameObject meshObject = new GameObject ();
 		meshObject.AddComponent<MeshFilter> ().mesh = msh;
-		Renderer renderer = meshObject.AddComponent<MeshRenderer> ();
-		//meshObject.AddComponent<TextureCellular> ();
+//		Renderer renderer = meshObject.AddComponent<MeshRenderer> ();
+		meshObject.AddComponent<TextureCellular> ();
 		meshObject.transform.parent = this.transform;
 
-		Material newMat = Resources.Load("Materials/House") as Material;
-		renderer.material = newMat;
+//		Material newMat = Resources.Load("Materials/House") as Material;
+//		renderer.material = newMat;
 			
 	}
 

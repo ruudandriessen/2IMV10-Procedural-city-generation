@@ -14,6 +14,7 @@ namespace ProceduralCity
 				GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>() ;
 				foreach(GameObject go in allObjects) {
 					Rigidbody body = go.GetComponent<Rigidbody>();
+					body.useGravity = true;
 					body.isKinematic = false;
 				}
 			} else if (Input.GetKeyDown("e")){
