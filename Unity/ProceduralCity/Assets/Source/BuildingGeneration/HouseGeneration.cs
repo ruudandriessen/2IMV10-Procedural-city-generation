@@ -154,8 +154,8 @@ public class HouseGeneration : MonoBehaviour
 
 		Vector3[] meshPoints = new Vector3[symbols.Count*6];
 		Vector2[] topAndBottomPoints = new Vector2[symbols.Count];
-		Vector2[] uv1 = new Vector2[symbols.Count*4];
-		Vector2[] uv2 = new Vector2[symbols.Count];
+		Vector2[] uv1 = new Vector2[symbols.Count*6];
+		//Vector2[] uv2 = new Vector2[symbols.Count];
 		for(int i = 0; i < symbols.Count; i++) {
 			topAndBottomPoints [i] = new Vector2(symbols [i].getPoint (0).x, symbols[i].getPoint(0).z);
 		}
@@ -216,22 +216,20 @@ public class HouseGeneration : MonoBehaviour
 		msh.triangles = triangles;
 		msh.normals = meshNormals;
 		msh.RecalculateBounds ();
-		msh.RecalculateNormals ();
+
 		Bounds bounds = msh.bounds;
-		for(int i = 0; i < topAndBottomPoints.Length; i++) {
-			
-		}
 
 		for (int i = 0; i < symbols.Count; i++) {
 			uv1 [i * 4] = new Vector2 (0, 1);
 			uv1 [i * 4+1] = new Vector2 (1, 1);
 			uv1 [i * 4+2] = new Vector2 (0, 0);
 			uv1 [i * 4+3] = new Vector2 (1, 0);
-			uv2[i] = new Vector2(symbols[i].getPoint(0).x / bounds.size.x, symbols[i].getPoint(0).z / bounds.size.z);
+			uv1[symbols.Count*4+i] = new Vector2(symbols[i].getPoint(0).x / bounds.size.x, symbols[i].getPoint(0).z / bounds.size.z);
+			uv1[symbols.Count*5+i] = new Vector2(symbols[i].getPoint(0).x / bounds.size.x, symbols[i].getPoint(0).z / bounds.size.z);
 		}
 		msh.uv = uv1;
-		msh.uv2 = uv2;
-
+		//msh.uv2 = uv2;
+		msh.RecalculateNormals ();
 
 		GameObject meshObject = new GameObject ();
 		meshObject.AddComponent<MeshFilter> ().mesh = msh;
