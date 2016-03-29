@@ -245,13 +245,17 @@ public class HouseGeneration : MonoBehaviour
 		meshObject.AddComponent<MeshFilter> ().mesh = msh;
 		GameObject roofObject = new GameObject ("roof");
 		roofObject.AddComponent<MeshFilter> ().mesh = roofMesh;
+		Renderer renderer = meshObject.AddComponent<MeshRenderer> ();
+		renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
 		meshObject.AddComponent<TextureCellular> ();
 		meshObject.transform.parent = this.transform;
 		roofObject.transform.parent = this.transform;
-		MeshRenderer renderer = roofObject.AddComponent<MeshRenderer> ();
+		MeshRenderer renderer1 = roofObject.AddComponent<MeshRenderer> ();
 
 		Material newMat = Resources.Load("Materials/Concrete_Asphalt_02", typeof(Material)) as Material;
-		renderer.material = newMat;
+		Material newMat1 = Resources.Load("Materials/House") as Material;
+		renderer.material = newMat1;
+		renderer1.material = newMat;
 			
 	}
 

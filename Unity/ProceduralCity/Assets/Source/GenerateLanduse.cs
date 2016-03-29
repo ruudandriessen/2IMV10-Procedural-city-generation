@@ -14,13 +14,7 @@ namespace ProceduralCity
 			GameObject terrain = GameObject.CreatePrimitive (PrimitiveType.Cube);
 			terrain.transform.position = min + max/2;
 			terrain.transform.localScale = max;
-//			float r = 242.0f / 256.0f;
-//			float g = 239.0f / 256.0f;
-//			float b = 233.0f / 256.0f;
 
-//			terrain.transform.Translate(new Vector3(0, 0.0f, 0));
-
-//			terrain.GetComponent<Renderer> ().material.color = new Color (r, g, b);
 			terrain.GetComponent<Renderer> ().material = Resources.Load("Materials/Desert_Sand_01", typeof(Material)) as Material;
 
 			// Get surfaces

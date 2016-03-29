@@ -43,6 +43,9 @@ namespace ProceduralCity
 				}
 			}
 
+			newObj.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+			newObj.isStatic = true;
+
 			Vector3[] symbolPoints = s.getPoints ().ToArray();
 			Vector3 normal = Vector3.Cross ((symbolPoints [1] - symbolPoints [0]), (symbolPoints [2] - symbolPoints [0]));
 			normal = normal / normal.magnitude;

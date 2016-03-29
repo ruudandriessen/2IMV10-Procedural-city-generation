@@ -44,10 +44,8 @@ namespace ProceduralCity
 		}
 
 		private void mergeWithRegion(Region r) {
-//			Debug.Log ("Merged, old: "+ faces.Count + "/" + edges.Count);
 			this.faces.AddRange(r.getFaces ());
 			this.edges.AddRange(r.getEdges ());
-//			Debug.Log ("Merged, new: "+ faces.Count + "/" + edges.Count);
 		}
 
 		public List<HighLevelEdge> getEdges() {
@@ -70,8 +68,6 @@ namespace ProceduralCity
 			if (faces.Count == 0) {
 				// We take this face as our base normal
 				normal = f.getNormal ();
-
-//				Debug.Log ("Region now have normal: " + normal);
 
 				// And add the face
 				this.faces.Add(f);

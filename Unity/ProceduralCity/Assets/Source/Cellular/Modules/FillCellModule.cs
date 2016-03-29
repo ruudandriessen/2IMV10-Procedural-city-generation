@@ -9,13 +9,11 @@ namespace ProceduralCity
 		{
 		}
 
-		public static void fillCell(Vector3 start, Vector3 end, Vector3 size, Vector3 dimensions, Transform parent, Color color) {
+		public static void fillCell(Vector3 start, Vector3 end, Vector3 size, Vector3 dimensions, Transform parent, Color color, Quaternion rotation) {
 			// Calculate edge and it's magnitude
 			Vector3 edge = end-start;
 			Vector3 direction = edge.normalized;
 			float magnitude = edge.magnitude;
-
-			Quaternion rotation = Quaternion.FromToRotation (Vector3.forward, direction); // Rotation based off the z (forward) axis
 
 			int numCells = (int) Mathf.Floor(magnitude / dimensions.z) + 1; // Floor the number of cells and add one (no Roof method is available)
 			float magnitudeOvershoot = -(magnitude - numCells * dimensions.z);
@@ -37,6 +35,15 @@ namespace ProceduralCity
 					c.setColor(color);
 				}
 			}
+		}
+
+		public static void fillCell(Vector3 start, Vector3 end, Vector3 size, Vector3 dimensions, Transform parent, Color color) {
+			// Calculate edge and it's magnitude
+			Vector3 edge = end-start;
+			Vector3 direction = edge.normalized;
+
+			Quaternion rotation = Quaternion.FromToRotation (Vector3.forward, direction); // Rotation based off the z (forward) axis
+			fillCell(start, end, size, dimensions, parent, color, rotation);
 		}
 	}
 }
