@@ -140,12 +140,13 @@ public class HouseGeneration : MonoBehaviour
 
 		}
 		bool flipped = false;
-		Debug.Log (symbols.Count + " - " + numberOfWrongs + " - " + symbols.Count + " - " + flipped);
 		if (1.8*(float)numberOfWrongs > symbols.Count) {
 			normals = flipNormals (normals);
 			flipped = true;
 		}
-
+		Vector3[] roofPoints = new Vector3[symbols.Count];
+		Vector2[] roofUV = new Vector2[symbols.Count];
+		Vector3[] roofNormal = new Vector3[symbols.Count];
 
 		Vector3[] meshPoints = new Vector3[symbols.Count*6];
 		Vector2[] topAndBottomPoints = new Vector2[symbols.Count];
@@ -153,6 +154,8 @@ public class HouseGeneration : MonoBehaviour
 		//Vector2[] uv2 = new Vector2[symbols.Count];
 		for(int i = 0; i < symbols.Count; i++) {
 			topAndBottomPoints [i] = new Vector2(symbols [i].getPoint (0).x, symbols[i].getPoint(0).z);
+			roofPoints [i] = symbols [i].getPoint (2);
+			roofNormal [i] = Vector3.up;
 		}
 		Triangulator tr = new Triangulator (topAndBottomPoints);
 		int[] indices = tr.Triangulate ();
@@ -214,6 +217,14 @@ public class HouseGeneration : MonoBehaviour
 
 		Bounds bounds = msh.bounds;
 
+		Mesh roofMesh = new Mesh ();
+		roofMesh.name = "Roof";
+		roofMesh.vertices = roofPoints;
+		roofMesh.triangles = indices;
+		roofMesh.normals = roofNormal;
+		roofMesh.RecalculateBounds ();
+
+
 		for (int i = 0; i < symbols.Count; i++) {
 			uv1 [i * 4] = new Vector2 (0, 1);
 			uv1 [i * 4+1] = new Vector2 (1, 1);
@@ -221,19 +232,26 @@ public class HouseGeneration : MonoBehaviour
 			uv1 [i * 4+3] = new Vector2 (1, 0);
 			uv1[symbols.Count*4+i] = new Vector2(symbols[i].getPoint(0).x / bounds.size.x, symbols[i].getPoint(0).z / bounds.size.z);
 			uv1[symbols.Count*5+i] = new Vector2(symbols[i].getPoint(0).x / bounds.size.x, symbols[i].getPoint(0).z / bounds.size.z);
-		}
-		msh.uv = uv1;
-		//msh.uv2 = uv2;
-		msh.RecalculateNormals ();
+			roofUV[i] = new Vector2(symbols[i].getPoint(0).x / bounds.size.x, symbols[i].getPoint(0).z / bounds.size.z);
 
-		GameObject meshObject = new GameObject ();
+		}
+
+		roofMesh.uv = roofUV;
+		msh.uv = uv1;
+		msh.RecalculateNormals ();
+		roofMesh.RecalculateNormals ();
+
+		GameObject meshObject = new GameObject("buildingMesh");
 		meshObject.AddComponent<MeshFilter> ().mesh = msh;
-//		Renderer renderer = meshObject.AddComponent<MeshRenderer> ();
+		GameObject roofObject = new GameObject ("roof");
+		roofObject.AddComponent<MeshFilter> ().mesh = roofMesh;
 		meshObject.AddComponent<TextureCellular> ();
 		meshObject.transform.parent = this.transform;
+		roofObject.transform.parent = this.transform;
+		MeshRenderer renderer = roofObject.AddComponent<MeshRenderer> ();
 
-//		Material newMat = Resources.Load("Materials/House") as Material;
-//		renderer.material = newMat;
+		Material newMat = Resources.Load("Materials/Concrete_Asphalt_02", typeof(Material)) as Material;
+		renderer.material = newMat;
 			
 	}
 
