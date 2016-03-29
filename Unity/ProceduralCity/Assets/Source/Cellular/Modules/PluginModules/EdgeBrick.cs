@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace ProceduralCity
 {
@@ -16,8 +17,9 @@ namespace ProceduralCity
 
 		#region implemented abstract members of EdgeModule
 
-		public override bool apply (HighLevelEdge edge)
+		public override List<MeshFilter> apply (HighLevelEdge edge)
 		{
+			List<MeshFilter> meshes = new List<MeshFilter> ();
 			Vector3 cornerDimensions = new Vector3 (1.0f, 1.0f, 1.0f);
 
 			// Get from and translate to world space
@@ -41,9 +43,11 @@ namespace ProceduralCity
 			Vector3 dimensions = this.getCellDimensions ();
 			Vector3 scale = this.getCellSize();
 
-			FillCellModule.fillCell (from, to, scale, dimensions, parent, color);
+			Vector3 normal = edge.getNormal ();
 
-			return true;
+			meshes.AddRange(FillCellModule.fillCell (from, to, scale, dimensions, parent, color, normal));
+
+			return meshes;
 		}
 
 		#endregion

@@ -17,6 +17,7 @@ namespace ProceduralCity
 			//Debug.Log ("Going to insert model " + this.model);
 			GameObject newObj = GameObject.CreatePrimitive(PrimitiveType.Quad);
 
+			newObj.GetComponent<MeshCollider> ().enabled = false;
 			Vector3[] symbolPoints = s.getPoints ().ToArray();
 			Vector3 normal = Vector3.Cross ((symbolPoints [1] - symbolPoints [0]), (symbolPoints [2] - symbolPoints [0]));
 			newObj.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;

@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace ProceduralCity
 {
@@ -9,11 +10,15 @@ namespace ProceduralCity
 		{
 		}
 
-		public static void fillCell(Vector3 start, Vector3 end, Vector3 size, Vector3 dimensions, Transform parent, Color color, Quaternion rotation) {
+		public static List<MeshFilter> fillCell(Vector3 start, Vector3 end, Vector3 size, Vector3 dimensions, Transform parent, Color color, Vector3 normal) {
+			List<MeshFilter> meshes = new List<MeshFilter> ();
+
 			// Calculate edge and it's magnitude
 			Vector3 edge = end-start;
 			Vector3 direction = edge.normalized;
 			float magnitude = edge.magnitude;
+
+			Quaternion rotation = Quaternion.FromToRotation (Vector3.forward, direction);
 
 			int numCells = (int) Mathf.Floor(magnitude / dimensions.z) + 1; // Floor the number of cells and add one (no Roof method is available)
 			float magnitudeOvershoot = -(magnitude - numCells * dimensions.z);
@@ -27,23 +32,17 @@ namespace ProceduralCity
 					if (overshootSize > 0.01f) {
 						size.z = overshootSize;
 						p -= magnitudeOvershoot / 2 * direction;
-						Cell c = new Cell (parent, p, size, rotation, "CellOvershoot");
+						Cell c = new Cell (parent, p, size, rotation, "CellOvershoot", normal);
 						c.setColor(color);
+						meshes.Add(c.getCell ().GetComponent<MeshFilter> ());
 					}
 				} else {
-					Cell c = new Cell (parent, p, size, rotation, "Cell");
+					Cell c = new Cell (parent, p, size, rotation, "Cell", normal);
 					c.setColor(color);
+					meshes.Add (c.getCell ().GetComponent<MeshFilter> ());
 				}
 			}
-		}
-
-		public static void fillCell(Vector3 start, Vector3 end, Vector3 size, Vector3 dimensions, Transform parent, Color color) {
-			// Calculate edge and it's magnitude
-			Vector3 edge = end-start;
-			Vector3 direction = edge.normalized;
-
-			Quaternion rotation = Quaternion.FromToRotation (Vector3.forward, direction); // Rotation based off the z (forward) axis
-			fillCell(start, end, size, dimensions, parent, color, rotation);
+			return meshes;
 		}
 	}
 }

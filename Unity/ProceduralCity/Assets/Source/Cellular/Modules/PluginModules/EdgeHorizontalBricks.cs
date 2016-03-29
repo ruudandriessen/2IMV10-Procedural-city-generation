@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace ProceduralCity
 {
@@ -16,8 +17,9 @@ namespace ProceduralCity
 
 		#region implemented abstract members of EdgeModule
 
-		public override bool apply (HighLevelEdge edge)
+		public override List<MeshFilter> apply (HighLevelEdge edge)
 		{
+			List<MeshFilter> meshes = new List<MeshFilter> ();
 			Vector3 cornerDimensions = new Vector3 (1.0f, 1.0f, 1.0f);
 
 			// Get points of edge and translate to world space
@@ -43,7 +45,7 @@ namespace ProceduralCity
 
 			if (e2 == null) {
 				Debug.Log ("Warning, corner with only one edge found, something went wrong!");
-				return true;
+				return meshes;
 			}
 
 			// Calculate rotation for the two directions
@@ -91,8 +93,10 @@ namespace ProceduralCity
 				takeDir1 = !takeDir1;
 				c.setColor (finalColor);
 				i++;
+				meshes.Add(c.getCell().GetComponent<MeshFilter>());
 			}
-			return true;
+
+			return meshes;
 		}
 
 		#endregion

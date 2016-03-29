@@ -15,8 +15,9 @@ namespace ProceduralCity
 			this.color = c;
 		}
 
-		public override bool apply (Corner corner)
+		public override List<MeshFilter> apply (Corner corner)
 		{
+			List<MeshFilter> meshes = new List<MeshFilter>();
 			Vector3 translateVector = corner.getTranslateVector ();
 			Vector3 p = corner.getVertex ().getPoint ();
 
@@ -29,8 +30,8 @@ namespace ProceduralCity
 			Cell c = new Cell (parent, p, scale, Quaternion.identity, "BrickCorner");
 			Color finalColor = Color.Lerp (color, Color.black, UnityEngine.Random.value * 0.3f);
 			c.setColor (finalColor);
-
-			return true;
+			meshes.Add (c.getCell ().GetComponent<MeshFilter> ());
+			return meshes;
 		}
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace ProceduralCity
 {
@@ -19,23 +20,40 @@ namespace ProceduralCity
 
 		public override bool apply (HighLevelMesh mesh)
 		{
+			List<MeshFilter> meshes = new List<MeshFilter> ();
 			// Apply all corners
-			if (!this.applyCorners (mesh.getCorners ())) {
-				Debug.Log ("Failed to apply corner module");
-				return false;
-			}
+			meshes.AddRange(this.applyCorners (mesh.getCorners ()));
 
 			// Apply all edges
-			if (!this.applyEdges (mesh.getEdges ())) {
-				Debug.Log ("Failed to apply edge module");
-				return false;
-			}
+			meshes.AddRange(this.applyEdges (mesh.getEdges ()));
 
 			// Apply all regions
-			if (!this.applyRegions (mesh.getRegions ())) {
-				Debug.Log ("Failed to apply region module");
-				return false;
+			meshes.AddRange(this.applyRegions (mesh.getRegions ()));
+
+
+			MeshFilter[] meshFilters = meshes.ToArray ();
+
+			CombineInstance[] combine = new CombineInstance[meshFilters.Length];
+			int i = 0;
+			while (i < meshFilters.Length) {
+				combine[i].mesh = meshFilters[i].sharedMesh;
+				combine[i].transform = meshFilters[i].transform.localToWorldMatrix;
+				meshFilters [i].gameObject.SetActive (false);
+				i++;
 			}
+			GameObject regionCombined = new GameObject ();
+			regionCombined.name = "BlackBrickBuilding";
+			regionCombined.AddComponent<MeshFilter> ();
+			MeshRenderer renderer = regionCombined.AddComponent<MeshRenderer> ();
+			regionCombined.GetComponent<MeshFilter>().mesh = new Mesh();
+			regionCombined.GetComponent<MeshFilter>().mesh.CombineMeshes(combine);
+
+			Material newMat = Resources.Load("Materials/Concrete_Asphalt_02", typeof(Material)) as Material;
+			renderer.sharedMaterial = newMat;
+			renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+			regionCombined.isStatic = true;
+			regionCombined.gameObject.SetActive (true);
+
 			return true;
 		}
 	}

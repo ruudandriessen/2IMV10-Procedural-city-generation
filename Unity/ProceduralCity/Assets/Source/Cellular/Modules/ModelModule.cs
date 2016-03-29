@@ -29,18 +29,16 @@ namespace ProceduralCity
 			return cornerModule;
 		}
 
-		public bool applyCorners(List<Corner> corners) {
+		public List<MeshFilter> applyCorners(List<Corner> corners) {
+			List<MeshFilter> meshes = new List<MeshFilter> ();
 			if (cornerModule == null) {
-				return false;
+				return meshes;
 			}
 			foreach (Corner c in corners) {
 				// Apply to each corner
-				if (!this.cornerModule.apply (c)) {
-					// If it went wrong, return false
-					return false;
-				}
+				meshes.AddRange(this.cornerModule.apply (c));
 			}
-			return true;
+			return meshes;
 		}
 
 		// -- Edge handling --
@@ -65,26 +63,21 @@ namespace ProceduralCity
 			return horizontalEdges;
 		}
 
-		public bool applyEdges(List<HighLevelEdge> edges) {
+		public List<MeshFilter> applyEdges(List<HighLevelEdge> edges) {
+			List<MeshFilter> meshes = new List<MeshFilter> ();
 			if (verticalEdges == null && horizontalEdges == null) {
-				return false;
+				return meshes;
 			}
 			foreach (HighLevelEdge e in edges) {
 				if (e.getDirection ().y == 0 && horizontalEdges != null) {
 					// Apply horizontal
-					if (!this.horizontalEdges.apply (e)) {
-						// If it went wrong, return false
-						return false;
-					}
+					meshes.AddRange(this.horizontalEdges.apply (e));
 				} else if (verticalEdges != null) {
 					// Apply vertical
-					if (!this.verticalEdges.apply (e)) {
-						// If it went wrong, return false
-						return false;
-					}
+					meshes.AddRange(this.verticalEdges.apply (e));
 				}
 			}
-			return true;
+			return meshes;
 		}
 
 		// -- Region handling --
@@ -109,7 +102,8 @@ namespace ProceduralCity
 			return verticalRegion;
 		}
 
-		public bool applyRegions(List<Region> regions) {
+		public List<MeshFilter> applyRegions(List<Region> regions) {
+			List<MeshFilter> meshes = new List<MeshFilter> ();
 			foreach (Region r in regions) {
 				if (r.isHorizontal ()) {
 //					if (horizontalRegion == null || !this.horizontalRegion.apply (r)) {
@@ -117,13 +111,14 @@ namespace ProceduralCity
 //						return false;
 //					}
 				} else {
-					if (verticalRegion == null || !this.verticalRegion.apply (r)) {
+					if (verticalRegion == null) {
 						// If it went wrong, return false
-						return false;
+						return meshes;;
 					}
+					meshes.AddRange(this.verticalRegion.apply (r));
 				}
 			}
-			return true;
+			return meshes;
 		}
 	}
 }

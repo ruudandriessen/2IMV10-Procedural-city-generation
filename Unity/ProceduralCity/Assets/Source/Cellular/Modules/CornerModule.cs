@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace ProceduralCity
 {
@@ -36,7 +37,7 @@ namespace ProceduralCity
 			return padding;
 		}
 
-		abstract public bool apply(Corner corner);
+		abstract public List<MeshFilter> apply(Corner corner);
 	}
 }
 

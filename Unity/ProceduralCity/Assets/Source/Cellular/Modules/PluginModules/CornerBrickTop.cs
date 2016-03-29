@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace ProceduralCity
 {
@@ -14,8 +15,9 @@ namespace ProceduralCity
 			this.color = c;
 		}
 
-		public override bool apply (Corner corner)
+		public override List<MeshFilter> apply (Corner corner)
 		{
+			List<MeshFilter> meshes = new List<MeshFilter> ();
 			Vector3 normal = corner.getNormal ();
 			Vector3 p = corner.getVertex ().getPoint ();
 
@@ -28,6 +30,7 @@ namespace ProceduralCity
 				Quaternion rotation = Quaternion.FromToRotation(Vector3.forward, direction);
 				Vector3 location = p + direction * scale.z / 2 + e.getNormal () * scale.x / 2;
 				Cell c = new Cell (parent, location, scale, rotation, "BrickCorner");
+				meshes.Add(c.getCell ().GetComponent<MeshFilter> ());
 			}
 
 
@@ -37,7 +40,7 @@ namespace ProceduralCity
 //			Color finalColor = Color.Lerp (color, Color.black, UnityEngine.Random.value * 0.3f);
 //			c.setColor (finalColor);
 
-			return true;
+			return meshes;
 		}
 	}
 }

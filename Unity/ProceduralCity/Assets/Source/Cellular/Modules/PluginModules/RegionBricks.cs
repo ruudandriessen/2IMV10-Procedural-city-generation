@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace ProceduralCity
 {
@@ -16,8 +17,9 @@ namespace ProceduralCity
 
 		#region implemented abstract members of RegionModule
 
-		public override bool apply (Region r)
+		public override List<MeshFilter> apply (Region r)
 		{
+			List<MeshFilter> meshes = new List<MeshFilter> ();
 			Vector3 cornerDimensions = new Vector3 (1.0f, 1.0f, 1.0f);
 
 			HighLevelEdge e1 = null;
@@ -40,7 +42,7 @@ namespace ProceduralCity
 			}
 			if (e2 == null) {
 				Debug.Log ("Error - no two edges from same start vertex in region with different y values");
-				return true;
+				return meshes;
 			}
 			Vector3 horizontalDir, verticalDir;
 			if (e1.getDirection ().y == 0) {
@@ -83,10 +85,13 @@ namespace ProceduralCity
 					rowStart += 2.0f / 2 * horizontalDir;
 					rowEnd += 2.0f / 2 * horizontalDir;
 				}
-				FillCellModule.fillCell (rowStart, rowEnd, scale, dimensions, parent, color);
+				Vector3 normal = r.getNormal ();
+				meshes.AddRange(FillCellModule.fillCell (rowStart, rowEnd, scale, dimensions, parent, color, normal));
 				brickOut = !brickOut;
 			}
-			return true;
+
+
+			return meshes;
 		}
 
 		#endregion
