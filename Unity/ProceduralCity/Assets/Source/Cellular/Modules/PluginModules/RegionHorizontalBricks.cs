@@ -49,7 +49,7 @@ namespace ProceduralCity
 			p = parent.TransformPoint (p);
 
 			// Calculate rotation
-			Quaternion rotation = Quaternion.FromToRotation (dir1, Vector3.right);
+			Quaternion rotation = Quaternion.FromToRotation (Vector3.right, dir1);
 
 			float dir1Magnitude = dir1.magnitude;
 			float dir2Magnitude = dir2.magnitude;

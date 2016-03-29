@@ -228,12 +228,13 @@ public class HouseGeneration : MonoBehaviour
 
 		GameObject meshObject = new GameObject ();
 		meshObject.AddComponent<MeshFilter> ().mesh = msh;
-//		Renderer renderer = meshObject.AddComponent<MeshRenderer> ();
+		Renderer renderer = meshObject.AddComponent<MeshRenderer> ();
+		renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
 		meshObject.AddComponent<TextureCellular> ();
 		meshObject.transform.parent = this.transform;
 
-//		Material newMat = Resources.Load("Materials/House") as Material;
-//		renderer.material = newMat;
+		Material newMat = Resources.Load("Materials/House") as Material;
+		renderer.material = newMat;
 			
 	}
 

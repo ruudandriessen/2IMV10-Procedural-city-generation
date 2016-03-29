@@ -19,6 +19,7 @@ namespace ProceduralCity
 			MeshRenderer renderer = cell.GetComponent<MeshRenderer>();
 			Material newMat = Resources.Load("Materials/Concrete_Asphalt_02", typeof(Material)) as Material;
 			renderer.sharedMaterial = newMat;
+			renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
 			// Set parameters
 			cell.name = name;

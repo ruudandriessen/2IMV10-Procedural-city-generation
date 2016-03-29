@@ -37,8 +37,6 @@ public class TextureCellular : MonoBehaviour {
 			ModelRedBricks module = new ModelRedBricks (this.transform);
 			module.apply (highMesh);
 		}
-//		BrickModule module = new BrickModule (this.transform);
-//		RGBModule module = new RGBModule (this.transform);
 	}
 
 	public Face createFace(int i) {
