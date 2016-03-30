@@ -11,9 +11,9 @@ public class SunMovement : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKey (KeyCode.Q)) {
-			transform.Rotate (0.5f, 0.5f, 0.5f);
+			transform.Rotate (0.5f, 0.0f, 0.0f);
 		} else if (Input.GetKey (KeyCode.E)) {
-			transform.Rotate (-0.5f, -0.5f, -0.5f);
+			transform.Rotate (-0.5f, 0.0f, 0.0f);
 		}
 	}
 }
