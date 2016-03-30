@@ -92,11 +92,12 @@ public class Street : MonoBehaviour {
 			lightPost.transform.localScale = new Vector3 (0.2f, 3.0f, 0.2f);
 
 			// Create the latern top towards the road
-			GameObject lightHandle = GameObject.CreatePrimitive (PrimitiveType.Cylinder);
+			GameObject lightHandle = GameObject.CreatePrimitive (PrimitiveType.Sphere);
 			lightHandle.transform.parent = lantern.transform;
-			lightHandle.transform.position = lantern.transform.position + new Vector3 (0, 3.0f, 0) - transDirection * 0.3f;
-			lightHandle.transform.localScale = new Vector3 (0.2f, 0.6f, 0.2f);
-			lightHandle.transform.localRotation = Quaternion.AngleAxis (90, Vector3.left);
+			lightHandle.transform.position = lantern.transform.position + new Vector3 (0, 3.2f, 0);
+			lightHandle.transform.localScale = new Vector3 (0.4f, 0.4f, 0.4f);
+			lightHandle.GetComponent<MeshRenderer> ().material = Resources.Load("Materials/Glass 1", typeof(Material)) as Material;
+//			lightHandle.GetComponent<MeshRenderer> ().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
 			// Create the light component
 			GameObject light = new GameObject ("Light");
@@ -108,7 +109,7 @@ public class Street : MonoBehaviour {
 			lightComp.shadowStrength = 0.5f;
 			lightComp.shadows = LightShadows.Hard;
 			lightComp.transform.parent = lantern.transform;
-			lightComp.transform.position = lantern.transform.position + new Vector3 (0, 3.0f, 0) - transDirection * 0.6f;
+			lightComp.transform.position = lantern.transform.position + new Vector3 (0, 3.2f, 0);
 
 		}
 		road.points = dataPoints;
