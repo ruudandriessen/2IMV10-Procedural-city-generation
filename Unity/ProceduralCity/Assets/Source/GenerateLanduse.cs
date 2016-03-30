@@ -13,6 +13,8 @@ namespace ProceduralCity
 
 			GameObject terrain = GameObject.CreatePrimitive (PrimitiveType.Cube);
 			terrain.transform.position = min + max/2;
+			GameObject.Destroy (terrain.GetComponent<BoxCollider> ());
+			terrain.isStatic = true;
 			terrain.transform.localScale = max;
 
 			terrain.GetComponent<Renderer> ().material = Resources.Load("Materials/ground2", typeof(Material)) as Material;

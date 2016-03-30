@@ -35,7 +35,8 @@ public class Surface : MonoBehaviour
 		}
 		msh.uv = uvs;
 
-		GameObject meshObject = new GameObject ();
+		GameObject meshObject = new GameObject ("SurfaceMesh");
+		meshObject.isStatic = true;
 		meshObject.transform.parent = this.transform;
 		meshObject.transform.Translate(new Vector3(0, 0.02f, 0));
 

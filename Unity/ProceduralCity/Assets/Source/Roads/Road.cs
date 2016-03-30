@@ -13,6 +13,7 @@ public class Road : MonoBehaviour {
 	void Start () {
 		// Create mesh and set parent to road
 		GameObject meshObject = new GameObject ();
+		meshObject.isStatic = true;
 		meshObject.transform.parent = this.transform;
 		meshObject.name = "Road";
 
