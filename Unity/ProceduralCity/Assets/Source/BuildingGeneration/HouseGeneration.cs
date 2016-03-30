@@ -13,7 +13,7 @@ public class HouseGeneration : MonoBehaviour
 		Vector3[] points = building.getPolygonAsVector3 ();
 		Scope s = new Scope (this.gameObject);
 		Rule r1 = new Rule ("Footprint")
-			.add (new ScaleOperation (s, 1, new System.Random().Next(12, 30), 1))
+			.add (new ScaleOperation (s, 1, new System.Random().Next(5, 10), 1))
 			.add (new SaveOperation(s, "Facades"));
 		Rule r2 = new Rule ("Facades")
 			.add (new ComputeOperation (s, "sidefaces", "Facade",
