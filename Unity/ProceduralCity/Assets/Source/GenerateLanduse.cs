@@ -13,7 +13,7 @@ namespace ProceduralCity
 
 			GameObject terrain = GameObject.CreatePrimitive (PrimitiveType.Cube);
 			terrain.transform.position = min + max/2;
-			GameObject.Destroy (terrain.GetComponent<BoxCollider> ());
+//			GameObject.Destroy (terrain.GetComponent<BoxCollider> ());
 			terrain.isStatic = true;
 			terrain.transform.localScale = max;
 
