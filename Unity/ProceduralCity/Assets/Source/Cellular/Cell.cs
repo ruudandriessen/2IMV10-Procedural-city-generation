@@ -17,7 +17,7 @@ namespace ProceduralCity
 		{
 			cell = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
-			cell.GetComponent<BoxCollider> ().enabled = false;
+			GameObject.Destroy (cell.GetComponent<BoxCollider> ());
 			cell.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
 			// Get renderer and apply material

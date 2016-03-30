@@ -17,7 +17,7 @@ namespace ProceduralCity
 			//Debug.Log ("Going to insert model " + this.model);
 			GameObject newObj = GameObject.CreatePrimitive(PrimitiveType.Quad);
 
-			newObj.GetComponent<MeshCollider> ().enabled = false;
+			GameObject.Destroy (newObj.GetComponent<MeshCollider> ());
 			Vector3[] symbolPoints = s.getPoints ().ToArray();
 			Vector3 normal = Vector3.Cross ((symbolPoints [1] - symbolPoints [0]), (symbolPoints [2] - symbolPoints [0]));
 			newObj.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
@@ -33,6 +33,7 @@ namespace ProceduralCity
 			//GameObject newObj = new GameObject(this.model);
 			if (this.model == "window") {
 				newObj.transform.localScale = new Vector3 (1.5f, 2f, 2f);
+
 				//newObj.transform.localRotation = Quaternion.Euler (0, 180, 0);
 				int random = new System.Random ().Next (0, 4);
 				if (random == 0) {
