@@ -11,7 +11,7 @@ public class LoadData {
 
 	// Use this for initialization
 	public static void Load () {
-		using(XmlTextReader reader = new XmlTextReader("Assets/Maps/herpt"))
+		using(XmlTextReader reader = new XmlTextReader("strijps"))
 //		using (XmlReader reader = XmlReader.Create("Assets/Maps/andorra"))
 		{
 			while (reader.Read())
